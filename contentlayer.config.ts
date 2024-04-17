@@ -7,13 +7,6 @@ export const Post = defineDocumentType(() => ({
   contentType: 'mdx',
   filePathPattern: `**/*.mdx`, // mdx 파일경로 패턴
 
-  // mdx로 작성한 글 정보에 대해 입력해야하는 필드 정의
-  /*
-    [필드명]: {
-      type: '자료형',
-      required: '필수여부',
-    }
-  */
   fields: {
     title: {
       type: 'string',
@@ -34,6 +27,12 @@ export const Post = defineDocumentType(() => ({
     createdAt: {
       type: 'date',
       required: true,
+    },
+  },
+  computedFields: {
+    url: {
+      type: "string",
+      resolve: (post) => `/blog/${post._raw.flattenedPath}`,
     },
   },
 }));
