@@ -1,4 +1,5 @@
 import { allPosts } from "@/.contentlayer/generated";
+import PostCard from "@/components/PostCard";
 import { compareDesc } from "date-fns";
 
 export default function Blog() {
@@ -7,10 +8,13 @@ export default function Blog() {
   );
 
   return (
-    <div>
+    <main className="mx-auto max-w-5xl">
+      <h1 className="my-8 text-center text-3xl font-bold">
+        Next.js & ContentLayer Blog Example
+      </h1>
       {posts.map((post) => (
-        <h2 key={post._id}>{post.title}</h2>
+        <PostCard key={post._id} {...post} />
       ))}
-    </div>
+    </main>
   );
 }
