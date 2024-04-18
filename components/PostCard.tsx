@@ -1,16 +1,28 @@
 import { Post } from "@/.contentlayer/generated";
-import { format, parseISO } from "date-fns";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function PostCard(post: Post): React.ReactElement {
   return (
-    <div className="mb-4 flex flex-col border-2 rounded-lg p-2">
-      <Link href={post.url} className="text-3xl mb-1 text-blue-500">
-        {post.title}
+    <div className="flex flex-col max-w-[480px]">
+      <Link href={post.url}>
+        <Image
+          src={post.thumbnail}
+          width={480}
+          height={270}
+          alt="thumbnail"
+          className="rounded-[15px] max-h-[270px]"
+        />
+        <div className="font-bold text-xl mt-3">{post.title}</div>
+        <div className="font-normal text-base mt-2.5">{post.description}</div>
+        {post.tags.map((tag, index) => (
+          <div className="h-8 mt-2.5 mr-2 bg-[#EDEDED] rounded-[10px] w-auto inline-flex flex-wrap justify-center items-center">
+            <div className="font-normal text-base mx-2" key={index}>
+              {tag}
+            </div>
+          </div>
+        ))}
       </Link>
-      <time dateTime={post.createdAt}>
-        {format(parseISO(post.createdAt), "LLLL d, yyyy")}
-      </time>
     </div>
   );
 }
