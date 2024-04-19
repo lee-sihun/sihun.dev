@@ -16,10 +16,11 @@ export default function PostCard(post: Post): React.ReactElement {
         <div className="font-bold text-xl mt-3">{post.title}</div>
         <div className="font-normal text-base mt-2.5">{post.description}</div>
         {post.tags.map((tag, index) => (
-          <div className="h-8 mt-2.5 mr-2 bg-[#EDEDED] rounded-[10px] w-auto inline-flex flex-wrap justify-center items-center">
-            <div className="font-normal text-base mx-2" key={index}>
-              {tag}
-            </div>
+          <div
+            key={index}
+            className="h-8 mt-2.5 mr-2 bg-[#EDEDED] rounded-[10px] w-auto inline-flex flex-wrap justify-center items-center"
+          >
+            <div className="font-normal text-base mx-2">{tag}</div>
           </div>
         ))}
       </Link>
