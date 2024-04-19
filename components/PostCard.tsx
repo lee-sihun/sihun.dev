@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function PostCard(post: Post): React.ReactElement {
   return (
-    <div className="flex flex-col max-w-[480px]">
+    <div className="flex flex-col max-w-[480px] w-full mx-auto">
       <Link href={post.url}>
         <Image
           src={post.thumbnail}
