@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import LogoSvg from "../public/svg/code-square.svg";
+import LogoSvg from "../public/svg/logo.svg";
 import { usePathname } from "next/navigation";
 
 const nav: { title: string; location: string }[] = [
@@ -15,7 +15,7 @@ export default function Nav() {
   return (
     <div className="flex items-center">
       <Link className="flex items-center" href="/">
-        <LogoSvg className="w-10 h-10" color={"#000000"} />
+        <LogoSvg color={"#000000"} />
         <div className="text-lg font-bold ml-[5px]">인터넷 탐험가</div>
       </Link>
       {nav.map((item) => {
