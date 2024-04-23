@@ -12,8 +12,8 @@ export default function Nav() {
       {nav.map((item) => {
         const { title, location } = item;
         return (
-          <Link href={location} key={title}>
-            <a>{title}</a>
+          <Link className="text-base" href={location} key={title}>
+            {title}
           </Link>
         );
       })}
