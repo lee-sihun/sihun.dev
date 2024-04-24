@@ -9,7 +9,7 @@ export default function Blog() {
 
   return (
     <div className="flex justify-center">
-      <div className="mx-4 max-w-[1020px] grid grid-cols-1 gap-[60px] gap-y-20 md:grid-cols-2">
+      <div className="px-4 max-w-[1052px] grid grid-cols-1 gap-[60px] gap-y-20 md:grid-cols-2">
         {posts.map((post) => (
           <PostCard key={post._id} {...post} />
         ))}
