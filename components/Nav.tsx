@@ -15,7 +15,7 @@ export default function Nav() {
   return (
     <div className="flex items-center">
       <Link className="flex items-center" href="/">
-        <LogoSvg color={"#000000"} />
+        <LogoSvg className="fill-black dark:fill-white" />
         <div className="text-lg font-bold ml-[5px]">인터넷 탐험가</div>
       </Link>
       {nav.map((item) => {
