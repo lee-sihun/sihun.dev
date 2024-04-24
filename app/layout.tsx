@@ -3,6 +3,7 @@ import "./globals.css";
 import "../styles/reset.css";
 import localFont from "next/font/local";
 import Header from "@/components/Header";
+import Providers from "@/components/Provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,8 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={pretendard.className}>
-        <Header />
-        {children}
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );
