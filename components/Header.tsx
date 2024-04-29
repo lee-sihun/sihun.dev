@@ -4,7 +4,7 @@ import ThemeSwitcher from "./ThemeSwitcher";
 export default function Header() {
   return (
     <div className="flex justify-center">
-      <div className="w-[1052px] h-[60px] flex justify-between items-center px-4">
+      <div className="w-[1068px] h-[60px] flex justify-between items-center px-6">
         <Nav />
         <ThemeSwitcher />
       </div>
