@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import LogoSvg from "../public/svg/logo.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const nav: { title: string; location: string }[] = [
@@ -18,6 +18,15 @@ export default function Nav() {
   const handleToggle = () => {
     setOnToggle(!onToggle);
   };
+
+  //스크롤 활성/비활성화
+  useEffect(() => {
+    if (onToggle) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'visible';
+    }
+  }, [onToggle]); 
 
   return (
     <div className="flex items-center">
