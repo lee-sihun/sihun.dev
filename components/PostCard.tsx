@@ -12,6 +12,7 @@ export default function PostCard(post: Post): React.ReactElement {
           height={270}
           alt="thumbnail"
           className="rounded-[15px] max-h-[270px]"
+          priority
         />
         <div className="font-bold text-xl mt-3">{post.title}</div>
         <div className="font-normal text-base mt-2.5 text-[#525252] dark:text-[#A3A3A3]">

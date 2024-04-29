@@ -18,11 +18,7 @@ export default function ThemeSwitcher() {
       /> */}
       <Square className="fill-black dark:fill-white transition-colors duration-300 ease-in-out" />
       <div className="absolute top-1/2 left-1/2 w-6 h-6 rounded-full transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-black" />
-      <div
-        className={`absolute top-1/2 left-1/2 w-[18px] h-[18px] rounded-full transform -translate-x-1/2 -translate-y-1/2 overflow-hidden transition-transform duration-300 ease-in-out ${
-          currentTheme === "dark" ? "rotate-[-180deg]" : "rotate-[0deg]"
-        } bg-white dark:bg-black`}
-      >
+      <div className="dark:rotate-[-180deg] rotate-[0deg] absolute top-1/2 left-1/2 w-[18px] h-[18px] rounded-full transform -translate-x-1/2 -translate-y-1/2 overflow-hidden transition-transform duration-300 ease-in-out bg-white dark:bg-black">
         <div
           className="w-[18px] h-[18px] rounded-full bg-black dark:bg-white"
           style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0% 100%)" }}
