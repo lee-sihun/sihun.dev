@@ -21,12 +21,8 @@ export default function Nav() {
 
   //스크롤 활성/비활성화
   useEffect(() => {
-    if (onToggle) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'visible';
-    }
-  }, [onToggle]); 
+    document.body.style.overflow = onToggle ? "hidden" : "visible";
+  }, [onToggle]);
 
   return (
     <div className="flex items-center">
