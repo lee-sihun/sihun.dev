@@ -14,7 +14,7 @@ export default function Category({
   onCategorySelect,
 }: CategoryProps) {
   return (
-    <div className="flex mb-10">
+    <div className="category flex mb-10 overflow-auto white-space: nowrap;">
       {category.map(({ title }) => {
         const isSelected = selectedCategory === title;
         const bgColor = isSelected

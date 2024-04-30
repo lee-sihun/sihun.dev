@@ -17,9 +17,10 @@ export default function Blog() {
 
   return (
     <div className="flex justify-center">
-      <div className="px-6 max-w-[1068px]">
+      <div className="px-6 max-w-[1068px] w-screen">
         <div className="text-[32px] font-bold mt-8 mb-3">
-          {selectedCategory} ({filteredPosts.length})
+          {selectedCategory === "All" ? "All Posts" : selectedCategory} (
+          {filteredPosts.length})
         </div>
         <Category
           selectedCategory={selectedCategory}
