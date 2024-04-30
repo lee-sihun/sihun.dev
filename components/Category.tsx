@@ -14,7 +14,7 @@ export default function Category({
   onCategorySelect,
 }: CategoryProps) {
   return (
-    <div className="category flex mb-10 overflow-auto white-space: nowrap;">
+    <div className="category px-2.5 h-[62px] items-center flex mb-5 overflow-auto white-space: nowrap;">
       {category.map(({ title }) => {
         const isSelected = selectedCategory === title;
         const bgColor = isSelected
