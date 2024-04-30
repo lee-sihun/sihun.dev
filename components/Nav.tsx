@@ -24,6 +24,11 @@ export default function Nav() {
     document.body.style.overflow = onToggle ? "hidden" : "visible";
   }, [onToggle]);
 
+  //경로 이동 시 토글 닫기 (깜빡임 방지)
+  useEffect(() => {
+    setOnToggle(false);
+  }, [pathname]);
+
   return (
     <div className="flex items-center">
       <Link className="hidden md:flex items-center" href="/">
@@ -63,10 +68,9 @@ export default function Nav() {
           return (
             <Link href={location} key={title}>
               <div
-                className={`py-4 border-solid border-b border-neutral-200 dark:border-neutral-700 text-base ${
+                className={`cursor-pointer py-4 border-solid border-b border-neutral-200 dark:border-neutral-700 text-base ${
                   isActive ? "font-bold" : ""
                 }`}
-                onClick={handleToggle}
               >
                 {title}
               </div>
