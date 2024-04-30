@@ -18,7 +18,7 @@ export default function Blog() {
   return (
     <div className="flex justify-center flex-wrap">
       <div className="max-[1020px]:px-[14px] px-6 max-w-[1088px] w-screen">
-        <div className="text-[32px] font-bold mt-8 mb-3 px-2.5">
+        <div className="text-2xl md:text-[32px] font-bold mt-8 mb-3 px-2.5">
           {selectedCategory === "All" ? "All Posts" : selectedCategory} (
           {filteredPosts.length})
         </div>

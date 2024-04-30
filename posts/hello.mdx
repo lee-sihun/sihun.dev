@@ -1,5 +1,5 @@
 ---
-title: Next.js와 ContentLayer를 이용한 정적 블로그 개발
+title: 스타일링 테스트용
 description: Next.js와 ContentLyaer를 이용하여 정적 블로그를 개발하고 배포하는 과정을 알아봅시다.
 category: Develop
 thumbnail: https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihY1vfPCsYA8_zvlmdIWOEp56ePYCq3QnJDHYct4moWSz69uB7whybh4ALu4R13JBL7231capkGQ5U3ROutJjrIFqUYKA8gRqMU=w2436-h1798
@@ -9,4 +9,42 @@ tags:
 createdAt: 2022-03-21
 ---
 
-안녕하세요. 오늘은 React.js 프로젝트를 만들어볼게요.
+This is My First Post!! <br />
+이건 나의 첫번째 포스트다!!
+
+> test
+> with a custom background color.
+
+<center>
+  <img
+    src="https://s.pstatic.net/static/www/mobile/edit/2021/0701/cropImg_728x360_67071928262748357.jpeg"
+    width="200"
+    height="300"
+  />
+</center>
+
+![img](https://s.pstatic.net/static/www/mobile/edit/2021/0701/cropImg_728x360_67071928262748357.jpeg)
+
+```javascript showLineNumbers {2-3,4,6} title="타이틀 입니다"
+import Document, { Html, Head, Main, NextScript } from "next/document";
+
+// 🔥 Super granular and accurate highlighting
+export default class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
+  }
+
+  render() {
+    return (
+      <Html>
+        <Head />
+        <body className="bg-zinc-800 text-zinc-200">
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+```
