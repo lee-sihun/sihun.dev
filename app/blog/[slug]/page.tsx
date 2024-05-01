@@ -24,12 +24,32 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXContent = useMDXComponent(post.body.code);
 
   return (
-    <article className="mx-auto prose">
-      <div className="mb-8 text-center">
-        <time dateTime={post.createdAt} className="mb-1 text-xs text-gray-600">
-          {new Intl.DateTimeFormat("en-US").format(new Date(post.createdAt))}
+    <article className="mx-auto px-6 max-w-3xl prose">
+      <div className="mt-10 mb-8 text-center">
+        <time
+          dateTime={post.createdAt}
+          className="mb-2.5 text-base text-[#686868] dark:text-[#A3A3A3]"
+        >
+          {new Intl.DateTimeFormat("en-CA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(new Date(post.createdAt))}
         </time>
-        <h1 className="text-3xl font-bold">{post.title}</h1>
+        <h1 className="mb-0 text-3xl md:text-[32px] font-bold text-black dark:text-white">
+          {post.title}
+        </h1>
+        {post.tags.map((tag, index) => (
+          <div
+            key={index}
+            className="mt-[15px] h-8 mr-2 bg-[#EDEDED] dark:bg-[#262626] rounded-[10px] w-auto inline-flex flex-wrap justify-center items-center"
+          >
+            <div className="font-normal text-base mx-2 text-[#404040] dark:text-[#B5B5B5]">
+              {tag}
+            </div>
+          </div>
+        ))}
+        <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
       <MDXContent components={mdxComponents} />
     </article>
