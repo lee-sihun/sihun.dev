@@ -1,6 +1,8 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
-import highlight from 'rehype-highlight';
 import rehypePrettyCode from 'rehype-pretty-code';
+import remarkGfm from 'remark-gfm';
+//@ts-ignore
+import rehypeFigure from 'rehype-figure';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -54,10 +56,11 @@ const contentSource = makeSource({
   contentDirPath: 'posts',
   documentTypes: [Post],
   mdx: {
-    remarkPlugins: [],
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [
+      [rehypeFigure, { className: 'image-caption' }],
       // @ts-ignore
-      [rehypePrettyCode, options]
+      [rehypePrettyCode, options],
     ],
   },
 });

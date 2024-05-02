@@ -58,7 +58,7 @@ export default function Nav() {
         })}
       </div>
       <div
-        className={`w-full h-screen absolute top-[60px] left-0 bg-white flex-col flex-nowrap px-6 dark:bg-[#121212] md:hidden ${
+        className={`transition-colors duration-300 ease-in-out w-full h-screen absolute top-[60px] left-0 bg-[#fafafa] flex-col flex-nowrap px-6 dark:bg-[#171717] md:hidden ${
           onToggle ? "" : "hidden"
         }`}
       >

@@ -47,19 +47,60 @@ p code {
 /* 코드 블럭 테마 */
 .light {
   code[data-theme*=" "],
-  code[data-theme*=" "] span, pre {
+  code[data-theme*=" "] span,
+  pre {
     color: var(--shiki-light);
-    background-color: var(--shiki-light-bg); 
+    background-color: var(--shiki-light-bg);
   }
 }
 .light pre {
   @apply shadow-[0_0px_10px_0px_rgba(0,0,0,0.1)];
 }
-
 .dark {
   code[data-theme*=" "],
-  code[data-theme*=" "] span, pre {
+  code[data-theme*=" "] span,
+  pre {
     color: var(--shiki-dark);
     background-color: var(--shiki-dark-bg);
   }
+}
+
+/* 이미지 캡션 */
+figcaption {
+  @apply mt-2 mx-auto text-sm text-center text-gray-500 dark:text-gray-400;
+}
+
+/* 테이블 */
+table {
+  @apply w-full rounded-md;
+  border-collapse: collapse;
+}
+.light table {
+  @apply shadow-[0_0px_10px_0px_rgba(0,0,0,0.1)];
+}
+.dark table {
+  @apply shadow-[0_0px_10px_0px_rgba(0,0,0,0.2)];
+}
+thead,
+tbody {
+  @apply text-xs uppercase bg-[#ffffff] dark:bg-[#262626];
+}
+thead tr th,
+tbody tr td {
+  @apply py-4 font-medium text-center align-middle border-b border-r border-solid border-[#e4e7eb] dark:border-[#686868];
+}
+thead tr th:last-child,
+tbody tr td:last-child {
+  border-right: none;
+}
+tbody tr:last-child td {
+  border-bottom: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+thead tr th:first-child {
+  border-top-left-radius: 6px;
+}
+thead tr th:last-child {
+  border-top-right-radius: 6px;
 }

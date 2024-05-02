@@ -22,6 +22,7 @@ prose-img:w-full
 prose-blockquote:not-italic
  */
 const style = `
+prose-img:rounded-md
 before:prose-p:content-none 
 after:prose-p:content-none 
 before:prose-code:content-none 
