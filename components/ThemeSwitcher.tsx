@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import Square from "../public/svg/square.svg";
+import Square from "../public/svg/logo.svg";
 
 export default function ThemeSwitcher() {
   const { systemTheme, theme, setTheme } = useTheme();
