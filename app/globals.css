@@ -5,13 +5,23 @@
 /* 기본 배경색 */
 body {
   transition: background-color 0.3s ease;
-  background-color: #FAFAFA; 
+  background-color: #fafafa;
 }
 /* 다크 모드시 배경색 */
 .dark body {
-  background-color: #171717; 
+  background-color: #171717;
 }
 
-.category::-webkit-scrollbar{
-  display:none;
+.category::-webkit-scrollbar {
+  display: none;
+}
+
+p code {
+  border-radius: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  background-color: #e5e5e5;
+}
+
+.dark p code {
+  background-color: #363636;
 }

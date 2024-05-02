@@ -17,6 +17,24 @@ export const generatedMetadata = ({ params }: { params: { slug: string } }) => {
   if (!post) notFound();
 };
 
+/*
+prose-img:w-full
+prose-blockquote:not-italic
+ */
+const style = `
+before:prose-p:content-none 
+after:prose-p:content-none 
+before:prose-code:content-none 
+after:prose-code:content-none 
+prose-blockquote:border-solid
+prose-blockquote:bg-[#F5F5F5]
+dark:prose-blockquote:bg-[#262626]
+prose-a:text-blue-500
+prose-a:no-underline
+hover:prose-a:text-blue-700
+hover:prose-a:underline
+`;
+
 export default function Page({ params }: { params: { slug: string } }) {
   const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
   if (!post) notFound();
@@ -24,7 +42,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXContent = useMDXComponent(post.body.code);
 
   return (
-    <article className="mx-auto px-6 max-w-3xl prose">
+    <section className="mx-auto px-6 max-w-3xl">
       <div className="mt-10 mb-8 text-center">
         <time
           dateTime={post.createdAt}
@@ -51,7 +69,9 @@ export default function Page({ params }: { params: { slug: string } }) {
         ))}
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
-      <MDXContent components={mdxComponents} />
-    </article>
+      <article className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
+        <MDXContent components={mdxComponents} />
+      </article>
+    </section>
   );
 }
