@@ -42,6 +42,13 @@ export const Post = defineDocumentType(() => ({
   },
 }));
 
+const options = {
+  theme: {
+    dark: "one-dark-pro",
+    light: "github-light",
+  },
+};
+
 const contentSource = makeSource({
   // 마크다운 파일이 저장되어 있는 루트 폴더
   contentDirPath: 'posts',
@@ -49,15 +56,8 @@ const contentSource = makeSource({
   mdx: {
     remarkPlugins: [],
     rehypePlugins: [
-      [
-         // @ts-ignore
-        rehypePrettyCode,
-        {
-          theme: 'github-dark', // 코드작성시 적용할 테마
-        },
-      ],
-       // @ts-ignore
-      highlight,
+      // @ts-ignore
+      [rehypePrettyCode, options]
     ],
   },
 });

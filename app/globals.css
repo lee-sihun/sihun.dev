@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600;700&display=swap");
 
 /* 기본 배경색 */
 body {
@@ -24,4 +25,41 @@ p code {
 
 .dark p code {
   background-color: #363636;
+}
+
+/* 코드 테마 */
+.prose pre > code {
+  display: grid;
+  font-family: "Source Code Pro", monospace;
+  font-size: 16px;
+}
+
+/* Fenced Code block - hide horizontal scrollbar: webkit */
+.prose pre::-webkit-scrollbar {
+  display: none;
+}
+/* Fenced Code block - hide horizontal scrollbar: mozila */
+.prose pre {
+  scrollbar-width: none;
+  padding: 16px 16px;
+}
+
+/* 코드 블럭 테마 */
+.light {
+  code[data-theme*=" "],
+  code[data-theme*=" "] span, pre {
+    color: var(--shiki-light);
+    background-color: var(--shiki-light-bg); 
+  }
+}
+.light pre {
+  @apply shadow-[0_0px_10px_0px_rgba(0,0,0,0.1)];
+}
+
+.dark {
+  code[data-theme*=" "],
+  code[data-theme*=" "] span, pre {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
 }
