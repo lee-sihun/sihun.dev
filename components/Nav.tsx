@@ -1,13 +1,13 @@
 "use client";
 import Link from "next/link";
-import LogoSvg from "../public/svg/logo.svg";
+import LogoSvg from "../public/svg/saturn.svg";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const nav: { title: string; location: string }[] = [
   { title: "홈", location: "/" },
   { title: "블로그", location: "/blog" },
-  { title: "포트폴리오", location: "/portfolio" },
+  // { title: "포트폴리오", location: "/portfolio" },
   { title: "소개", location: "/about" },
 ];
 
@@ -33,14 +33,14 @@ export default function Nav() {
     <div className="flex items-center">
       <Link className="hidden md:flex items-center" href="/">
         <LogoSvg className="fill-black dark:fill-white" />
-        <div className="text-lg font-bold ml-[5px]">인터넷 탐험가</div>
+        <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
       </Link>
       <div
         className="flex md:hidden items-center cursor-pointer"
         onClick={handleToggle}
       >
         <LogoSvg className="fill-black dark:fill-white" />
-        <div className="text-lg font-bold ml-[5px]">인터넷 탐험가</div>
+        <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
       </div>
       <div className="hidden md:flex items-center">
         {nav.slice(1).map((item) => {
