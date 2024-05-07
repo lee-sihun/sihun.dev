@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const nav: { title: string; location: string }[] = [
-  { title: "홈", location: "/" },
-  { title: "블로그", location: "/blog" },
+  { title: "Home", location: "/" },
+  { title: "Blog", location: "/blog" },
   // { title: "포트폴리오", location: "/portfolio" },
-  { title: "소개", location: "/about" },
+  { title: "About", location: "/about" },
 ];
 
 export default function Nav() {
