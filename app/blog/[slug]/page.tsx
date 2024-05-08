@@ -11,11 +11,13 @@ const mdxComponents: MDXComponents = {
   pre: Pre,
 };
 
-export const generatedStaticParams = async () => {
-  allPosts.map((post) => ({ slug: post._raw.flattenedPath }));
+export const generateStaticParams = async () => {
+  return allPosts.map((post) => ({
+    slug: post._raw.flattenedPath,
+  }));
 };
 
-export const generatedMetadata = ({ params }: { params: { slug: string } }) => {
+export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
   if (!post) notFound();
 };
