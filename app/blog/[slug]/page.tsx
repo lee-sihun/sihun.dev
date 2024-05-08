@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
+import { Pre } from "@/components/Pre";
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
+  // @ts-ignore
+  pre: Pre,
 };
 
 export const generatedStaticParams = async () => {
