@@ -16,10 +16,12 @@ export const CopyButton = ({ preRef, isHoverd }: CopyButtonProps) => {
     let timeoutId: NodeJS.Timeout;
     if (isHoverd) {
       setVisible(true);
-    } else {
+    } else if (isCopied) {
       timeoutId = setTimeout(() => {
         setVisible(false);
-      }, 1500); // 3초 후에 버튼을 숨기기
+      }, 1500);
+    } else {
+      setVisible(false);
     }
     return () => clearTimeout(timeoutId); // 컴포넌트가 언마운트되거나 상태가 변경되면 타이머를 취소
   }, [isHoverd]);
