@@ -78,6 +78,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       <article className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
         <MDXContent components={mdxComponents} />
       </article>
+      <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
     </section>
   );
 }
