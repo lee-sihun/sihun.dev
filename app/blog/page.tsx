@@ -18,7 +18,7 @@ export default function Blog() {
   return (
     <div className="flex justify-center flex-wrap">
       <div className="max-[1020px]:px-[14px] px-6 max-w-[1088px] w-screen">
-        <div className="text-2xl md:text-[32px] font-bold mt-2 mb-3 px-2.5">
+        <div className="text-[28px] md:text-[30px] font-bold mt-2 mb-2 px-2.5">
           {selectedCategory === "All" ? "All Posts" : selectedCategory} (
           {filteredPosts.length})
         </div>
@@ -28,9 +28,9 @@ export default function Blog() {
         />
       </div>
       <div className="px-6 max-w-[1068px] w-screen">
-        <div className="grid grid-cols-1 gap-[60px] gap-y-20 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-[40px] gap-y-14 md:grid-cols-2">
           {filteredPosts.map((post) => (
-            <PostCard key={post._id} {...post} />
+            <PostCard key={post._id} post={post} onCategorySelect={setSelectedCategory} />
           ))}
         </div>
       </div>
