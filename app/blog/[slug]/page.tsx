@@ -4,6 +4,7 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { Pre } from "@/components/Pre";
+import Comments from "@/components/Comments";
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
@@ -78,7 +79,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       <article className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
         <MDXContent components={mdxComponents} />
       </article>
-      <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
+      <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
+      <Comments />
     </section>
   );
 }
