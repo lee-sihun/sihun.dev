@@ -21,7 +21,7 @@ export const CopyButton = ({ preRef, isHoverd }: CopyButtonProps) => {
         setVisible(false);
       }, 1500); // 3초 후에 버튼을 숨기기
     }
-    return () => clearTimeout(timeoutId); // 컴포넌트가 언마운트되거나 isHoverd가 변경되면 타이머를 취소합니다.
+    return () => clearTimeout(timeoutId); // 컴포넌트가 언마운트되거나 상태가 변경되면 타이머를 취소
   }, [isHoverd]);
 
   const handleCopyText = async () => {
