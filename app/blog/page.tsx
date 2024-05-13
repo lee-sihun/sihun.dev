@@ -16,7 +16,7 @@ export default function Blog() {
   );
 
   return (
-    <div className="flex justify-center flex-wrap">
+    <div className="flex justify-center flex-wrap mt-3">
       <div className="max-[1020px]:px-[14px] px-6 max-w-[1088px] w-screen">
         <div className="text-[28px] md:text-[30px] font-bold mt-2 mb-2 px-2.5">
           {selectedCategory === "All" ? "All Posts" : selectedCategory} (
