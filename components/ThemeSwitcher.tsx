@@ -7,7 +7,7 @@ export default function ThemeSwitcher() {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <div className="hover:bg-black/5 dark:hover:bg-white/10 rounded-md p-1.5">
+    <div className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1.5">
       <div
         className="relative w-8 h-8 cursor-pointer"
         onClick={() => {
