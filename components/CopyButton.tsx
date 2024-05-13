@@ -19,7 +19,7 @@ export const CopyButton = ({ preRef, isHoverd }: CopyButtonProps) => {
     } else if (isCopied) {
       timeoutId = setTimeout(() => {
         setVisible(false);
-      }, 1500);
+      }, 2000);
     } else {
       setVisible(false);
     }
@@ -32,7 +32,7 @@ export const CopyButton = ({ preRef, isHoverd }: CopyButtonProps) => {
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);
-    }, 2000);
+    }, 2500);
   };
 
   return (
