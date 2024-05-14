@@ -1,15 +1,16 @@
+"use client";
 import Image from "next/image";
 import profileImg from "../../public/img/profile.jpeg";
 import MailSvg from "../../public/svg/mail.svg";
 import GithubSvg from "../../public/svg/github.svg";
 import DiscordSvg from "../../public/svg/discord.svg";
+import ProfileIntro from "./profile-intro.mdx";
 
 const profile = {
   text: "🎉 제 블로그에 방문해주신 여러분 모두 환영합니다 🎉",
   img: profileImg,
   name: "이시훈",
   job: "프론트엔드 개발자",
-  desc: "모든 사람이 자유로워지면 좋겠습니다",
 };
 
 export default function About() {
@@ -41,7 +42,9 @@ export default function About() {
           </div>
         </div>
         <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
-        <p>{profile.desc}</p>
+        <article className="prose prose-lg mx-auto dark:prose-invert">
+          <ProfileIntro />
+        </article>
       </article>
     </main>
   );

@@ -1,4 +1,7 @@
 const { withContentlayer } = require("next-contentlayer");
+const withMDX = require("@next/mdx")({
+  extension: /\.mdx?$/,
+});
 
 const nextConfig = {
   reactStrictMode: true,
@@ -12,6 +15,7 @@ const nextConfig = {
       },
     ],
   },
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
@@ -22,4 +26,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withContentlayer(nextConfig);
+module.exports = withMDX(withContentlayer(nextConfig));
