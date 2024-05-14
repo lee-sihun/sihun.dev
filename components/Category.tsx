@@ -26,7 +26,7 @@ export default function Category({
         return (
           <div
             key={title}
-            className={`group cursor-pointer rounded-xl w-fit h-[39px] mr-[9px] flex items-center shadow-[0_0px_10px_0px_rgba(0,0,0,0.1)] ${bgColor}`}
+            className={`transition-colors duration-300 ease-in-out group cursor-pointer rounded-xl w-fit h-[39px] mr-[9px] flex items-center shadow-[0_0px_10px_0px_rgba(0,0,0,0.1)] ${bgColor}`}
             onClick={() => onCategorySelect(title)}
           >
             <a className={`text-[18px] mx-6 ${textColor}`}>{title}</a>
