@@ -32,14 +32,14 @@ export default function Nav() {
   return (
     <div className="flex items-center">
       <Link
-        className="hidden md:flex items-center hover:bg-black/10 dark:hover:bg-white/30 rounded-md py-1 px-2"
+        className="hidden md:flex items-center"
         href="/"
       >
         <LogoSvg className="fill-black dark:fill-white" />
         <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
       </Link>
       <div
-        className="flex md:hidden items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/30 rounded-md py-1 px-2"
+        className="flex md:hidden items-center cursor-pointer"
         onClick={handleToggle}
       >
         <LogoSvg className="fill-black dark:fill-white" />
@@ -52,7 +52,7 @@ export default function Nav() {
           return (
             <Link href={location} key={title}>
               <div
-                className={`text-base ml-[16px] hover:bg-black/10 dark:hover:bg-white/30 rounded-md py-1 px-2 ${
+                className={`text-base ml-[8px] hover:bg-black/10 dark:hover:bg-white/10 rounded-md py-1 px-2 ${
                   isActive ? "font-bold" : ""
                 }`}
               >

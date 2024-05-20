@@ -27,7 +27,8 @@ export default function PostCard({
       </Link>
       <div>
         <div
-          className="hover:before:content-['>_'] cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text"
+        // hover:before:content-['>_']
+          className="cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text"
           onClick={() => onCategorySelect(post.category)}
         >
           {post.category}

@@ -19,10 +19,10 @@ export default function Category({
         const isSelected = selectedCategory === title;
         const bgColor = isSelected
           ? "bg-black dark:bg-white"
-          : "bg-white dark:bg-[#2C2C2E] hover:bg-black dark:hover:bg-white";
+          : "bg-white dark:bg-[#2C2C2E] hover:bg-black dark:hover:bg-[#414143]";
         const textColor = isSelected
           ? "text-white dark:text-[#2C2C2E]"
-          : "text-black dark:text-white group-hover:text-white dark:group-hover:text-[#2C2C2E]";
+          : "text-black dark:text-white group-hover:text-white";
         return (
           <div
             key={title}
