@@ -31,10 +31,7 @@ export default function Nav() {
 
   return (
     <div className="flex items-center">
-      <Link
-        className="hidden md:flex items-center"
-        href="/"
-      >
+      <Link className="hidden md:flex items-center" href="/">
         <LogoSvg className="fill-black dark:fill-white" />
         <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
       </Link>
@@ -48,16 +45,16 @@ export default function Nav() {
       <div className="hidden md:flex items-center">
         {nav.slice(1).map((item) => {
           const { title, location } = item;
-          const isActive = pathname === location; //경로가 일치하는지 체크
+          const isActive = pathname.includes(location); //경로가 일치하는지 체크
           return (
-            <Link href={location} key={title}>
-              <div
-                className={`text-base ml-[8px] hover:bg-black/10 dark:hover:bg-white/10 rounded-md py-1 px-2 ${
-                  isActive ? "font-bold" : ""
-                }`}
-              >
-                {title}
-              </div>
+            <Link
+              href={location}
+              key={title}
+              className={`flex items-center text-base ml-[14px] text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 rounded-md py-1 px-2 leading-snug ${
+                isActive ? "font-bold" : ""
+              }`}
+            >
+              {title}
             </Link>
           );
         })}
