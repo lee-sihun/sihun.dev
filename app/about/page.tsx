@@ -35,14 +35,23 @@ export default function About() {
         <h3 className="font-bold text-2xl mt-5">{profile.name}</h3>
         <h4 className="font-bold text-lg">{profile.job}</h4>
         <div className="flex justify-center items-center mt-[7px]">
-          <Link href={profile.mail} className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer">
-            <MailSvg />
+          <Link
+            href={profile.mail}
+            className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer"
+          >
+            <MailSvg className="w-[30px] h-[22px]" />
           </Link>
-          <Link href={profile.github} className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer mx-[10px]">
-            <GithubSvg />
+          <Link
+            href={profile.github}
+            className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer mx-[10px]"
+          >
+            <GithubSvg className="w-[30px] h-[31px]" />
           </Link>
-          <Link href={profile.discord} className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer">
-            <DiscordSvg />
+          <Link
+            href={profile.discord}
+            className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer"
+          >
+            <DiscordSvg className="w-[30px] h-[23px]" />
           </Link>
         </div>
         <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
