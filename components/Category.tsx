@@ -19,14 +19,14 @@ export default function Category({
         const isSelected = selectedCategory === title;
         const bgColor = isSelected
           ? "bg-black dark:bg-white"
-          : "bg-white dark:bg-[#2C2C2E] hover:bg-black dark:hover:bg-[#414143]";
+          : "bg-[#EDEDED] dark:bg-[#2C2C2E] hover:bg-[#D9D9D9] dark:hover:bg-[#414143]";
         const textColor = isSelected
           ? "text-white dark:text-[#2C2C2E]"
-          : "text-black dark:text-white group-hover:text-white";
+          : "text-black dark:text-white";
         return (
           <div
             key={title}
-            className={`transition-colors duration-300 ease-in-out group cursor-pointer rounded-xl w-fit h-[39px] mr-[9px] flex items-center shadow-[0_0px_10px_0px_rgba(0,0,0,0.1)] ${bgColor}`}
+            className={`transition-colors duration-300 ease-in-out group cursor-pointer rounded-xl w-fit h-[39px] mr-[9px] flex items-center  ${bgColor}`}
             onClick={() => onCategorySelect(title)}
           >
             <a className={`text-[18px] mx-6 ${textColor}`}>{title}</a>
