@@ -23,7 +23,8 @@
     "paths": {
       "@/*": ["./*"],
       "contentlayer/generated": ["./.contentlayer/generated"],
-      "@/components": ["./components"]
+      "@/components": ["./components"],
+      "@/hooks": ["./hooks"]
     }
   },
   "include": [
