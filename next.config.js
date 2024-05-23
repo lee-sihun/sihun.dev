@@ -13,6 +13,11 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "i.postimg.cc",
+        port: "",
+      },
     ],
   },
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
@@ -23,6 +28,15 @@ const nextConfig = {
     });
 
     return config;
+  },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/blog',
+        permanent: true,
+      },
+    ];
   },
 };
 
