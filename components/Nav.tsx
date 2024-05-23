@@ -51,8 +51,10 @@ export default function Nav() {
             <Link
               href={location}
               key={title}
-              className={`flex items-center text-base ml-[14px] text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 rounded-md py-1 px-2 leading-snug ${
-                isActive ? "font-bold" : ""
+              className={`flex items-center text-base ml-[14px] hover:bg-black/10 dark:hover:bg-white/10 rounded-md py-1 px-2 leading-snug ${
+                isActive
+                  ? "font-bold text-black dark:text-white"
+                  : "font-semibold text-[#4a4a4a] dark:text-[#B5B5B5]"
               }`}
             >
               {title}
@@ -72,7 +74,9 @@ export default function Nav() {
             <Link href={location} key={title}>
               <div
                 className={`cursor-pointer py-4 border-solid border-b border-neutral-200 dark:border-neutral-700 text-base ${
-                  isActive ? "font-bold" : ""
+                  isActive
+                    ? "font-bold text-black dark:text-white"
+                    : "font-semibold text-[#4a4a4a] dark:text-[#B5B5B5]"
                 }`}
               >
                 {title}
