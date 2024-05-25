@@ -18,9 +18,9 @@ export default function PostCard({
           <Image
             src={post.thumbnail}
             width={490}
-            height={270}
+            height={275}
             alt="thumbnail"
-            className="max-h-[270px] transition-transform duration-300 ease-in-out hover:scale-105"
+            className="max-h-[275px] transition-transform duration-300 ease-in-out hover:scale-105"
             priority
           />
         </div>
