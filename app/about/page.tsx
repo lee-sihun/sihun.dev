@@ -55,7 +55,7 @@ export default function About() {
           </Link>
         </div>
         <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
-        <article className="prose prose-lg mx-auto dark:prose-invert">
+        <article className="prose prose-lg mx-auto dark:prose-invert text-left">
           <ProfileIntro />
         </article>
       </article>
