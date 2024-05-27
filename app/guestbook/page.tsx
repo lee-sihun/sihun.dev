@@ -1,4 +1,9 @@
 import Comments from "@/components/Comments";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GuestBook",
+};
 
 export default function Page() {
   return (

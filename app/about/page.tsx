@@ -1,11 +1,11 @@
-"use client";
 import Image from "next/image";
 import profileImg from "../../public/img/profile.jpeg";
 import MailSvg from "../../public/svg/mail.svg";
 import GithubSvg from "../../public/svg/github.svg";
 import DiscordSvg from "../../public/svg/discord.svg";
-import ProfileIntro from "./profile-intro.mdx";
+import ProfileIntro from "@/components/ProfileIntro";
 import Link from "next/link";
+import { Metadata } from "next";
 
 const profile = {
   text: "🎉 제 블로그에 방문해주신 여러분 모두 환영합니다 🎉",
@@ -15,6 +15,10 @@ const profile = {
   mail: "mailto:cnsa201119@gmail.com",
   github: "https://github.com/lee-sihun",
   discord: "https://discordapp.com/users/479635064368398342",
+};
+
+export const metadata: Metadata = {
+  title: "About",
 };
 
 export default function About() {
