@@ -4,6 +4,7 @@ import "../styles/reset.css";
 import localFont from "next/font/local";
 import Header from "@/components/Header";
 import Providers from "@/components/Provider";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,8 +26,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body className={pretendard.className}>
         <Providers>
-          <Header />
-          {children}
+          <div className="wrapper">
+            <Header />
+            <div className="contentWrapper">{children}</div>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>

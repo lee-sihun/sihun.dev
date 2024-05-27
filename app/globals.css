@@ -14,6 +14,20 @@ body {
   background-color: #171717;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.contentWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .category::-webkit-scrollbar {
   display: none;
 }
