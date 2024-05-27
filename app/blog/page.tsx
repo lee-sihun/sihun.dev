@@ -16,18 +16,18 @@ export default function Blog() {
   );
 
   return (
-    <div className="flex justify-center flex-wrap mt-3">
+    <section className="flex justify-center flex-wrap mt-3">
       <div className="max-w-[1068px] w-screen px-6">
-        <div className="text-2xl md:text-[30px] font-bold mt-2 mb-2">
+        <h3 className="text-2xl md:text-[30px] font-bold mt-2 mb-2">
           {selectedCategory === "All" ? "All Posts" : selectedCategory} (
           {filteredPosts.length})
-        </div>
+        </h3>
         <Category
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
         />
       </div>
-      <div className="px-6 max-w-[1068px] w-screen">
+      <section className="px-6 max-w-[1068px] w-screen">
         <div className="grid grid-cols-1 gap-[40px] gap-y-14 md:grid-cols-2">
           {filteredPosts.map((post) => (
             <PostCard
@@ -37,7 +37,7 @@ export default function Blog() {
             />
           ))}
         </div>
-      </div>
-    </div>
+      </section>
+    </section>
   );
 }

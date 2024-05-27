@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function Header() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex justify-center">
+    <header className="flex justify-center">
       <div className="w-[1068px] h-[60px] flex justify-between items-center px-6">
         <Nav />
         <div className="flex items-center">
@@ -34,6 +34,6 @@ export default function Header() {
         </button>
         <CommandMenu open={open} setOpen={setOpen} />
       </div>
-    </div>
+    </header>
   );
 }

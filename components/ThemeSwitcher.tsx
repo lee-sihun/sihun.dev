@@ -7,7 +7,7 @@ export default function ThemeSwitcher() {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <div
+    <button
       className="relative w-8 h-8 cursor-pointer"
       onClick={() => {
         setTheme(currentTheme === "dark" ? "light" : "dark");
@@ -24,6 +24,6 @@ export default function ThemeSwitcher() {
           style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0% 100%)" }}
         />
       </div>
-    </div>
+    </button>
   );
 }

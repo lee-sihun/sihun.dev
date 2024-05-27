@@ -14,18 +14,19 @@ body {
   background-color: #171717;
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+/* footer 하단에 고정 */
+html,
+body {
   height: 100vh;
 }
 
-.contentWrapper {
+body {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 .category::-webkit-scrollbar {

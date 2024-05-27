@@ -19,7 +19,7 @@ const profile = {
 
 export default function About() {
   return (
-    <main className="flex justify-center flex-wrap mt-10 px-6">
+    <section className="flex justify-center flex-wrap mt-10 px-6">
       <article className="max-w-[768px] w-full mx-auto text-center">
         {/* <h2 className="font-bold text-2xl md:text-3xl">{profile.text}</h2> */}
         <div className="overflow-hidden w-[150px] h-[150px] rounded-[75px] md:w-[200px] md:h-[200px] md:rounded-[100px] mt-[30px] mx-auto">
@@ -34,7 +34,7 @@ export default function About() {
         </div>
         <h3 className="font-bold text-2xl mt-5">{profile.name}</h3>
         <h4 className="font-bold text-lg">{profile.job}</h4>
-        <div className="flex justify-center items-center mt-[7px]">
+        <nav className="flex justify-center items-center mt-[7px]">
           <Link
             href={profile.mail}
             className="hover:bg-black/10 dark:hover:bg-white/30 rounded-md p-1 cursor-pointer"
@@ -53,12 +53,12 @@ export default function About() {
           >
             <DiscordSvg className="w-[30px] h-[23px]" />
           </Link>
-        </div>
-        <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
-        <article className="prose prose-lg mx-auto dark:prose-invert text-left">
+        </nav>
+        <hr className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
+        <section className="prose prose-lg mx-auto dark:prose-invert text-left">
           <ProfileIntro />
-        </article>
+        </section>
       </article>
-    </main>
+    </section>
   );
 }

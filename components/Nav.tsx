@@ -31,7 +31,7 @@ export default function Nav() {
   }, [pathname]);
 
   return (
-    <div className="flex items-center">
+    <nav className="flex items-center">
       <Link className="hidden md:flex items-center" href="/">
         <LogoSvg className="fill-black dark:fill-white" />
         <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
@@ -85,6 +85,6 @@ export default function Nav() {
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }

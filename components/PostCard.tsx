@@ -12,9 +12,9 @@ export default function PostCard({
   onCategorySelect,
 }: PostCardProps): React.ReactElement {
   return (
-    <div className="flex flex-col max-w-[490px] w-full mx-auto">
+    <article className="flex flex-col max-w-[490px] w-full mx-auto">
       <Link href={post.url}>
-        <div className="overflow-hidden w-full rounded-[12px]">
+        <figure className="overflow-hidden w-full rounded-[12px]">
           <Image
             src={post.thumbnail}
             width={490}
@@ -23,24 +23,24 @@ export default function PostCard({
             className="max-h-[275px] transition-transform duration-300 ease-in-out hover:scale-105"
             priority
           />
-        </div>
+        </figure>
       </Link>
       <div>
-        <div
+        <p
         // hover:before:content-['>_']
           className="cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text"
           onClick={() => onCategorySelect(post.category)}
         >
           {post.category}
-        </div>
+        </p>
       </div>
       <Link href={post.url} className="group">
-        <div className="font-bold text-xl mt-1 group-hover:text-blue-500 dark:group-hover:text-blue-500 group-hover:underline">
+        <p className="font-bold text-xl mt-1 group-hover:text-blue-500 dark:group-hover:text-blue-500 group-hover:underline">
           {post.title}
-        </div>
-        <div className="font-normal text-base mt-1 text-[#525252] dark:text-[#A3A3A3]">
+        </p>
+        <p className="font-normal text-base mt-1 text-[#525252] dark:text-[#A3A3A3]">
           {post.description}
-        </div>
+        </p>
       </Link>
       <div>
         {post.tags.map((tag, index) => (
@@ -54,6 +54,6 @@ export default function PostCard({
           </div>
         ))}
       </div>
-    </div>
+    </article>
   );
 }

@@ -14,7 +14,7 @@ export default function Category({
   onCategorySelect,
 }: CategoryProps) {
   return (
-    <div className="category h-[62px] items-center flex mb-3 overflow-auto white-space: nowrap;">
+    <nav className="category h-[62px] items-center flex mb-3 overflow-auto white-space: nowrap;">
       {category.map(({ title }) => {
         const isSelected = selectedCategory === title;
         const bgColor = isSelected
@@ -33,6 +33,6 @@ export default function Category({
           </div>
         );
       })}
-    </div>
+    </nav>
   );
 }

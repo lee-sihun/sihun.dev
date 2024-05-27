@@ -49,7 +49,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXContent = useMDXComponent(post.body.code);
 
   return (
-    <section className="mx-auto px-6 max-w-3xl">
+    <article className="mx-auto px-6 max-w-3xl">
       <div className="mt-10 mb-8 text-center">
         <time
           dateTime={post.createdAt}
@@ -76,11 +76,11 @@ export default function Page({ params }: { params: { slug: string } }) {
         ))}
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
-      <article className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
+      <section className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
         <MDXContent components={mdxComponents} />
-      </article>
+      </section>
       <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       <Comments />
-    </section>
+    </article>
   );
 }
