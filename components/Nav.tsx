@@ -34,14 +34,14 @@ export default function Nav() {
     <nav className="flex items-center">
       <Link className="hidden md:flex items-center" href="/">
         <LogoSvg className="fill-black dark:fill-white" />
-        <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
+        <h1 className="text-lg font-bold ml-[5px]">시훈의 개발노트</h1>
       </Link>
       <div
         className="flex md:hidden items-center cursor-pointer"
         onClick={handleToggle}
       >
         <LogoSvg className="fill-black dark:fill-white" />
-        <div className="text-lg font-bold ml-[5px]">시훈의 개발노트</div>
+        <h1 className="text-lg font-bold ml-[5px]">시훈의 개발노트</h1>
       </div>
       <div className="hidden md:flex items-center">
         {nav.slice(1).map((item) => {

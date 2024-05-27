@@ -61,9 +61,9 @@ export default function Page({ params }: { params: { slug: string } }) {
             day: "2-digit",
           }).format(new Date(post.createdAt))}
         </time>
-        <h1 className="mb-0 text-2xl md:text-[32px] font-bold text-black dark:text-white">
+        <h3 className="mb-0 text-2xl md:text-[32px] font-bold text-black dark:text-white">
           {post.title}
-        </h1>
+        </h3>
         {post.tags.map((tag, index) => (
           <div
             key={index}
