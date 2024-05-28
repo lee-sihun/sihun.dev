@@ -24,13 +24,13 @@ export default function Category({
           ? "text-white dark:text-[#2C2C2E]"
           : "text-black dark:text-white";
         return (
-          <div
+          <button
             key={title}
             className={`transition-colors duration-300 ease-in-out group cursor-pointer rounded-xl w-fit h-[39px] mr-[9px] flex items-center  ${bgColor}`}
             onClick={() => onCategorySelect(title)}
           >
-            <a className={`text-[18px] mx-6 ${textColor}`}>{title}</a>
-          </div>
+            <div className={`text-[18px] mx-6 ${textColor}`}>{title}</div>
+          </button>
         );
       })}
     </nav>
