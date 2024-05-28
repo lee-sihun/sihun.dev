@@ -19,6 +19,7 @@ const profile = {
 
 export const metadata: Metadata = {
   title: "About",
+  description: "프론트엔드 개발자 이시훈에 대한 소개입니다.",
 };
 
 export default function About() {

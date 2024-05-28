@@ -3,6 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "GuestBook",
+  description: "시훈의 개발노트의 게스트북입니다.",
 };
 
 export default function Page() {

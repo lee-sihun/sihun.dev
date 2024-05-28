@@ -21,6 +21,35 @@ export const generateStaticParams = async () => {
 export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
   if (!post) notFound();
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url: `https://sihun.dev/blog/${post._raw.flattenedPath}`,
+      images: [
+        {
+          url: post.thumbnail,
+          width: 800,
+          height: 600,
+          alt: `${post.title} thumbnail`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [
+        {
+          url: post.thumbnail,
+          alt: `${post.title} thumbnail`,
+        },
+      ],
+    },
+  };
 };
 
 /*
