@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const nav: { title: string; location: string }[] = [
-  { title: "Home", location: "/" },
+  // { title: "Home", location: "/" },
   { title: "Blog", location: "/blog" },
   // { title: "포트폴리오", location: "/portfolio" },
   { title: "About", location: "/about" },

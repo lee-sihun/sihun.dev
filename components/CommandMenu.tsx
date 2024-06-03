@@ -101,12 +101,12 @@ export default function CommandMenu({ open, setOpen }: CommandMenuProps) {
           {!page && (
             <>
               <Command.Group heading="Pages">
-                <Command.Item onSelect={() => routing("/")}>
+                {/* <Command.Item onSelect={() => routing("/")}>
                   <HomeSvg /> Home
                   <div className="cmdk-vercel-shortcuts">
                     <kbd>H</kbd>
                   </div>
-                </Command.Item>
+                </Command.Item> */}
                 <Command.Item onSelect={() => setPages([...pages, "posts"])}>
                   <BlogSvg />
                   Blog
