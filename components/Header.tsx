@@ -1,9 +1,12 @@
 "use client";
 import Nav from "./Nav";
 import ThemeSwitcher from "./ThemeSwitcher";
-import CommandMenu from "@/components/CommandMenu";
+// import CommandMenu from "@/components/CommandMenu";
 import SearchSvg from "../public/svg/search.svg";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const CommandMenu = dynamic(() => import("@/components/CommandMenu"));
 
 export default function Header() {
   const [open, setOpen] = useState(false);
