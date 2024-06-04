@@ -24,6 +24,9 @@ export default function ThemeSwitcher() {
           style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0% 100%)" }}
         />
       </div>
+      <span className="border-0 clip-[0_0_0_0] h-px -mt-px overflow-hidden p-0 absolute whitespace-nowrap w-px">
+        Theme Switch
+      </span>
     </button>
   );
 }

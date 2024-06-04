@@ -18,10 +18,10 @@ export default function BlogContent() {
   return (
     <section className="flex justify-center flex-wrap mt-3">
       <div className="max-w-[1068px] w-screen px-6">
-        <h3 className="text-2xl md:text-[30px] font-bold mt-2 mb-2">
+        <h2 className="text-2xl md:text-[30px] font-bold mt-2 mb-2">
           {selectedCategory === "All" ? "All Posts" : selectedCategory} (
           {filteredPosts.length})
-        </h3>
+        </h2>
         <Category
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
