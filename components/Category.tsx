@@ -8,7 +8,7 @@ const category: { title: string }[] = [
   { title: "Develop" },
   { title: "Design" },
   { title: "CS" },
-  { title: "PS" },
+  // { title: "PS" },
   { title: "Etc" },
 ];
 
