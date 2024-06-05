@@ -7,6 +7,9 @@ const category: { title: string }[] = [
   { title: "All" },
   { title: "Develop" },
   { title: "Design" },
+  { title: "CS" },
+  { title: "PS" },
+  { title: "Etc" },
 ];
 
 export default function Category({
