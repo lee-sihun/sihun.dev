@@ -16,7 +16,7 @@ export default function PostCard({
       <Link href={post.url}>
         <figure className="overflow-hidden w-full rounded-[12px]">
           <Image
-            src={post.thumbnail}
+            src={"/img/thumbnail/" + post.thumbnail}
             width={490}
             height={245}
             alt="thumbnail"
@@ -27,7 +27,7 @@ export default function PostCard({
       </Link>
       <div>
         <p
-        // hover:before:content-['>_']
+          // hover:before:content-['>_']
           className="cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text"
           onClick={() => onCategorySelect(post.category)}
         >
