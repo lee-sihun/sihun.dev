@@ -254,6 +254,7 @@ thead tr th:last-child {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 15;
 
   .dark & {
     background: rgba(22, 22, 22, 0.9);
@@ -414,4 +415,14 @@ thead tr th:last-child {
     color: var(--gray9);
     transform: translateY(-4px);
   }
+}
+
+/* 코드 블럭의 z-index 조정 */
+.prose pre {
+  position: relative;
+  z-index: 5; /* 배경보다 낮은 값을 설정 */
+}
+figure {
+  position: relative;
+  z-index: 5; /* 배경보다 낮은 값을 설정 */
 }

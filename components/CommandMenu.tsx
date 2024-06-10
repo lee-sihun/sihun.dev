@@ -57,7 +57,7 @@ export default function CommandMenu({ open, setOpen }: CommandMenuProps) {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-25 backdrop-blur-sm ${
+      className={`z-10 fixed top-0 left-0 w-full h-full bg-black bg-opacity-25 backdrop-blur-sm ${
         open ? "" : "hidden"
       }`}
     >
