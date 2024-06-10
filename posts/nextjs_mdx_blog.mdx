@@ -1,0 +1,238 @@
+---
+title: Next.js로 MDX 블로그를 만들어보자
+description: Next.js와 ContentLayer를 이용하여 정적 블로그를 개발하고 배포하는 과정을 알아봅시다.
+category: Develop
+thumbnail: mdx_blog.png
+tags:
+  - Next
+  - ContentLayer
+  - MDX
+createdAt: 2024-06-05
+---
+
+## 블로그를 만드는 이유
+> 聰明不如鈍筆(총명불여둔필)  
+> "총명함은 둔필보다 못하다"
+
+__아무리 기억력이 좋아도 기록하는 것만 못하다는 말이다.__ 나는 효율적인 학습을 위해서 공부를 하면서 배운 내용을 정리해서 기록하고, 다른 사람들과 공유하기 위한 블로그를 시작하기로 결심했다.
+ 그리고 이왕 시작하는거 직접 만들어보기로 했다. **내 취향을 100% 반영할 수 있고, 직접 만들면 더 애착이가서 열심히 글을 쓸 수 있을 것 같았다.** 
+
+
+## 어떻게 만드는게 좋을까? 
+### 고려해야 하는 요소
+블로그를 개발할때 고려해야하는 가장 중요한 요소는 **검색 엔진 최적화(SEO)** 라고 생각한다. 
+글을 아무리 열심히 작성해도 읽어주는 사람이 없다면, 혼자 사용하는 메모장과 다를바 없기 때문이다. 
+그리고 블로그에 동적인 컨텐츠는 불필요하다고 생각하여 **SSG(Static Site Generation)** 방식의 블로그를 개발하기로 계획했다. 
+
+### Next.js vs Gatsby
+Next.js와 Gatsby는 비슷한 점이 많다. 둘 다 __React 기반의 프레임워크고__ SSG와 SEO에 유리하기 때문이다. 
+검색을 통해 자료를 조사해보니 나와 비슷한 고민을 하는 사람들을 찾을 수 있었다. 보통 프로젝트의 규모가 크다면 Next.js, 소규모라면 Gatsby를 추천하는 것 같았다. [(next.js vs gatsby)](https://radixweb.com/blog/next-js-vs-gatsby)
+
+개인용 블로그를 개발하는데는 Gatsby가 더 적합해 보였지만 __결론적으로 나는 Next.js를 사용하기로 했다.__ ~~잘못 읽은게 아니다.~~ 왜냐하면 국내 채용 공고를 찾아보니 Next.js의 수요가 압도적으로 많았기 때문이다. 취준생의 입장에서 무시하고 넘어가기 힘든 포인트였다. 
+
+### ContentLayer
+블로그 게시글로 사용 할 컨텐츠와 데이터를 관리하기 위한 도구로는 ContentLayer 라이브러리를 사용하기로 했다. 
+MDX 파일을 **자동으로 JSON 형태의 데이터로 변환**해주고 **타입 안정성을 보장**해서 디버깅 시간을 단축 할 수 있었다. 
+또한 **캐싱을 지원**해서 빌드 속도도 빠르다.
+
+### ETC
+그 밖에도 간편한 스타일링을 위해서 **Tailwind CSS**, MDX 플러그인으로는 **rehype-figure**, **rehype-pretty-code**, **remark-gfm**, 
+댓글 기능 구현을 위해서 **giscus**, 다크모드 구현을 위해서는 **next-themes** 등의 라이브러리를 사용했다.
+
+## 개발 과정  
+### 사용한 라이브러리 버전
+`Next.js` - 14.2.1  
+`contentlayer` - 0.3.4
+
+### 개발 환경 설정 
+다음 명령어로 프로젝트를 생성한다. 
+```npm
+npx create-next-app@latest
+```
+![프로젝트 설정](https://i.postimg.cc/rz6RMVMH/2024-06-07-8-29-25.png)  
+
+프로젝트의 이름을 정하고 차례대로 원하는 옵션을 선택한다. 이 블로그에서는 **TypeScript, Tailwind CSS, App Router**를 사용했다.   
+
+이후 프로젝트 폴더로 이동해서 다음 라이브러리를 설치한다. 
+
+```npm
+npm install contentlayer next-contentlayer --force
+```
+
+아직 ContentLayer가 공식적으로 Next.js 14 버전을 지원하지 않지만, 주요 변경 사항이 없어서 사용하는데는 문제가 없었다. 
+`pakage.json` 파일에 **overrides 필드를 추가해서 의존성 문제를 해결해줬다.**   
+
+```json
+// pakage.json
+"overrides": {
+    "next-contentlayer": { "next": "$next"}
+}
+```
+
+### config 파일 설정
+`next.config.js` 파일을 다음과 같이 수정해준다. **파일 확장자가 mjs가 아니라 js이다.**
+```javascript
+// next.config.js
+const { withContentlayer } = require("next-contentlayer");
+
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+};
+
+module.exports = withContentlayer(nextConfig);
+```
+
+`tsconfig.json` 파일에 다음과 같은 코드를 추가해준다. 
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    // ...
+    "paths": {
+      // ...
+      "contentlayer/generated": ["./.contentlayer/generated"],
+    }
+  },
+  "include": [
+    // ...
+    ".contentlayer/generated",
+  ],
+}
+
+```
+
+루트 경로에 `contentlayer.config.ts` 파일을 생성하고 다음과 같이 작성해준다. 
+```javascript
+// contentlayer.config.ts
+import { defineDocumentType, makeSource } from 'contentlayer/source-files';
+
+export const Post = defineDocumentType(() => ({
+  name: 'Post',
+  contentType: 'mdx',
+  filePathPattern: `**/*.mdx`, 
+
+  fields: {
+    title: {
+      type: 'string',
+      required: true,
+    },
+    createdAt: {
+      type: 'date',
+      required: true,
+    },
+  },
+  computedFields: {
+    url: {
+      type: "string",
+      resolve: (post) => `/blog/${post._raw.flattenedPath}`,
+    },
+  },
+}));
+
+const contentSource = makeSource({
+  contentDirPath: 'posts', // MDX 파일 저장 경로
+  documentTypes: [Post],
+  /*
+  마크다운 플러그인 사용 시 추가  
+  mdx: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+  */
+});
+
+export default contentSource;
+```
+MDX 파일은 상단에 컨텐츠에 대한 정보를 담은 구조화된 데이터를 저장할 수 있는데, 
+ContentLayer는 이를 분석하여 코드에서 해당 데이터에 접근할 수 있는 수단을 제공한다.  
+
+`contentlayer.config.ts` 파일에서는 문서의 유형을 정의하고 **fields**를 통해 각 문서에 필요한 필드를 정의한다. 
+또한 **computedFields**를 사용하여 동적으로 계산된 값을 설정할 수도 있다. 
+
+### 테스트용 MDX 파일 생성 
+루트 경로에 `posts` 폴더를 만들고 안에 `test.mdx` 파일을 생성한다. 내용은 다음과 같다. 
+```markdown
+---
+title: 게시글 제목 
+createdAt: 2024-06-05
+---
+### 게시글 내용
+```
+
+### 게시글 리스트 페이지 구현 
+`app` 폴더 안의 `page.tsx` 파일을 다음과 같이 수정한다. 만약 `allPosts`를 불러올 수 없다면 개발 서버를 재시작한다. 
+```javascript
+// page.tsx
+import { allPosts } from "@/.contentlayer/generated";
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <main>
+      <h1 className="text-3xl font-bold">All Posts</h1>
+      {allPosts.map((post) => (
+        <Link key={post._id} href={post.url}>
+          <h2 className="text-xl">
+            {post.title}
+          </h2>
+        </Link>
+      ))}
+    </main>
+  );
+}
+```
+
+### 게시글 상세 페이지 구현
+`app/blog/[slug]/` 경로에 `page.tsx` 파일을 생성하고 다음과 같이 작성해준다. 
+**Next.js는 폴더 이름을 대괄호로 묶는 것으로 동적 라우팅을 지원한다.**
+```javascript
+// app/blog/[slug]/page.tsx
+import { allPosts } from "@/.contentlayer/generated";
+import { notFound } from "next/navigation";
+import { useMDXComponent } from "next-contentlayer/hooks";
+
+export default function Page({ params }: { params: { slug: string } }) {
+  const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
+  if (!post) notFound();
+
+  const MDXContent = useMDXComponent(post.body.code);
+
+  return (
+    <article>
+      <h2>{post.title}</h2>
+      <time>{post.createdAt}</time>
+      <MDXContent />
+    </article>
+  );
+}
+```
+
+### Vercel로 배포하기 
+이제 완성된 블로그를 vercel을 통해 배포해보겠다. 
+먼저 vercel에 로그인 한 뒤 **Add New-Project** 버튼을 눌러 아래 화면으로 이동한다.
+이후 깃허브 아이콘의 **Install** 버튼을 눌러서 깃허브와 연결해주고 배포할 저장소를 선택해준다. 
+
+![Install 버튼 클릭](https://i.postimg.cc/9MypP796/2024-06-10-8-02-08.png)
+![배포할 저장소 선택](https://i.postimg.cc/m20gJX5W/2024-06-10-8-07-25.png)
+
+**Import** 버튼을 누르고 **Build Command**에 `pakage.json`과 동일한 **Build** 명령어를 입력해준다.
+이제 **Deploy**를 누르고 기다리면 배포가 완료된다. 
+
+![Import 버튼 클릭](https://i.postimg.cc/X7YXSBL4/2024-06-10-8-11-29.png)
+![Build Command 입력 후 Deploy](https://i.postimg.cc/XqG5WZK2/2024-06-10-8-13-36.png)
+
+
+## 마치며...
+이것으로 Next.js와 ContentLayer를 이용하여 MDX 블로그를 개발하고 Vercel로 배포하는 과정을 알아봤다. 
+이후에는 스타일링과 기능 추가 등의 과정을 거쳐 자신만의 블로그를 완성하면 된다.
+
+### Reference
+<details>
+<summary>접기/펼치기</summary> 
+
+[How to Build a Static MDX Blog with Next.js and Contentlayer](https://www.kozhuhds.com/blog/how-to-build-a-static-mdx-blog-with-nextjs-and-contentlayer/)    
+[Next.js 블로그 개발기](https://maintainhoon.vercel.app/blog/post/blog_development_period)  
+[Next.js와 ContentLayer로 MDX 블로그 만들기](https://dis.qa/nsf)  
+[Next.js에서 contentlayer 사용하여 손쉽게 정적블로그 만들기](https://yiyb-blog.vercel.app/posts/nextjs-contentlayer-blog)
+</details>
