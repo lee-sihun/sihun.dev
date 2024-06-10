@@ -417,7 +417,12 @@ thead tr th:last-child {
   }
 }
 
-figure [data-rehype-pretty-code-figure]{
+figure [data-rehype-pretty-code-figure] {
   position: relative;
   z-index: 5; /* 배경보다 낮은 값을 설정 */
+}
+
+#cmdkbg {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
