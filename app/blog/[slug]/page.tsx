@@ -31,7 +31,7 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
       url: `https://sihun.dev/blog/${post._raw.flattenedPath}`,
       images: [
         {
-          url: post.thumbnail,
+          url: `/img/thumbnail/${post.thumbnail}`,
           width: 800,
           height: 600,
           alt: `${post.title} thumbnail`,
@@ -44,7 +44,7 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
       description: post.description,
       images: [
         {
-          url: post.thumbnail,
+          url: `/img/thumbnail/${post.thumbnail}`,
           alt: `${post.title} thumbnail`,
         },
       ],
@@ -78,7 +78,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXContent = useMDXComponent(post.body.code);
 
   return (
-    <article className="mx-auto px-6 max-w-3xl">
+    <article className="max-w-3xl px-6 mx-auto">
       <div className="mt-10 mb-8 text-center">
         <time
           dateTime={post.createdAt}
