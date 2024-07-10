@@ -17,7 +17,7 @@ export default function Comments() {
     scriptElem.async = true;
     scriptElem.crossOrigin = "anonymous";
 
-    scriptElem.setAttribute("data-repo", "lee-sihun/sihuns-blog");
+    scriptElem.setAttribute("data-repo", "lee-sihun/sihun.dev");
     scriptElem.setAttribute("data-repo-id", "R_kgDOL5rfLQ");
     scriptElem.setAttribute("data-category", "Comments");
     scriptElem.setAttribute("data-category-id", "DIC_kwDOL5rfLc4CfREZ");
