@@ -1,14 +1,5 @@
+import { Post } from "@/.contentlayer/generated";
 import { allPosts } from "@/.contentlayer/generated";
-
-interface Post {
-  title: string;
-  description: string;
-  category: string;
-  tags: string[];
-  thumbnail: string;
-  createdAt: string;
-  url: string;
-}
 
 function usePost() {
   return allPosts;
