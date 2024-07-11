@@ -3,10 +3,10 @@ import { allPosts } from "@/.contentlayer/generated";
 import PostCard from "@/components/PostCard";
 import Category from "@/components/Category";
 import { compareDesc } from "date-fns";
-import { useState } from "react";
+import { useCategoryStore } from "@/stores";
 
 export default function BlogContent() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const { selectedCategory, setSelectedCategory } = useCategoryStore();
   const posts = allPosts.sort((a, b) =>
     compareDesc(new Date(a.createdAt), new Date(b.createdAt))
   );
