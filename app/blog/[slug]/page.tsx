@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { Pre } from "@/components/Pre";
 import Comments from "@/components/Comments";
+import Tag from "@/components/Tag";
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
@@ -93,15 +94,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         <h3 className="mb-0 text-2xl md:text-[32px] font-bold text-black dark:text-white">
           {post.title}
         </h3>
-        {post.tags.map((tag, index) => (
-          <div
-            key={index}
-            className="mt-[15px] h-8 mr-2 bg-[#EDEDED] dark:bg-[#262626] rounded-[10px] w-auto inline-flex flex-wrap justify-center items-center"
-          >
-            <div className="font-normal text-base mx-2 text-[#404040] dark:text-[#B5B5B5]">
-              {tag}
-            </div>
-          </div>
+        {post.tags.map((tag) => (
+          <Tag key={tag}>{tag}</Tag>
         ))}
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
