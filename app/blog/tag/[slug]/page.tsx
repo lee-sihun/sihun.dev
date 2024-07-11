@@ -1,8 +1,15 @@
+"use client";
 import PostCard from "@/components/PostCard";
 import { filterPostsByTag } from "@/hooks/posts";
+import { useCategoryStore } from "@/stores";
+import { notFound } from "next/navigation";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const setSelectedCategory = useCategoryStore(
+    (state) => state.setSelectedCategory
+  );
   const filteredPosts = filterPostsByTag(params.slug);
+  if (filteredPosts.length === 0) notFound();
 
   return (
     <section className="flex justify-center flex-wrap mt-3">
@@ -12,10 +19,14 @@ export default function Page({ params }: { params: { slug: string } }) {
             #{params.slug} ({filteredPosts.length})
           </h2>
         </div>
-        <section className="px-6 max-w-[1068px] w-screen">
+        <section className="mt-[22px] px-6 max-w-[1068px] w-screen">
           <div className="grid grid-cols-1 gap-[40px] gap-y-14 md:grid-cols-2">
             {filteredPosts.map((post) => (
-              <PostCard key={post._id} post={post} />
+              <PostCard
+                key={post._id}
+                post={post}
+                onCategorySelect={setSelectedCategory}
+              />
             ))}
           </div>
         </section>
