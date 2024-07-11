@@ -17,6 +17,7 @@ npm run dev
 
 - **프레임워크**: Next.js 14 (App Router)
 - **언어**: TypeScript
+- **상태 관리**: Zustand
 - **스타일링**: Tailwind CSS
 - **콘텐츠 관리**: ContentLayer
 - **댓글 기능**: Giscus
