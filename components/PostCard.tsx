@@ -1,7 +1,9 @@
+"use client";
 import { Post } from "@/.contentlayer/generated";
 import Link from "next/link";
 import Image from "next/image";
 import Tag from "@/components/Tag";
+import { useRouter } from "next/navigation";
 
 interface PostCardProps {
   post: Post;
@@ -12,6 +14,8 @@ export default function PostCard({
   post,
   onCategorySelect,
 }: PostCardProps): React.ReactElement {
+  const router = useRouter();
+
   return (
     <article className="flex flex-col max-w-[490px] w-full mx-auto">
       <Link href={post.url}>
@@ -30,7 +34,10 @@ export default function PostCard({
         <p
           // hover:before:content-['>_']
           className="cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text"
-          onClick={() => onCategorySelect(post.category)}
+          onClick={() => {
+            onCategorySelect(post.category);
+            router.push("/blog");
+          }}
         >
           {post.category}
         </p>
