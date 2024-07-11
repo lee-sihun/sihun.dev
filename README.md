@@ -2,7 +2,8 @@
 
 프론트엔드 개발자 이시훈의 기술 블로그입니다. [구경하러 가기](https://sihun.dev/blog)
 
-![sihun.dev](https://i.postimg.cc/CxTxyj2S/2024-06-19-9-25-51.png)
+![sihun.dev](https://i.postimg.cc/Vvx4gMPG/2024-07-11-7-15-23.png)
+
 
 ## 🚀 실행 방법
 
