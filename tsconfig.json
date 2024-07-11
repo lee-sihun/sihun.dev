@@ -24,7 +24,8 @@
       "@/*": ["./*"],
       "contentlayer/generated": ["./.contentlayer/generated"],
       "@/components": ["./components"],
-      "@/hooks": ["./hooks"]
+      "@/hooks": ["./hooks"],
+      "@/stores": ["./stores"]
     }
   },
   "include": [
