@@ -50,6 +50,7 @@ export default function Nav() {
           const isActive = pathname.includes(location); //경로가 일치하는지 체크
           return (
             <Squircle
+              key={title}
               cornerRadius={6}
               cornerSmoothing={0.6}
               className={`flex items-center text-base ml-[14px] hover:bg-black/10 dark:hover:bg-white/10 py-1 px-2 leading-snug ${
@@ -58,9 +59,7 @@ export default function Nav() {
                   : "font-semibold text-[#4a4a4a] dark:text-[#B5B5B5]"
               }`}
             >
-              <Link href={location} key={title}>
-                {title}
-              </Link>
+              <Link href={location}>{title}</Link>
             </Squircle>
           );
         })}
