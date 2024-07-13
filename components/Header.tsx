@@ -5,6 +5,7 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import SearchSvg from "../public/svg/search.svg";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { Squircle } from "@/components/Squircle";
 
 const CommandMenu = dynamic(() => import("@/components/CommandMenu"));
 
@@ -15,16 +16,22 @@ export default function Header() {
       <div className="w-[1068px] h-[60px] flex justify-between items-center px-6">
         <Nav />
         <div className="flex items-center">
-          <button
-            className="group hidden cursor-text md:flex items-center w-[250px] h-[40px] bg-[#E5E5E5] dark:bg-[#262626] rounded-xl text-[#737373] dark:text-[#808080] text-left px-4 mr-[10px]"
+          <Squircle
+            cornerRadius={12}
+            cornerSmoothing={0.6}
+            className="group hidden cursor-text md:flex items-center w-[250px] h-[40px] bg-[#E5E5E5] dark:bg-[#262626] text-[#737373] dark:text-[#808080] text-left px-4 mr-[10px]"
             onClick={() => setOpen(true)}
           >
             <SearchSvg className="cursor-pointer w-[18px] h-[18px] mr-2" />
             <span className="flex-grow">Search...</span>
-            <span className="group-hover:text-black group-hover:dark:text-white flex items-center justify-center bg-[#FAFAFA] dark:bg-[#171717] rounded-[3px] w-[35px] h-[20px]">
+            <Squircle
+              cornerRadius={3}
+              cornerSmoothing={0.6}
+              className="group-hover:text-black group-hover:dark:text-white flex items-center justify-center bg-[#FAFAFA] dark:bg-[#171717] w-[35px] h-[20px]"
+            >
               ⌘K
-            </span>
-          </button>
+            </Squircle>
+          </Squircle>
           <ThemeSwitcher />
         </div>
         <button

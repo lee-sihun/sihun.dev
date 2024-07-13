@@ -3,6 +3,7 @@ import Link from "next/link";
 import LogoSvg from "../public/svg/saturn.svg";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Squircle } from "@/components/Squircle";
 
 const nav: { title: string; location: string }[] = [
   // { title: "Home", location: "/" },
@@ -48,22 +49,24 @@ export default function Nav() {
           const { title, location } = item;
           const isActive = pathname.includes(location); //경로가 일치하는지 체크
           return (
-            <Link
-              href={location}
-              key={title}
-              className={`flex items-center text-base ml-[14px] hover:bg-black/10 dark:hover:bg-white/10 rounded-md py-1 px-2 leading-snug ${
+            <Squircle
+              cornerRadius={6}
+              cornerSmoothing={0.6}
+              className={`flex items-center text-base ml-[14px] hover:bg-black/10 dark:hover:bg-white/10 py-1 px-2 leading-snug ${
                 isActive
                   ? "font-bold text-black dark:text-white"
                   : "font-semibold text-[#4a4a4a] dark:text-[#B5B5B5]"
               }`}
             >
-              {title}
-            </Link>
+              <Link href={location} key={title}>
+                {title}
+              </Link>
+            </Squircle>
           );
         })}
       </div>
       <div
-        className={`transition-colors duration-300 ease-in-out w-full h-screen absolute top-[60px] left-0 bg-[#fafafa] flex-col flex-nowrap px-6 dark:bg-[#171717] md:hidden ${
+        className={`z-10 transition-colors duration-300 ease-in-out w-full h-screen absolute top-[60px] left-0 bg-[#fafafa] flex-col flex-nowrap px-6 dark:bg-[#171717] md:hidden ${
           onToggle ? "" : "hidden"
         }`}
       >

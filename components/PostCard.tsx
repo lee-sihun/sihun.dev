@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Tag from "@/components/Tag";
 import { useRouter } from "next/navigation";
+import { Squircle } from "@/components/Squircle";
 
 interface PostCardProps {
   post: Post;
@@ -19,7 +20,11 @@ export default function PostCard({
   return (
     <article className="flex flex-col max-w-[490px] w-full mx-auto">
       <Link href={post.url}>
-        <figure className="overflow-hidden w-full rounded-[12px]">
+        <Squircle
+          cornerRadius={12}
+          cornerSmoothing={0.6}
+          className="overflow-hidden w-full rounded-[12px]"
+        >
           <Image
             src={"/img/thumbnail/" + post.thumbnail}
             width={490}
@@ -28,7 +33,7 @@ export default function PostCard({
             className="max-h-[245px] transition-transform duration-300 ease-in-out hover:scale-105"
             priority
           />
-        </figure>
+        </Squircle>
       </Link>
       <div>
         <p
