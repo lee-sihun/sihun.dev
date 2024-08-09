@@ -1,7 +1,7 @@
 "use client";
 import { Command } from "cmdk";
 import { useEffect, useState } from "react";
-import { allPosts } from "@/.contentlayer/generated";
+import { allPosts, Post } from "@/.contentlayer/generated";
 import { compareDesc } from "date-fns";
 import { useRouter } from "next/navigation";
 import MailSvg from "../public/svg/mail.svg";
@@ -30,7 +30,7 @@ export default function CommandMenu({ open, setOpen }: CommandMenuProps) {
   const posts = allPosts.sort((a, b) =>
     compareDesc(new Date(a.createdAt), new Date(b.createdAt))
   );
-  const tagCounts = getTagCounts(posts);
+  const tagCounts = getTagCounts();
 
   // Toggle the menu when ⌘K is pressed
   useEffect(() => {
@@ -180,7 +180,7 @@ export default function CommandMenu({ open, setOpen }: CommandMenuProps) {
             <Command.Group
               heading={`Posts tagged with "${page?.split(":")[1]}"`}
             >
-              {filterPostsByTag(page?.split(":")[1]).map((post) => (
+              {filterPostsByTag(page?.split(":")[1] || "").map((post) => (
                 <Command.Item key={post.url} onSelect={() => routing(post.url)}>
                   <BlogSvg />
                   {post.title}
