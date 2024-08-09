@@ -34,7 +34,6 @@ export default function BlogContent() {
               <PostCard
                 key={post._id}
                 post={post}
-                onCategorySelect={setSelectedCategory}
               />
             ))}
           </div>
