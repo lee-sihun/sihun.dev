@@ -1,13 +1,14 @@
-"use client";
 import PostCard from "@/components/PostCard";
 import { filterPostsByTag } from "@/hooks/posts";
-import { useCategoryStore } from "@/stores";
 import { notFound } from "next/navigation";
+import { allPosts } from "@/.contentlayer/generated";
+
+export async function generateStaticParams() {
+  const tags = new Set(allPosts.flatMap((post) => post.tags));
+  return Array.from(tags).map((tag) => ({ slug: tag }));
+}
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const setSelectedCategory = useCategoryStore(
-    (state) => state.setSelectedCategory
-  );
   const filteredPosts = filterPostsByTag(params.slug);
   if (filteredPosts.length === 0) notFound();
 
@@ -25,7 +26,6 @@ export default function Page({ params }: { params: { slug: string } }) {
               <PostCard
                 key={post._id}
                 post={post}
-                onCategorySelect={setSelectedCategory}
               />
             ))}
           </div>

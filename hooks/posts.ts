@@ -1,29 +1,27 @@
 import { Post } from "@/.contentlayer/generated";
 import { allPosts } from "@/.contentlayer/generated";
 
-function usePost() {
-  return allPosts;
-}
+const posts = allPosts;
+const taggedPosts: Record<string, Post[]> = {};
 
-function getTagCounts(posts: Post[]): Record<string, number> {
-  const tagCounts: Record<string, number> = {};
-
-  posts.forEach(post => {
-    post.tags.forEach(tag => {
-      if (tag in tagCounts) {
-        tagCounts[tag] += 1;
-      } else {
-        tagCounts[tag] = 1;
-      }
-    });
+posts.forEach(post => {
+  post.tags.forEach(tag => {
+    if (tag in taggedPosts) {
+      taggedPosts[tag].push(post);
+    } else {
+      taggedPosts[tag] = [post];
+    }
   });
+});
 
-  return tagCounts;
+function getTagCounts(): Record<string, number> {
+  return Object.fromEntries(
+    Object.entries(taggedPosts).map(([tag, posts]) => [tag, posts.length])
+  );
 }
 
 function filterPostsByTag(tag: string): Post[] {
-  const posts = usePost();
-  return posts.filter(post => post.tags.includes(tag));
+  return taggedPosts[tag] || [];
 }
 
-export { usePost, getTagCounts, filterPostsByTag };
+export { getTagCounts, filterPostsByTag };
