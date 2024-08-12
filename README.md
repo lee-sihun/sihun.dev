@@ -26,6 +26,7 @@ npm run dev
 
 ## ✨ 주요 기능
 
+- SSG(Static Site Generation) 적용 
 - 반응형 디자인 (Tailwind CSS)
 - 다크 모드 지원 (next/themes)
 - 댓글 기능 (Giscus)
