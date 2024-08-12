@@ -55,6 +55,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning={true}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "시훈의 개발노트",
+              url: "https://sihun.dev",
+            }),
+          }}
+        />
+      </head>
       <body className={pretendard.className}>
         <Providers>
           <Header />
