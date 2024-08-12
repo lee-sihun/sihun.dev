@@ -30,4 +30,5 @@ npm run dev
 - 다크 모드 지원 (next/themes)
 - 댓글 기능 (Giscus)
 - 검색 엔진 최적화 (SEO)
-
+- 카테고리 & 태그 분류
+- 게시글 검색 
