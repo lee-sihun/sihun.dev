@@ -1,0 +1,143 @@
+---
+title: Next.js 15 + SVGR 세팅 방법 (feat.TurboPack)
+description: Next.js 15에 SVGR을 적용하는 방법을 알아보자.
+category: Develop
+thumbnail: svgr.png
+tags:
+  - Next
+  - SVGR
+  - TurboPack
+createdAt: 2024-02-01
+---
+
+새로운 프로젝트에서 **@svgr/webpack** 라이브러리를 사용하려는데,
+ **Next.js 15**부터는 [TurboPack](https://turbo.build/pack/docs)이 기본 번들러로 채택되어 
+ 프로젝트 세팅 방법에 변화가 생겼다. 먼저 TurboPack이 무엇인지부터 간단히 알아보고 세팅 방법을 알아보자.
+
+## TurboPack 넌 뭐니?
+TurboPack은 Vercel에서 개발한 고성능 웹 애플리케이션 번들러로, Rust 언어로 구현되었다. 
+webpack과 비교하여 **높은 성능과 메모리 안정성**을 보장하고, **빠른 빌드 속도**를 제공한다.
+
+하지만 현재는 `next dev`만 지원하고 `next build`는 지원하지 않는다. 그래서 
+TurboPack과 webpack 설정을 각각 해줘야 쾌적한 개발 환경과 안정적인 빌드 효과를 모두 얻을 수 있다. 
+**개발 환경에서는 TurboPack을 사용하고, 배포 환경에서는 webpack을 사용**하는 것이다.
+~~나처럼 TurboPack 설정만 하고 배포할때 오류 뜬다고 당황하지 말자~~
+
+## 세팅 과정 
+### 사용한 라이브러리 버전 
+`Next.js` - 15.1.6  
+`@svgr/webpack` - 8.1.0
+
+### 개발 환경 설정 
+먼저 Next.js 최신 버전과 SVGR 라이브러리를 설치한다. 
+```bash
+npx create-next-app@latest
+npm install --save-dev @svgr/webpack
+```
+중간에 터보팩을 사용할지 물어보는데 **Yes**를 선택하면 된다.
+```bash
+? Would you like to use Turbopack for `next dev`? > No / Yes
+```
+
+### pakage.json 설정
+Next.js 15 버전부터는 `next dev` 명령어를 사용할 때 TurboPack이 기본으로 설정되어 있다.
+```json
+{
+  ...
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  ...
+}
+```
+
+### svgr.d.ts 설정
+`typescript`를 사용하지 않는다면 이 과정은 생략해도 된다. 
+프로젝트 루트 경로에 `svgr.d.ts` 파일을 생성하고 아래 코드를 추가한다.
+```typescript
+declare module '*.svg' {
+  import React from 'react';
+  const SVG: React.VFC<React.SVGProps<SVGSVGElement>>;
+  export default SVG;
+}
+```
+이후에 `tsconfig.json` 파일에 `svgr.d.ts` 파일을 추가해준다. **이때 `svgr.d.ts`가 `include` 배열의 첫번째 요소여야 한다**.
+```json
+{
+  ...
+  "include": ["svgr.d.ts", "next-env.d.ts", "src/**/*.d.ts"]
+}
+``` 
+
+### next.config.ts 설정
+`next.config.ts`을 다음과 같이 설정해준다.
+```typescript
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  // TurboPack 설정
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
+  // webpack 설정
+  webpack: (config) => {
+    // @ts-expect-error 타입 에러 무시
+    const fileLoaderRule = config.module.rules.find((rule) =>
+      rule.test?.test?.('.svg')
+    );
+
+    config.module.rules.push(
+      {
+        ...fileLoaderRule,
+        test: /\.svg$/i,
+        resourceQuery: /url/, 
+      },
+      {
+        test: /\.svg$/i,
+        issuer: fileLoaderRule.issuer,
+        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] },
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              typescript: true,
+              ext: 'tsx',
+            },
+          },
+        ],
+      }
+    );
+    fileLoaderRule.exclude = /\.svg$/i;
+    return config;
+  },
+};
+
+export default nextConfig;
+```
+
+## 마치며... 
+이것으로 `Next.js 15`에서 `@svgr/webpack`을 설정하는 방법을 알아봤다. TurboPack과 webpack 설정을 모두 해줘야 하는 번거로움이 있지만, 
+쾌적한 개발 환경을 위해서 조금만 노력해보자.
+
+### Reference
+<details>
+<summary>접기/펼치기</summary> 
+
+[Next.js - SVGR](https://react-svgr.com/docs/next/)    
+[Why Turbopack?](https://turbo.build/pack/docs/why-turbopack)
+[Turbopack Dev is Now Stable](https://nextjs.org/blog/turbopack-for-development-stable?utm_source=chatgpt.com)    
+[How to import svg icons in Nextjs 15](https://stackoverflow.com/questions/79329145/how-to-import-svg-icons-in-nextjs-15)
+[Turbopack 웹 애플리케이션 성능을 높이는 차세대 번들러](https://dev.drawyourmind.com/posts/introduction_to_turbopack/?utm_source=chatgpt.com)
+[next.config.js: turbo](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbo#examples)
+</details>
+
