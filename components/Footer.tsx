@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="mt-5 min-h-[60px] flex text-sm container mx-auto text-[#262626] dark:text-[#A3A3A3]">
       <div className="container mx-auto text-center flex flex-col justify-center">
         <span className="block">
-          Copyright © 2024{" "}
+          Copyright © 2025{" "}
           <Link className="underline" href="https://github.com/lee-sihun">
             lee-sihun
           </Link>{" "}
