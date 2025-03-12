@@ -9,6 +9,7 @@ const nav: { title: string; location: string }[] = [
   // { title: "Home", location: "/" },
   { title: "Blog", location: "/blog" },
   // { title: "포트폴리오", location: "/portfolio" },
+  { title: "Project", location: "/project" },
   { title: "About", location: "/about" },
   { title: "GuestBook", location: "/guestbook" },
 ];
