@@ -37,7 +37,7 @@ export default function PostCard({ post }: PostCardProps): React.ReactElement {
       </Link>
       <div>
         <p
-          className="cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text hover:before:content-['>_'] [background-clip:text] [-webkit-background-clip:text]"
+          className="cursor-pointer font-bold text-[15px] mt-3 bg-gradient-to-r from-[#832374] to-[#E93ECE] dark:from-blue-500 dark:to-green-500 inline-block text-transparent bg-clip-text hover:before:content-['>_'] [-webkit-background-clip:text]"
           onClick={() => {
             setSelectedCategory(post.category);
             router.push("/blog");
