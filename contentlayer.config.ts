@@ -7,8 +7,7 @@ import rehypeFigure from 'rehype-figure';
 export const Post = defineDocumentType(() => ({
   name: 'Post',
   contentType: 'mdx',
-  filePathPattern: `**/*.mdx`, // mdx 파일경로 패턴
-
+  filePathPattern: `posts/**/*.mdx`, 
   fields: {
     title: {
       type: 'string',
@@ -39,7 +38,55 @@ export const Post = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (post) => `/blog/${post._raw.flattenedPath}`,
+      resolve: (post) => `/blog/${post._raw.flattenedPath.replace(/^posts\//, '')}`,
+    },
+  },
+}));
+
+export const Project = defineDocumentType(() => ({
+  name: 'Project',
+  contentType: 'mdx',
+  filePathPattern: `projects/**/*.mdx`,
+  fields: {
+    title: {
+      type: 'string',
+      required: true,
+    },
+    description: {
+      type: 'string',
+      required: true,
+    },
+    thumbnail: {
+      type: 'string',
+      required: true,
+    },
+    techStack: {
+      type: 'list',
+      of: { type: 'string' },
+      required: true,
+    },
+    demoUrl: {
+      type: 'string',
+      required: false,
+    },
+    githubUrl: {
+      type: 'string',
+      required: false,
+    },
+    createdAt: {
+      type: 'date',
+      required: true,
+    },
+    featured: {
+      type: 'boolean',
+      default: false,
+      required: false,
+    }
+  },
+  computedFields: {
+    url: {
+      type: "string",
+      resolve: (project) => `/project/${project._raw.flattenedPath.replace(/^projects\//, '')}`,
     },
   },
 }));
@@ -52,9 +99,8 @@ const options = {
 };
 
 const contentSource = makeSource({
-  // 마크다운 파일이 저장되어 있는 루트 폴더
-  contentDirPath: 'posts',
-  documentTypes: [Post],
+  contentDirPath: 'contents',
+  documentTypes: [Post, Project],
   mdx: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [

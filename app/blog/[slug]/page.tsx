@@ -15,12 +15,13 @@ const mdxComponents: MDXComponents = {
 
 export const generateStaticParams = async () => {
   return allPosts.map((post) => ({
-    slug: post._raw.flattenedPath,
+    slug: post._raw.flattenedPath.replace(/^posts\//, ''),
   }));
 };
 
 export const generateMetadata = ({ params }: { params: { slug: string } }) => {
-  const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
+  const post = allPosts.find((post) => post._raw.flattenedPath === `posts/${params.slug}`);
+  
   if (!post) notFound();
 
   return {
@@ -29,7 +30,7 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
     openGraph: {
       title: post.title,
       description: post.description,
-      url: `https://sihun.dev/blog/${post._raw.flattenedPath}`,
+      url: `https://sihun.dev/blog/${params.slug}`,
       images: [
         {
           url: `/img/thumbnail/${post.thumbnail}`,
@@ -53,10 +54,6 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   };
 };
 
-/*
-prose-img:w-full
-prose-blockquote:not-italic
- */
 const style = `
 prose-img:rounded-md
 before:prose-p:content-none 
@@ -73,9 +70,9 @@ hover:prose-a:underline
 `;
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
+  const post = allPosts.find((post) => post._raw.flattenedPath === `posts/${params.slug}`);
+  
   if (!post) notFound();
-
   const MDXContent = useMDXComponent(post.body.code);
 
   return (
