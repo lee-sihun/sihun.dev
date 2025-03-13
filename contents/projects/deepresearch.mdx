@@ -1,0 +1,30 @@
+---
+title: "deep-research"
+description: "📝 LLM 기반 웹 심층 검색"
+thumbnail: "deepresearch.png"
+techStack: ["Node.js", "LangChain", "LLM", "RAG"]
+githubUrl: "https://github.com/lee-sihun/deep-research"
+createdAt: 2025-03-01
+featured: false
+---
+개발 기간: 2024.02 ~ 2025.03  
+팀 구성: 개인 프로젝트  
+[개발과정 보러가기](https://gall.dcinside.com/mgallery/board/view/?id=thesingularity&no=665052)
+
+### 📝 Deep Research
+
+이 프로젝트는 OpenAI와 Google의 Deep Research, xAI의 Deep Search와 같은 LLM을 활용한 심층 검색 기능을 구현하는 것을 목표로 합니다. 사용자 질문에 대해 웹을 탐색하고, 관련 정보를 수집하여 답변을 제공합니다.
+
+### 동작 로직
+
+1. **사용자 질문 의도 분석**: 사용자의 질문을 분석하여 의도를 파악하고, 검색 쿼리를 생성합니다.
+2. **검색 수행 및 자료 수집**: 생성된 쿼리로 웹 검색을 수행하고, 자료를 수집합니다.
+3. **답변 생성 및 평가**: 수집된 자료에 기반하여 답변을 생성하고, 답변이 사용자 질문의 의도를 충족 시키는지 평가합니다. 생성된 답변이 평가 기준을 통과하면 최종 결과로 제공하고, 그렇지 않으면 검색 쿼리를 개선하여 2단계로 돌아갑니다. 이 과정은 최대 시도 횟수에 도달할 때까지 반복되며 답변을 개선합니다.
+
+### 시연 영상 
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <video controls width="100%" style={{ maxWidth: '800px', marginTop: '0px' }}>
+    <source src="https://dcm1.dcinside.co.kr/viewmovie.php?code=02647cd8475dd51ba03960b8abc3aefd2591fdb7f54d&key=64a18c7671e8c3adb25df6693edea1eeaf23c5cd7f3ebd0d12edd648b72ed0cddf84dae7ef6d802d8632c12d413183c1d1138612162333ee656f0bde2d948e6a0ff9afe1abe39fa3&r=92&ss=6&type=mp4" type="video/mp4" />
+    브라우저가 비디오 태그를 지원하지 않습니다.
+  </video>
+</div>
