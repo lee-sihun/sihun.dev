@@ -15,12 +15,12 @@ export default function ProjectContent() {
   return (
     <section className="flex justify-center flex-wrap mt-3">
       <div className="max-w-[1068px]">
-        <div className="max-w-[1068px] w-screen px-6 mb-8">
+        {/* <div className="max-w-[1068px] w-screen px-6 mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mt-[8px]">Projects</h1>
           <p className="text-[#525252] dark:text-[#A3A3A3] mt-2">
             Portfolio 
           </p>
-        </div>
+        </div> */}
 
         <div className="max-w-[1068px] w-screen px-6">
           <h2 className="text-2xl md:text-[30px] font-bold mt-2 mb-2">
