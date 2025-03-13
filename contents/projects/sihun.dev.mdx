@@ -1,0 +1,46 @@
+---
+title: "sihun.dev"
+description: "💫 시훈의 개발노트"
+thumbnail: "sihundev.png"
+techStack: ["Next.js", "TypeScript", "Contentlayer", "Zustand", "Tailwind CSS", "Vercel"]
+demoUrl: "https://sihun.dev"
+githubUrl: "https://github.com/lee-sihun/sihun.dev"
+createdAt: 2024-09-01
+featured: true
+---
+개발 기간: 2024.05 ~ 2024.09  
+팀 구성: 개인 프로젝트
+
+### Description
+
+ 다른 사람들과 공유하고 싶은 내용을 기록하는 MDX 기반 정적 블로그입니다. [(개발 과정)](https://sihun.dev/blog/nextjs_mdx_blog)
+
+### Stacks
+
+- **Next.js**: 외부 유입이 중요하고 정적 컨텐츠를 다루는 블로그의 특성을 고려해서 **SEO 최적화와 SSG 렌더링을 위해 사용**했습니다.
+- **Contentlayer:**  MDX 기반 블로그 게시글을 효율적으로 관리하고 타입 안정성을 보장하기 위해 사용했습니다. 간편한 파싱이 가능하고 빌드 시점에 컨텐츠 객체를 자동으로 생성해서 SSG 렌더링이 가능합니다.
+- **TypeScript, Zustand, Tailwind CSS, Vercel**
+
+ 이 밖에도 부드러운 전환 효과를 위해 **Framer Motion**, 다크 모드 지원을 위해 next-themes, 댓글과 방명록 기능을 위해 **Giscus** 등의 라이브러리를 사용했습니다. 
+
+### Features
+
+- 반응형 웹 디자인, 다크모드 지원
+- Next.js를 활용한 SSG(Static Site Generation)
+- SEO 최적화
+    - sitemap, robot.txt, 시맨틱 태그 사용
+    - 구글 서치 콘솔, 네이버 서치 어드바이저 등록
+- 게시글 카테고리 & 태그 분류 및 필터링
+- 코드 블럭 복사 기능 [(Next.js MDX 코드블럭에 복사 버튼을 추가해보자)](https://sihun.dev/blog/nextjs_codeblock_copybutton)
+
+### Screenshots
+
+*사진은 클릭하면 확대해서 볼 수 있습니다*
+
+![메인 페이지](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2F12bfd9dc-72b5-43bf-bcbc-e19458905642%2FCapture-2025-02-18-191222.png/size/w=660?exp=1741919050&sig=cjaWC7TcTUdH6rZUABmRn9N1ohCYmGPa1KD3ewmAfXI)
+
+![게시글 상세 페이지](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2F711e8cad-e7ff-4d33-9b70-a007d9a89b22%2FCapture-2025-02-18-191253.png/size/w=660?exp=1741919079&sig=fZypRcLec57mxtez13_r8XndE___Iq1lQPPJpIJabLw)
+
+![다크 / 라이트 모드 전환 ](https://file.notion.so/f/f/5985ce4c-2bd6-4dd3-949c-0e2593099a0e/bc44221f-32b7-47d1-b1cd-7964fe66f988/Kapture_2025-02-23_at_11.27.13.gif?table=block&id=1a36a452-ce90-8050-9e75-c10e8df226d9&spaceId=5985ce4c-2bd6-4dd3-949c-0e2593099a0e&expirationTimestamp=1741860000000&signature=xlR2UXiN2yzjNzc6u06qt9e7d9k-HLmMRY9VlL4VppQ)
+
+![반응형 디자인 ](https://file.notion.so/f/f/5985ce4c-2bd6-4dd3-949c-0e2593099a0e/73eed6b8-975b-4ba5-b1c1-68edcab3f907/Kapture_2025-02-23_at_16.37.14.gif?table=block&id=1a36a452-ce90-80b6-825b-e04fe2c38831&spaceId=5985ce4c-2bd6-4dd3-949c-0e2593099a0e&expirationTimestamp=1741860000000&signature=lokTcoz1dfVJONh4GYArHPjkzWgpdPO4lUK02iQS8v0)
