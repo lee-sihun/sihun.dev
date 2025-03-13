@@ -1,0 +1,130 @@
+---
+title: "Deep Eye"
+description: "👀 DeepEye!"
+thumbnail: "deepeye.png"
+techStack: ["Next.js", "TypeScript", "Zustand", "React Query", "Tailwind CSS", "Supabase", "Github Actions", "Vercel"]
+demoUrl: "https://deepeye.pro/"
+githubUrl: "https://github.com/lee-sihun/stock-sentiment"
+createdAt: 2025-02-01
+featured: true
+---
+
+### Description
+
+ 이 프로젝트는 [Can ChatGPT Forecast Stock Price Movements? Return Predictability and Large Language Models (Lopez-Lira & Tang, 2023)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4412788) 논문에서 영감을 받아 시작된 프로젝트입니다. 해당 연구는 LLM이 주식 시장의 움직임을 예측하는데 유의미한 성과를 보여준다는 것을 입증했습니다. DeepEye는 이를 바탕으로 주요 기업들의 실시간 주가 정보와 함께, LLM을 활용한 뉴스 기사 감정 분석 결과를 제공하여 투자자들이 시장 동향을 파악할 수 있도록 돕는 서비스입니다. 
+
+ 매일 오후 10시마다 Github Actions를 통한 Cron 작업이 실행되어 전세계 시가총액 상위 30위 기업의 정보를 저장하고, 각 기업에 대한 최신 뉴스기사를 10개씩 스크래핑 합니다. 이후 각 뉴스 기사들의 헤드라인을 LLM으로 감정 분석을 진행하고 긍정(1), 중립(0), 부정(-1) 평가에 따라 분류하여 DB에 저장합니다. 
+
+ 프론트엔드에서는 DB에 저장되어 있는 시가총액 상위 30위 기업의 정보를 바탕으로 각 기업의 주가, 시가총액, 거래대금을 Yahoo Finance API를 통해 실시간으로 불러와 DB에 저장 된 감정 분석 결과와 함께 제공합니다.
+
+ ### Stacks
+
+프로젝트의 전체적인 기술 스택을 선정할때 빠른 개발 속도와 비용을 최소한으로 줄이는 것을 목표로 삼았습니다. 
+
+- **Next.js**: 풀스택 개발과 생산성 향상을 위해 사용했습니다. App Router의 폴더 기반 라우팅으로 페이지를 구성했고, 서버 컴포넌트를 활용해서 초기 로딩 속도를 최적화했습니다. SEO 최적화를 위해 정적/동적 메타 데이터를 설정하고, Image 컴포넌트로 이미지를 최적화했습니다. 별도의 백엔드 서버 구축 없이 Route Handlers의 서버리스 함수로 API를 구현하여 개발 시간과 비용을 크게 절약할 수 있었습니다.
+- **TypeScript**: 안정성 있는 코드 작성과 그로 인한 생산성 향상을 위해 사용했습니다. Interface로 컴포넌트 Props의 타입 안정성을 보장하고, Generic을 사용하여 재사용이 가능한 커스텀 훅을 구현했습니다. 덕분에 런타임 에러를 사전에 방지하고 코드의 가독성과 유지 보수성을 높일 수 있었습니다.
+- **Zustand**: 간편한 전역 상태 관리를 위해 사용했습니다. 즐겨찾기한 종목들의 필터링 상태를 관리하여 사용자가 상세 페이지를 탐색해도 이전 상태가 유지되도록 하여 일관된 사용자 경험을 구현했습니다. persist 미들웨어를 활용해 비로그인 상태의 즐겨찾기 목록을 LocalStorage에 저장하고, React Query와 함께 사용한 커스텀 훅에서는 로그인 상태에 따른 로직을 내부적으로 처리하도록 구현하여 컴포넌트의 복잡도를 낮췄습니다.
+- **React Query**: 간편한 서버 상태 관리와 데이터 동기화를 효율적으로 처리하기 위해 사용했습니다. 캐싱을 통해 API 호출을 최소화 하고 데이터 로딩 상태에는 Skeleton UI를 적용했습니다. 메인페이지의 주식 종목 리스트에는 useInfiniteQuery를 사용한 무한 스크롤을 구현하였고, 로그인 상태에서의 즐겨찾기 기능에는 useMutation으로 ****낙관적 업데이트를 구현하여 서버 응답 전 UI를 즉시 업데이트하여 사용자 경험을 개선했습니다. 오류 발생 시에는 자동 롤백처리를 하여 안정성을 확보했습니다.
+- **Axios**: 전역 인스턴스를 설정해서 중복 코드를 줄이고, 인터셉터를 통해 요청/응답 처리를 중앙화 했습니다. 인터셉터의 경우 현재 프로젝트에는 기본 구조만 구현했지만 향후 기능 확장과 유지보수를 고려해 설정했습니다. 이로 인해 API 요청의 일관성과 재사용성을 높일 수 있었습니다.
+- **Tailwind CSS**: 빠르고 간편한 스타일링을 위해 사용했습니다. 반응형 레이아웃을 구현했습니다.
+- **Supabase**: 무료로 사용이 가능하고 초기 세팅이 간편하여 사용했습니다. Supabase와 Firebase 중 어떤걸 사용하는게 좋을지 고민하였는데, 향후 프로젝트의 유지 보수나 기능 확장을 위해서는 관계형 데이터 베이스를 사용하는게 유리하다고 판단하여 선택했습니다.
+- **Github Actions**: 프로젝트 초기에는 Next.js로 Vercel에서 제공하는 Cron Jobs 기능을 사용하여 뉴스 기사 수집과 감정 분석 기능 자동화를 구현하였는데, 분석하는 종목의 숫자가 늘어나자 Hobby 플랜에서 제공하는 최대 함수 실행 시간을 초과하여 Cron 작업이 중간에 끊기는 문제가 발생했습니다. 그래서 무료로 더 많은 작업을 수행할 수 있는 Github Actions의 workflows로 Cron 작업을 수행하게 구현했습니다.
+- **Vercel**: Next.js와의 호환성이 좋고, 쉽고 간편하게 Github 저장소와 CI/CD 구축이 가능하며, 무료라서 사용했습니다. 서비스 배포와 도메인 설정을 해줬습니다.
+
+ 이 밖에도 감정 분석 결과의 그래프를 그리기 위해 **recharts**, 구글 로그인과 향후 확장성을 고려하여 **NextAuth**, 웹파싱을 위해 **Cheerio**, 코드의 일관성을 보장하기 위해 **ESLint** 등의 라이브러리를 사용했습니다. 
+
+### Features
+
+- 반응형 웹 디자인, Skeleton UI로 로딩 처리
+- Recharts를 활용한 데이터 그래프 시각화
+- 구글 로그인 구현
+- React Query를 활용한 효율적인 API 호출
+    - 무한 스크롤로 대량 데이터 처리
+    - 실시간 주가 데이터 자동 갱신 (5분마다 갱신)
+    - 캐싱으로 불필요한 API 호출 감소
+- 즐겨찾기 기능
+    - 비로그인 시 LocalStorage, 로그인 시 DB에 저장
+    - 낙관적 업데이트로 즉각적인 UI 피드백 제공
+- 커스텀 훅으로 비지니스 로직을 추상화하여 컴포넌트와 분리
+
+### Screenshots
+
+*사진은 클릭하면 확대해서 볼 수 있습니다*
+
+![메인 페이지](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2Ff97d9824-46d6-4052-a52e-f3301630c479%2FImage_from_GitHub_2872x1796.png/size/w=770?exp=1741920913&sig=XaXahFdeP5zYT9HOjW3PnT_ZuV9DB_z4Av5yDp4Glzs)
+
+![종목 상세 페이지](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2Fc7075ef3-7b78-4a03-9bb9-b21a47a1afa7%2F68747470733a2f2f692e6962622e636f2f5137305268386b422f436170747572652d323032352d30322d30392d3230353030382e706e67.png/size/w=2000?exp=1741920926&sig=9FnJRCUgJsF7imxFSkwboHVxtMyRUils6wrHcktjBSg)
+
+![Skeleton UI & 무한 스크롤 ](https://file.notion.so/f/f/5985ce4c-2bd6-4dd3-949c-0e2593099a0e/1fce4735-c53a-4eb5-ad1c-9a127be4a3f8/Kapture_2025-02-23_at_16.42.22.gif?table=block&id=1a36a452-ce90-80dc-b0d3-ee3f557ca11d&spaceId=5985ce4c-2bd6-4dd3-949c-0e2593099a0e&expirationTimestamp=1741860000000&signature=xlKmofOeLr37U5XdN51SLmLpLo47Kka0C4qsKuZoJEg)
+
+![반응형 디자인](https://file.notion.so/f/f/5985ce4c-2bd6-4dd3-949c-0e2593099a0e/5986ab12-dcba-4dc0-8be4-682e7aade2da/Kapture_2025-02-23_at_16.50.59.gif?table=block&id=1a36a452-ce90-80c6-920d-f038795dff92&spaceId=5985ce4c-2bd6-4dd3-949c-0e2593099a0e&expirationTimestamp=1741860000000&signature=LfTPD3WaI_RYog2NFPyoXwasVmuATRAfKxFP2gWjY3A)
+
+
+### Troubleshooting
+
+1. **SVGR 라이브러리 도입 후 배포 환경에서 오류 발생** 
+
+ 프로젝트에서 SVG 파일을 편리하게 사용하기 위해 SVGR 라이브러리를 도입했습니다. 그런데 **개발 환경에서는 정상적으로 동작하는데, 배포 된 Vercel 서버에서는 오류가 발생하는 문제**가 생겼습니다. 
+
+```bash
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object.
+...
+Error: Command "next build" exited with 1
+```
+
+ 그래서 Vercel에서 Build Logs를 살펴보니 프로젝트의 **빌드 과정에서 문제**가 생겼다는 점을 알 수 있었습니다. 로컬 환경에서 “next build” 명령어로 빌드를 진행해서 테스트해보니 동일한 오류가 발생하는 걸 확인하고, 프로젝트의 **개발 환경과 빌드 환경에 어떤 차이가 존재하는지 찾아봤습니다.** 
+
+```json
+// pakage.json
+{
+	...
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+	...
+}
+```
+
+ 프로젝트의 package.json과 Next.js의 공식 문서[(API Reference: Turbopack | Next.js)](https://nextjs.org/docs/app/api-reference/turbopack)를 참고한 결과 문제의 원인을 짐작할 수 있었습니다. **Next.js 15부터 더 빠른 빌드 환경을 제공하기 위해 기본 번들러로 채택 된 Turbopack이 현재 “next dev”만 지원하고 “next build”를 지원하지 않는다는** 점이였습니다. 
+
+ 즉, 현재 프로젝트는 “next dev”를 통한 개발 환경은 Turbopack으로 빌드되고, “next build”를 통한 빌드 환경은 webpack으로 빌드되고 있었습니다. 결국 **next.config.ts 파일에서 SVGR 라이브러리를 로더에 추가할때 Turbopack에만 설정해준게 문제의 원인**이라는 것을 알아냈습니다. 이후에 webpack 로더 설정을 추가하고 정상적으로 빌드되는 것을 확인할 수 있었습니다.[(해당 세팅 방법을 정리해서 작성한 게시글)](https://sihun.dev/blog/nextjs15_svgr_setting)
+
+ 2. **React Query 캐시 전략 최적화로 API 중복 요청 제거**
+
+ 메인 페이지와 상세 페이지에서 Yahoo Finance API를 통해 주식 종목의 주가 정보를 제공할때, **이미 불러온 데이터를 중복으로 요청해서 상세 페이지 진입 시 불필요한 로딩이 발생하는 문제**가 있었습니다.
+
+![메인 페이지의 리스트에서 제공하는 현재 주가](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2F32d41eea-e88c-401c-9210-dd4c8606d90f%2F%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2025-02-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_8.38.49.png/size/w=2000?exp=1741921014&sig=Qelfj_XviWwFkISR8f7QrkDPTXVrkBf6--ZaHZKtMM4)
+
+![종목 상세 페이지에서 제공하는 현재 주가 ](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2F4984bb5a-a5bf-4beb-8716-c8aba9158cfd%2F%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2025-02-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_8.39.04.png/size/w=480?exp=1741921024&sig=bfuKmD5XYd0pxzcM8Uk2ELx0qiE37XF459cJ4gDYLgc)
+
+ 문제는 React Query가 queryKey를 기준으로 캐싱을 수행하는데, 메인 페이지의 useInfiniteQuery와 상세 페이지의 useQuery가 **서로 다른 queryKey를 사용하여 캐시가 공유되지 않는다는 점**이였습니다**.** 상세 페이지는 메인 페이지의 리스트뿐만이 아니라 헤더를 통한 검색이나 URL로 직접적인 접근도 가능해야하기 때문에 독립적인 데이터 호출이 필요해서 발생한 상황이였습니다. 
+
+ 문제를 해결하기 위해 React Query의 공식 문서[(QueryClient.setQueryData)](https://tanstack.com/query/v5/docs/reference/QueryClient/#queryclientsetquerydata)를 참고한 결과 QueryClient의 ”setQueryData” 메서드를 활용하면 메인 페이지에서 받아온 데이터를 각 종목별 queryKey의 캐시로 즉시 업데이트 할 수 있다는 것을 알았습니다. 
+
+```tsx
+export function useInfiniteStocks() {
+  const queryClient = useQueryClient();
+
+  return useInfiniteQuery({
+    queryKey: ['infiniteStocks'],
+    queryFn: async ({ pageParam = 0 }) => {
+			const { data: stocks } = await axiosInstance.get<Stock[]>(`/stocks`, {
+        params: { page: pageParam }
+      });
+      
+      // 각 종목 데이터를 개별 캐시로 저장
+      stocks.forEach((stock) => {
+        queryClient.setQueryData(['stocks', stock.symbol], stock);
+      });
+      
+      return stocks;
+    },
+    ...
+  });
+}
+```
+
+ 이를 활용해서 캐시된 데이터가 없을때는 상세 페이지에서 새로 데이터를 요청하고, 메인 페이지에서 이미 데이터가 호출된 종목은 상세 페이지로 이동할때 캐시된 데이터를 사용하게 만들어 로딩 속도를 개선할 수 있었습니다. 결과적으로 불필요한 API 호출을 제거하고 페이지 이동 시 사용자 경험을 개선할 수 있었습니다.
