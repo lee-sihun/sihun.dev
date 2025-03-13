@@ -81,7 +81,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <article className="max-w-3xl px-6 mx-auto">
       <div className="mt-10 mb-8 text-center">
-        <time
+        {/* <time
           dateTime={project.createdAt}
           className="mb-2.5 text-base text-[#686868] dark:text-[#A3A3A3]"
         >
@@ -90,19 +90,19 @@ export default function Page({ params }: { params: { slug: string } }) {
             month: "2-digit",
             day: "2-digit",
           }).format(new Date(project.createdAt))}
-        </time>
-        <h1 className="mb-4 text-2xl md:text-[32px] font-bold text-black dark:text-white">
+        </time> */}
+        <h1 className="text-2xl md:text-[32px] font-bold text-black dark:text-white">
           {project.title}
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
+        <p className="text-lg text-gray-600 dark:text-gray-400 mb-[10px]">
           {project.description}
         </p>
 
-        <div className="flex flex-wrap gap-2 justify-center mb-4">
+        <div className="flex flex-wrap gap-2 justify-center mb-[10px]">
           {project.techStack.map((tech) => (
             <span
               key={tech}
-              className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-gray-700 dark:text-gray-300"
+              className="text-xs px-3 py-1 bg-[#EDEDED] dark:bg-[#262626] rounded-full text-[#404040] dark:text-[#B5B5B5]"
             >
               {tech}
             </span>
@@ -171,10 +171,10 @@ export default function Page({ params }: { params: { slug: string } }) {
 
       <div className="h-px w-full my-8 bg-[#D4D4D4] dark:bg-[#686868]" />
 
-      <div className="flex justify-center mb-12">
+      <div className="flex justify-center">
         <Link
           href="/project"
-          className="px-6 py-2 bg-gray-200 dark:bg-gray-800 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+          className="px-6 py-2 bg-[#EDEDED] dark:bg-[#262626] rounded-md hover:bg-[#E5E5E5] dark:hover:bg-[#363636] text-[#404040] dark:text-[#B5B5B5] hover:text-[#171717] dark:hover:text-[#E5E5E5] transition-colors"
         >
           Back to Projects
         </Link>
