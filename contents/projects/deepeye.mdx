@@ -51,13 +51,13 @@ featured: true
 
 *사진은 클릭하면 확대해서 볼 수 있습니다*
 
-![메인 페이지](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2Ff97d9824-46d6-4052-a52e-f3301630c479%2FImage_from_GitHub_2872x1796.png/size/w=770?exp=1741920913&sig=XaXahFdeP5zYT9HOjW3PnT_ZuV9DB_z4Av5yDp4Glzs)
+![메인 페이지](https://i.postimg.cc/fRY7vjBj/1.webp)
 
-![종목 상세 페이지](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2Fc7075ef3-7b78-4a03-9bb9-b21a47a1afa7%2F68747470733a2f2f692e6962622e636f2f5137305268386b422f436170747572652d323032352d30322d30392d3230353030382e706e67.png/size/w=2000?exp=1741920926&sig=9FnJRCUgJsF7imxFSkwboHVxtMyRUils6wrHcktjBSg)
+![종목 상세 페이지](https://i.postimg.cc/2Sqjp2Ph/2.webp)
 
-![Skeleton UI & 무한 스크롤 ](https://file.notion.so/f/f/5985ce4c-2bd6-4dd3-949c-0e2593099a0e/1fce4735-c53a-4eb5-ad1c-9a127be4a3f8/Kapture_2025-02-23_at_16.42.22.gif?table=block&id=1a36a452-ce90-80dc-b0d3-ee3f557ca11d&spaceId=5985ce4c-2bd6-4dd3-949c-0e2593099a0e&expirationTimestamp=1741860000000&signature=xlKmofOeLr37U5XdN51SLmLpLo47Kka0C4qsKuZoJEg)
+![Skeleton UI & 무한 스크롤 ](https://i.postimg.cc/cC62K57c/3.gif)
 
-![반응형 디자인](https://file.notion.so/f/f/5985ce4c-2bd6-4dd3-949c-0e2593099a0e/5986ab12-dcba-4dc0-8be4-682e7aade2da/Kapture_2025-02-23_at_16.50.59.gif?table=block&id=1a36a452-ce90-80c6-920d-f038795dff92&spaceId=5985ce4c-2bd6-4dd3-949c-0e2593099a0e&expirationTimestamp=1741860000000&signature=LfTPD3WaI_RYog2NFPyoXwasVmuATRAfKxFP2gWjY3A)
+![반응형 디자인](https://i.postimg.cc/RV7yWfKy/4.gif)
 
 
 ### Troubleshooting
@@ -96,9 +96,9 @@ Error: Command "next build" exited with 1
 
  메인 페이지와 상세 페이지에서 Yahoo Finance API를 통해 주식 종목의 주가 정보를 제공할때, **이미 불러온 데이터를 중복으로 요청해서 상세 페이지 진입 시 불필요한 로딩이 발생하는 문제**가 있었습니다.
 
-![메인 페이지의 리스트에서 제공하는 현재 주가](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2F32d41eea-e88c-401c-9210-dd4c8606d90f%2F%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2025-02-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_8.38.49.png/size/w=2000?exp=1741921014&sig=Qelfj_XviWwFkISR8f7QrkDPTXVrkBf6--ZaHZKtMM4)
+![메인 페이지의 리스트에서 제공하는 현재 주가](https://i.postimg.cc/NFJyDLHc/5.webp)
 
-![종목 상세 페이지에서 제공하는 현재 주가 ](https://img.notionusercontent.com/s3/prod-files-secure%2F5985ce4c-2bd6-4dd3-949c-0e2593099a0e%2F4984bb5a-a5bf-4beb-8716-c8aba9158cfd%2F%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2025-02-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_8.39.04.png/size/w=480?exp=1741921024&sig=bfuKmD5XYd0pxzcM8Uk2ELx0qiE37XF459cJ4gDYLgc)
+![종목 상세 페이지에서 제공하는 현재 주가 ](https://i.postimg.cc/jSN5wMZK/6.webp)
 
  문제는 React Query가 queryKey를 기준으로 캐싱을 수행하는데, 메인 페이지의 useInfiniteQuery와 상세 페이지의 useQuery가 **서로 다른 queryKey를 사용하여 캐시가 공유되지 않는다는 점**이였습니다**.** 상세 페이지는 메인 페이지의 리스트뿐만이 아니라 헤더를 통한 검색이나 URL로 직접적인 접근도 가능해야하기 때문에 독립적인 데이터 호출이 필요해서 발생한 상황이였습니다. 
 
