@@ -6,6 +6,7 @@ import { useMDXComponent } from "next-contentlayer/hooks";
 import { Pre } from "@/components/Pre";
 import Comments from "@/components/Comments";
 import Tag from "@/components/Tag";
+import Toc from "@/components/Toc";
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
@@ -15,13 +16,15 @@ const mdxComponents: MDXComponents = {
 
 export const generateStaticParams = async () => {
   return allPosts.map((post) => ({
-    slug: post._raw.flattenedPath.replace(/^posts\//, ''),
+    slug: post._raw.flattenedPath.replace(/^posts\//, ""),
   }));
 };
 
 export const generateMetadata = ({ params }: { params: { slug: string } }) => {
-  const post = allPosts.find((post) => post._raw.flattenedPath === `posts/${params.slug}`);
-  
+  const post = allPosts.find(
+    (post) => post._raw.flattenedPath === `posts/${params.slug}`
+  );
+
   if (!post) notFound();
 
   return {
@@ -70,10 +73,14 @@ hover:prose-a:underline
 `;
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const post = allPosts.find((post) => post._raw.flattenedPath === `posts/${params.slug}`);
-  
+  const post = allPosts.find(
+    (post) => post._raw.flattenedPath === `posts/${params.slug}`
+  );
+
   if (!post) notFound();
   const MDXContent = useMDXComponent(post.body.code);
+
+  // console.log("Post Headings:", post.headings);
 
   return (
     <article className="max-w-3xl px-6 mx-auto">
@@ -97,6 +104,9 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
       <section className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
+        {/* {post.headings && post.headings.length > 0 && (
+          <Toc headings={post.headings} />
+        )} */}
         <MDXContent components={mdxComponents} />
       </section>
       <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
