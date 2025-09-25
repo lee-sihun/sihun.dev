@@ -4,7 +4,9 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { Pre } from "@/components/Pre";
+import Comments from "@/components/Comments";
 import Toc from "@/components/Toc";
+import BlogToolbar from "@/components/BlogToolbar";
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
@@ -166,7 +168,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
 
-      <section className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
+      <section
+        className={`prose prose-lg mx-auto dark:prose-invert ${style}`}
+        data-content
+      >
         {project.headings && project.headings.length > 0 && (
           <Toc headings={project.headings} title={project.title} />
         )}
@@ -174,15 +179,10 @@ export default function Page({ params }: { params: { slug: string } }) {
       </section>
 
       <div className="h-px w-full my-8 bg-[#D4D4D4] dark:bg-[#686868]" />
-
-      <div className="flex justify-center">
-        <Link
-          href="/project"
-          className="px-6 py-2 bg-[#EDEDED] dark:bg-[#262626] rounded-md hover:bg-[#E5E5E5] dark:hover:bg-[#363636] text-[#404040] dark:text-[#B5B5B5] hover:text-[#171717] dark:hover:text-[#E5E5E5] transition-colors"
-        >
-          Back to Projects
-        </Link>
-      </div>
+      <BlogToolbar headings={project.headings} title={project.title} />
+      <div className="h-px w-full my-8 bg-transparent" />
+      <Comments />
+      <div data-comments />
     </article>
   );
 }

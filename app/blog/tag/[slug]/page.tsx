@@ -3,6 +3,9 @@ import { filterPostsByTag } from "@/hooks/posts";
 import { notFound } from "next/navigation";
 import { allPosts } from "@/.contentlayer/generated";
 
+export const dynamicParams = false;
+export const revalidate = false;
+
 export async function generateStaticParams() {
   const tags = new Set(allPosts.flatMap((post) => post.tags));
   return Array.from(tags).map((tag) => ({ slug: tag }));

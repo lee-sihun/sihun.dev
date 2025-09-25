@@ -1,5 +1,5 @@
 "use client";
-import { Post } from "@/.contentlayer/generated";
+import type { PostPreview } from "@/utilities/post";
 import Link from "next/link";
 import Image from "next/image";
 import Tag from "@/components/Tag";
@@ -8,7 +8,7 @@ import { useCategoryStore } from "@/stores";
 import { useRouter } from "next/navigation";
 
 interface PostCardProps {
-  post: Post;
+  post: PostPreview;
 }
 
 export default function PostCard({ post }: PostCardProps): React.ReactElement {

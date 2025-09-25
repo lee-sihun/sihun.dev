@@ -4,14 +4,16 @@ import PostCard from "@/components/PostCard";
 import Category from "@/components/Category";
 import { compareDesc } from "date-fns";
 import { useCategoryStore } from "@/stores";
+import { toPostPreview } from "@/utilities/post";
+
+const postPreviews = [...allPosts]
+  .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
+  .map(toPostPreview);
 
 export default function BlogContent() {
   const { selectedCategory, setSelectedCategory } = useCategoryStore();
-  const posts = allPosts.sort((a, b) =>
-    compareDesc(new Date(a.createdAt), new Date(b.createdAt))
-  );
 
-  const filteredPosts = posts.filter((post) =>
+  const filteredPosts = postPreviews.filter((post) =>
     selectedCategory === "All" ? true : post.category === selectedCategory
   );
 

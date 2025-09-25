@@ -1,27 +1,35 @@
-import { Post } from "@/.contentlayer/generated";
 import { allPosts } from "@/.contentlayer/generated";
+import { compareDesc } from "date-fns";
+import type { PostPreview } from "@/utilities/post";
+import { toPostPreview } from "@/utilities/post";
 
-const posts = allPosts;
-const taggedPosts: Record<string, Post[]> = {};
+const sortedPosts = [...allPosts].sort((a, b) =>
+  compareDesc(new Date(a.createdAt), new Date(b.createdAt))
+);
 
-posts.forEach(post => {
-  post.tags.forEach(tag => {
-    if (tag in taggedPosts) {
-      taggedPosts[tag].push(post);
-    } else {
-      taggedPosts[tag] = [post];
+const taggedPostMap: Record<string, PostPreview[]> = {};
+const tagCounts: Record<string, number> = {};
+
+sortedPosts.forEach((post) => {
+  const preview = toPostPreview(post);
+
+  post.tags.forEach((tag) => {
+    if (!taggedPostMap[tag]) {
+      taggedPostMap[tag] = [];
     }
+
+    taggedPostMap[tag].push(preview);
+    tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
   });
 });
 
 function getTagCounts(): Record<string, number> {
-  return Object.fromEntries(
-    Object.entries(taggedPosts).map(([tag, posts]) => [tag, posts.length])
-  );
+  return { ...tagCounts };
 }
 
-function filterPostsByTag(tag: string): Post[] {
-  return taggedPosts[tag] || [];
+function filterPostsByTag(tag: string): PostPreview[] {
+  const posts = taggedPostMap[tag];
+  return posts ? [...posts] : [];
 }
 
 export { getTagCounts, filterPostsByTag };
