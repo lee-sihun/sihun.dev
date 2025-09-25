@@ -429,3 +429,12 @@ figure [data-rehype-pretty-code-figure] {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
+/* Scrollbar 숨기기 유틸리티 */
+.hidden-scrollbar {
+  scrollbar-width: none;
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}

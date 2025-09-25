@@ -44,5 +44,5 @@ export default function Comments() {
     );
   }, [theme]);
 
-  return <section ref={ref} />;
+  return <section ref={ref} data-comments />;
 }

@@ -2,15 +2,19 @@
 
 import { useCallback, useEffect, type MouseEvent } from "react";
 
-interface Heading {
+export interface TocHeading {
   level: number;
   text: string;
   slug: string;
 }
 
 interface TocProps {
-  headings: Heading[];
+  headings: TocHeading[];
   title?: string;
+  className?: string;
+  listClassName?: string;
+  variant?: "default" | "plain";
+  showHeader?: boolean;
 }
 
 const baseLinkClass =
@@ -37,10 +41,35 @@ type HistoryState = {
   [key: string]: unknown;
 };
 
-export default function Toc({ headings, title }: TocProps) {
+export default function Toc({
+  headings,
+  title,
+  className,
+  listClassName,
+  variant = "default",
+  showHeader = true,
+}: TocProps) {
   if (!headings || headings.length === 0) {
     return null;
   }
+
+  const isPlain = variant === "plain";
+
+  const navClassName = [
+    "not-prose mb-10 rounded-2xl border border-solid border-[#E4E4E7] dark:border-[#2F2F37] bg-[#fafafa] dark:bg-[#171717] backdrop-blur-sm",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const listClassNameCombined = [
+    "list-none space-y-1",
+    isPlain ? "" : "px-5 py-3",
+    isPlain ? className : "",
+    listClassName,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const articleTitle =
     title ??
@@ -178,30 +207,39 @@ export default function Toc({ headings, title }: TocProps) {
     event.currentTarget.blur();
   };
 
+  const listMarkup = (
+    <ul className={listClassNameCombined}>
+      {headings.map(({ slug, text, level }) => (
+        <li key={slug}>
+          <a
+            href={`#${slug}`}
+            className={`${baseLinkClass} ${getIndentClass(level)}`}
+            onClick={(event) => handleAnchorClick(event, slug)}
+          >
+            {text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+
+  if (isPlain) {
+    return listMarkup;
+  }
+
   return (
-    <nav
-      aria-label="Table of contents"
-      className="not-prose mb-10 rounded-2xl border border-solid border-[#E4E4E7] dark:border-[#2F2F37] bg-[#fafafa] dark:bg-[#171717] backdrop-blur-sm"
-    >
-      <div className="px-5 pt-5 pb-3">
-        <p className="text-sm font-semibold text-[#171717] dark:text-white">
-          {articleTitle}
-        </p>
-      </div>
-      <div className="mx-5 border-t border-dashed border-[#E4E4E7] dark:border-[#2F2F2F]" />
-      <ul className="px-5 py-3 list-none space-y-1">
-        {headings.map(({ slug, text, level }) => (
-          <li key={slug}>
-            <a
-              href={`#${slug}`}
-              className={`${baseLinkClass} ${getIndentClass(level)}`}
-              onClick={(event) => handleAnchorClick(event, slug)}
-            >
-              {text}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <nav aria-label="Table of contents" className={navClassName}>
+      {showHeader && (
+        <>
+          <div className="px-5 pt-5 pb-3">
+            <p className="text-sm font-semibold text-[#171717] dark:text-white">
+              {articleTitle}
+            </p>
+          </div>
+          <div className="mx-5 border-t border-dashed border-[#E4E4E7] dark:border-[#2F2F2F]" />
+        </>
+      )}
+      {listMarkup}
     </nav>
   );
 }

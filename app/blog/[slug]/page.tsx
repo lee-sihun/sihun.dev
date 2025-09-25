@@ -6,9 +6,10 @@ import { useMDXComponent } from "next-contentlayer/hooks";
 import { Pre } from "@/components/Pre";
 import Comments from "@/components/Comments";
 import Tag from "@/components/Tag";
-import Toc from "@/components/Toc";
 import { HeadingAnchor } from "@/components/HeadingAnchor";
 import type { HTMLAttributes } from "react";
+import Toc from "@/components/Toc";
+import BlogToolbar from "@/components/BlogToolbar";
 
 const headingFactory = (as: keyof JSX.IntrinsicElements) =>
   function Heading(providedProps: HTMLAttributes<HTMLHeadingElement>) {
@@ -116,7 +117,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         ))}
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
-      <section className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
+      <section
+        className={`prose prose-lg mx-auto dark:prose-invert ${style}`}
+        data-content
+      >
         {post.headings && post.headings.length > 0 && (
           <Toc headings={post.headings} title={post.title} />
         )}
@@ -124,6 +128,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       </section>
       <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       <Comments />
+      <div data-comments />
+      <BlogToolbar headings={post.headings} title={post.title} />
     </article>
   );
 }
