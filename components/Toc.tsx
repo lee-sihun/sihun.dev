@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, type MouseEvent } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export interface TocHeading {
   level: number;
@@ -41,6 +42,42 @@ type HistoryState = {
   [key: string]: unknown;
 };
 
+const tocContainerVariants = {
+  hidden: { opacity: 0, y: 16, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 240, damping: 28 },
+  },
+  exit: {
+    opacity: 0,
+    y: 12,
+    scale: 0.98,
+    transition: { duration: 0.2, ease: "easeInOut" },
+  },
+};
+
+const tocListVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { delayChildren: 0.05, staggerChildren: 0.03 },
+  },
+  exit: { opacity: 0, y: 8, transition: { duration: 0.15, ease: "easeInOut" } },
+};
+
+const tocItemVariants = {
+  hidden: { opacity: 0, y: 6 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 320, damping: 26 },
+  },
+  exit: { opacity: 0, y: 6, transition: { duration: 0.12, ease: "easeInOut" } },
+};
+
 export default function Toc({
   headings,
   title,
@@ -49,10 +86,8 @@ export default function Toc({
   variant = "default",
   showHeader = true,
 }: TocProps) {
-  if (!headings || headings.length === 0) {
-    return null;
-  }
-
+  const safeHeadings = headings ?? [];
+  const hasHeadings = safeHeadings.length > 0;
   const isPlain = variant === "plain";
 
   const navClassName = [
@@ -73,8 +108,8 @@ export default function Toc({
 
   const articleTitle =
     title ??
-    headings.find(({ level }) => level === 1)?.text ??
-    headings[0]?.text ??
+    safeHeadings.find(({ level }) => level === 1)?.text ??
+    safeHeadings[0]?.text ??
     "";
 
   const preserveCurrentPosition = useCallback(() => {
@@ -207,10 +242,17 @@ export default function Toc({
     event.currentTarget.blur();
   };
 
-  const listMarkup = (
-    <ul className={listClassNameCombined}>
-      {headings.map(({ slug, text, level }) => (
-        <li key={slug}>
+  const listContent = (
+    <motion.ul
+      key="toc-list"
+      className={listClassNameCombined}
+      variants={tocListVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      {safeHeadings.map(({ slug, text, level }) => (
+        <motion.li key={slug} variants={tocItemVariants}>
           <a
             href={`#${slug}`}
             className={`${baseLinkClass} ${getIndentClass(level)}`}
@@ -218,28 +260,42 @@ export default function Toc({
           >
             {text}
           </a>
-        </li>
+        </motion.li>
       ))}
-    </ul>
+    </motion.ul>
   );
 
   if (isPlain) {
-    return listMarkup;
+    return (
+      <AnimatePresence mode="wait">{hasHeadings && listContent}</AnimatePresence>
+    );
   }
 
   return (
-    <nav aria-label="Table of contents" className={navClassName}>
-      {showHeader && (
-        <>
-          <div className="px-5 pt-5 pb-3">
-            <p className="text-sm font-semibold text-[#171717] dark:text-white">
-              {articleTitle}
-            </p>
-          </div>
-          <div className="mx-5 border-t border-dashed border-[#E4E4E7] dark:border-[#2F2F2F]" />
-        </>
+    <AnimatePresence mode="wait">
+      {hasHeadings && (
+        <motion.nav
+          key="toc-nav"
+          aria-label="Table of contents"
+          className={navClassName}
+          variants={tocContainerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
+          {showHeader && (
+            <div className="px-5 pt-5 pb-3">
+              <p className="text-sm font-semibold text-[#171717] dark:text-white">
+                {articleTitle}
+              </p>
+            </div>
+          )}
+          {showHeader && (
+            <div className="mx-5 border-t border-dashed border-[#E4E4E7] dark:border-[#2F2F2F]" />
+          )}
+          {listContent}
+        </motion.nav>
       )}
-      {listMarkup}
-    </nav>
+    </AnimatePresence>
   );
 }
