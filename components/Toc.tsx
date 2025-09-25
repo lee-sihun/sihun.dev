@@ -10,23 +10,24 @@ interface Heading {
 
 interface TocProps {
   headings: Heading[];
+  title?: string;
 }
 
 const baseLinkClass =
-  "relative block rounded-lg py-1.5 leading-relaxed transition-colors duration-200 hover:bg-[#F4F4F5] dark:hover:bg-[#1F1F1F] hover:text-[#111827] dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0C0C0C]";
+  "relative block rounded-lg py-1.5 leading-relaxed transition-colors duration-200 hover:bg-[#F2F2F2] dark:hover:bg-[#1F1F1F] hover:text-[#111827] dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0C0C0C]";
 
 const getIndentClass = (level: number) => {
   switch (level) {
     case 1:
-      return "pl-4 pr-4 text-[15px] font-semibold text-[#171717] dark:text-white";
+      return "pl-1 pr-4 text-[15px] font-semibold text-[#171717] dark:text-white";
     case 2:
-      return "pl-7 pr-4 text-sm font-medium text-[#3F3F46] dark:text-[#E5E5E5]";
+      return "pl-4 pr-4 text-sm font-medium text-[#3F3F46] dark:text-[#E5E5E5]";
     case 3:
-      return "pl-10 pr-4 text-sm text-[#52525B] dark:text-[#A1A1AA]";
+      return "pl-7 pr-4 text-sm text-[#52525B] dark:text-[#A1A1AA]";
     case 4:
-      return "pl-12 pr-4 text-sm text-[#6B7280] dark:text-[#9CA3AF]";
+      return "pl-9 pr-4 text-sm text-[#6B7280] dark:text-[#9CA3AF]";
     default:
-      return "pl-4 pr-4 text-sm text-[#3F3F46] dark:text-[#D4D4D4]";
+      return "pl-1 pr-4 text-sm text-[#3F3F46] dark:text-[#D4D4D4]";
   }
 };
 
@@ -36,10 +37,16 @@ type HistoryState = {
   [key: string]: unknown;
 };
 
-export default function Toc({ headings }: TocProps) {
+export default function Toc({ headings, title }: TocProps) {
   if (!headings || headings.length === 0) {
     return null;
   }
+
+  const articleTitle =
+    title ??
+    headings.find(({ level }) => level === 1)?.text ??
+    headings[0]?.text ??
+    "";
 
   const preserveCurrentPosition = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -167,26 +174,22 @@ export default function Toc({ headings }: TocProps) {
   ) => {
     event.preventDefault();
     preserveCurrentPosition();
-    scrollToHeading(slug);
+    scrollToHeading(slug, { smooth: true });
     event.currentTarget.blur();
   };
 
   return (
     <nav
       aria-label="Table of contents"
-      className="not-prose mb-10 rounded-2xl border border-[#E5E5E5] dark:border-[#262626] bg-white/80 dark:bg-[#111111]/80 backdrop-blur-sm shadow-[0_12px_32px_rgba(15,23,42,0.08)] dark:shadow-[0_18px_45px_rgba(0,0,0,0.45)]"
+      className="not-prose mb-10 rounded-2xl border border-solid border-[#E4E4E7] dark:border-[#2F2F37] bg-[#fafafa] dark:bg-[#171717] backdrop-blur-sm"
     >
-      <div className="flex items-center gap-2 px-5 pt-5 pb-3">
-        <span
-          aria-hidden="true"
-          className="inline-flex h-2.5 w-2.5 rounded-full bg-[#6366F1]"
-        />
+      <div className="px-5 pt-5 pb-3">
         <p className="text-sm font-semibold text-[#171717] dark:text-white">
-          목차
+          {articleTitle}
         </p>
       </div>
-      <div className="mx-5 border-t border-dashed border-[#E5E5E5] dark:border-[#2F2F2F]" />
-      <ul className="px-2 py-4 list-none space-y-1.5">
+      <div className="mx-5 border-t border-dashed border-[#E4E4E7] dark:border-[#2F2F2F]" />
+      <ul className="px-5 py-3 list-none space-y-1">
         {headings.map(({ slug, text, level }) => (
           <li key={slug}>
             <a
