@@ -1,6 +1,6 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import { useCallback, useEffect, type MouseEvent } from "react";
 
 interface Heading {
   level: number;
@@ -30,56 +30,143 @@ const getIndentClass = (level: number) => {
   }
 };
 
+type HistoryState = {
+  slug?: string;
+  scrollY?: number;
+  [key: string]: unknown;
+};
+
 export default function Toc({ headings }: TocProps) {
   if (!headings || headings.length === 0) {
     return null;
   }
 
-  const scrollToHeading = (slug: string) => {
+  const preserveCurrentPosition = useCallback(() => {
     if (typeof window === "undefined") return;
 
-    const hash = `#${slug}`;
-    const findTarget = () => {
-      const byId = document.getElementById(slug);
-      if (byId) return byId;
+    const existingState = (window.history.state ?? {}) as HistoryState;
+    const currentSlug =
+      existingState.slug ??
+      (window.location.hash ? window.location.hash.slice(1) : undefined);
 
-      const anchors = Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(`a[href="${hash}"]`)
-      );
+    window.history.replaceState(
+      { ...existingState, slug: currentSlug, scrollY: window.scrollY },
+      "",
+      window.location.href
+    );
+  }, []);
 
-      for (const anchor of anchors) {
-        const heading = anchor.closest("h1, h2, h3, h4, h5, h6");
-        if (heading) return heading as HTMLElement;
+  const scrollToHeading = useCallback(
+    (slug: string, options?: { updateHistory?: boolean; smooth?: boolean }) => {
+      if (typeof window === "undefined") return;
+
+      const { updateHistory = true, smooth } = options ?? {};
+      const hash = `#${slug}`;
+      const findTarget = () => {
+        const byId = document.getElementById(slug);
+        if (byId) return byId;
+
+        const anchors = Array.from(
+          document.querySelectorAll<HTMLAnchorElement>(`a[href="${hash}"]`)
+        );
+
+        for (const anchor of anchors) {
+          const heading = anchor.closest("h1, h2, h3, h4, h5, h6");
+          if (heading) return heading as HTMLElement;
+        }
+
+        return anchors[0]?.parentElement ?? null;
+      };
+
+      const target = findTarget();
+
+      if (!target) {
+        if (updateHistory) {
+          window.location.hash = hash;
+        }
+        return;
       }
 
-      return anchors[0]?.parentElement ?? null;
+      const prefersReducedMotion =
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+        false;
+
+      const behavior =
+        smooth === false
+          ? "auto"
+          : smooth === true
+          ? "smooth"
+          : prefersReducedMotion
+          ? "auto"
+          : "smooth";
+
+      target.scrollIntoView({
+        behavior,
+        block: "start",
+      });
+
+      if (!updateHistory) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        const nextState: HistoryState = {
+          slug,
+          scrollY: window.scrollY,
+        };
+
+        if (window.location.hash !== hash) {
+          window.history.pushState(nextState, "", hash);
+        } else {
+          window.history.replaceState(nextState, "", hash);
+        }
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    preserveCurrentPosition();
+  }, [preserveCurrentPosition]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handlePopState = (event: PopStateEvent) => {
+      const state = (event.state ?? {}) as HistoryState;
+      const slugFromState = state.slug;
+      const slugFromHash = window.location.hash
+        ? window.location.hash.slice(1)
+        : undefined;
+      const slug = slugFromState || slugFromHash;
+
+      if (typeof state.scrollY === "number") {
+        window.requestAnimationFrame(() => {
+          window.scrollTo({ top: state.scrollY!, behavior: "auto" });
+        });
+        return;
+      }
+
+      if (!slug) return;
+
+      window.requestAnimationFrame(() => {
+        scrollToHeading(slug, { updateHistory: false, smooth: false });
+      });
     };
 
-    const target = findTarget();
+    window.addEventListener("popstate", handlePopState);
 
-    if (!target) {
-      window.location.hash = hash;
-      return;
-    }
-
-    const prefersReducedMotion =
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-
-    target.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start",
-    });
-
-    if (window.location.hash !== hash) {
-      window.history.replaceState(null, "", hash);
-    }
-  };
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [scrollToHeading]);
 
   const handleAnchorClick = (
     event: MouseEvent<HTMLAnchorElement>,
     slug: string
   ) => {
     event.preventDefault();
+    preserveCurrentPosition();
     scrollToHeading(slug);
     event.currentTarget.blur();
   };
