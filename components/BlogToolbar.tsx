@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Toc, { TocHeading } from "@/components/Toc";
 import TocSvg from "../public/svg/list.svg";
 import CommentSvg from "../public/svg/comment.svg";
@@ -15,6 +15,11 @@ export default function BlogToolbar({ headings, title }: BlogToolbarProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isTocOpen, setIsTocOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+  const [isDocked, setIsDocked] = useState(false);
+  const toolbarInnerRef = useRef<HTMLDivElement>(null);
+  const [toolbarHeight, setToolbarHeight] = useState(0);
+  const DOCK_SPACING = 24;
 
   useEffect(() => {
     setIsMounted(true);
@@ -29,6 +34,63 @@ export default function BlogToolbar({ headings, title }: BlogToolbarProps) {
 
     return () => window.clearTimeout(timeout);
   }, [isCopied]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const handleScrollVisibility = () => {
+      setIsToolbarVisible(window.scrollY > 20);
+    };
+
+    handleScrollVisibility();
+    window.addEventListener("scroll", handleScrollVisibility, {
+      passive: true,
+    });
+
+    return () => window.removeEventListener("scroll", handleScrollVisibility);
+  }, [isMounted]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const measureToolbar = () => {
+      const nextHeight = toolbarInnerRef.current?.offsetHeight ?? 0;
+      setToolbarHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+    };
+
+    measureToolbar();
+    window.addEventListener("resize", measureToolbar);
+
+    return () => window.removeEventListener("resize", measureToolbar);
+  }, [isMounted, isTocOpen]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const computeDocking = () => {
+      const contentEl = document.querySelector<HTMLElement>("[data-content]");
+      if (!contentEl) return;
+
+      const commentsEl = document.querySelector<HTMLElement>("[data-comments]");
+      const triggerTop =
+        commentsEl?.getBoundingClientRect().top ??
+        contentEl.getBoundingClientRect().bottom;
+      const buffer = (toolbarHeight || 0) + DOCK_SPACING;
+      const threshold = window.innerHeight - buffer;
+      const shouldDock = triggerTop <= threshold;
+
+      setIsDocked((prev) => (prev === shouldDock ? prev : shouldDock));
+    };
+
+    computeDocking();
+    window.addEventListener("scroll", computeDocking, { passive: true });
+    window.addEventListener("resize", computeDocking);
+
+    return () => {
+      window.removeEventListener("scroll", computeDocking);
+      window.removeEventListener("resize", computeDocking);
+    };
+  }, [isMounted, toolbarHeight, DOCK_SPACING]);
 
   if (!isMounted) return null;
 
@@ -56,11 +118,25 @@ export default function BlogToolbar({ headings, title }: BlogToolbarProps) {
     }
   };
 
+  const toolbarClassName = [
+    "flex items-center gap-3 rounded-full px-4 bg-white/50 dark:bg-black/25 shadow-glass dark:shadow-glassDark backdrop-blur border border-white/20 dark:border-black/20",
+  ].join(" ");
+
   return (
     <>
       {!isTocOpen && (
-        <div className="fixed inset-x-0 bottom-0 z-[5] flex justify-center pb-[calc(1rem+env(safe-area-inset-bottom))] px-4">
-          <div className="flex items-center gap-3 rounded-full px-4 bg-white/50 dark:bg-black/25 shadow-glass dark:shadow-glassDark backdrop-blur border border-white/20 dark:border-black/20">
+        <div
+          className={[
+            "z-[5] flex justify-center px-4 transform-gpu transition-all duration-300 ease-out",
+            isDocked
+              ? "relative mt-8"
+              : "fixed inset-x-0 bottom-0 pb-[calc(1rem+env(safe-area-inset-bottom))]",
+            isToolbarVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-full opacity-0",
+          ].join(" ")}
+        >
+          <div ref={toolbarInnerRef} className={toolbarClassName}>
             <button
               type="button"
               className="flex h-12 w-12 items-center justify-center rounded-full text-gray-700 transition hover:text-black dark:text-gray-300 dark:hover:text-white"
@@ -89,12 +165,20 @@ export default function BlogToolbar({ headings, title }: BlogToolbarProps) {
             </button>
           </div>
           {isCopied && (
-            <div className="absolute bottom-[80px] left-1/2 -translate-x-1/2 rounded-lg bg-white/50 dark:bg-black/25 backdrop-blur border border-white/20 dark:border-black/20 px-3 py-1 text-sm text-gray-900 dark:text-white shadow-glass dark:shadow-glassDark flex items-center gap-2">
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 -translate-y-4 rounded-lg bg-white/50 dark:bg-black/25 backdrop-blur border border-white/20 dark:border-black/20 px-3 py-1 text-sm text-gray-900 dark:text-white shadow-glass dark:shadow-glassDark flex items-center gap-2">
               <CheckSvg className="w-4 h-4 text-green-500 mt-[3.5px]" />
               링크가 복사되었습니다
             </div>
           )}
         </div>
+      )}
+
+      {!isTocOpen && !isDocked && isToolbarVisible && toolbarHeight > 0 && (
+        <div
+          aria-hidden
+          className="w-full"
+          style={{ height: toolbarHeight, transition: "height 200ms ease" }}
+        />
       )}
 
       {isTocOpen && (

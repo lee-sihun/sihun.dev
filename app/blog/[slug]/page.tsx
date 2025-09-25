@@ -127,9 +127,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         <MDXContent components={mdxComponents} />
       </section>
       <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
+      <BlogToolbar headings={post.headings} title={post.title} />
+      <div className="h-px w-full my-5 bg-transparent" />
       <Comments />
       <div data-comments />
-      <BlogToolbar headings={post.headings} title={post.title} />
     </article>
   );
 }
