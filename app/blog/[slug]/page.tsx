@@ -7,11 +7,24 @@ import { Pre } from "@/components/Pre";
 import Comments from "@/components/Comments";
 import Tag from "@/components/Tag";
 import Toc from "@/components/Toc";
+import { HeadingAnchor } from "@/components/HeadingAnchor";
+import type { HTMLAttributes } from "react";
+
+const headingFactory = (as: keyof JSX.IntrinsicElements) =>
+  function Heading(providedProps: HTMLAttributes<HTMLHeadingElement>) {
+    return <HeadingAnchor as={as as any} {...providedProps} />;
+  };
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
   // @ts-ignore
   pre: Pre,
+  h1: headingFactory("h1"),
+  h2: headingFactory("h2"),
+  h3: headingFactory("h3"),
+  h4: headingFactory("h4"),
+  h5: headingFactory("h5"),
+  h6: headingFactory("h6"),
 };
 
 export const generateStaticParams = async () => {
@@ -104,9 +117,9 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="h-px w-full mt-5 bg-[#D4D4D4] dark:bg-[#686868]" />
       </div>
       <section className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
-        {/* {post.headings && post.headings.length > 0 && (
+        {post.headings && post.headings.length > 0 && (
           <Toc headings={post.headings} />
-        )} */}
+        )}
         <MDXContent components={mdxComponents} />
       </section>
       <div className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
