@@ -4,6 +4,7 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { Pre } from "@/components/Pre";
+import Toc from "@/components/Toc";
 
 const mdxComponents: MDXComponents = {
   a: ({ href, children }) => <Link href={href as string}>{children}</Link>,
@@ -166,6 +167,9 @@ export default function Page({ params }: { params: { slug: string } }) {
       </div>
 
       <section className={`prose prose-lg mx-auto dark:prose-invert ${style}`}>
+        {project.headings && project.headings.length > 0 && (
+          <Toc headings={project.headings} title={project.title} />
+        )}
         <MDXContent components={mdxComponents} />
       </section>
 

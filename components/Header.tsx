@@ -3,7 +3,7 @@ import Nav from "./Nav";
 import ThemeSwitcher from "./ThemeSwitcher";
 // import CommandMenu from "@/components/CommandMenu";
 import SearchSvg from "../public/svg/search.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Squircle } from "@/components/Squircle";
 
@@ -11,27 +11,39 @@ const CommandMenu = dynamic(() => import("@/components/CommandMenu"));
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [shortcutLabel, setShortcutLabel] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const platform = window.navigator.platform.toLowerCase();
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isWindows = platform.includes("win") || userAgent.includes("windows");
+    setShortcutLabel(isWindows ? "CtrlK" : "⌘K");
+  }, []);
+
   return (
     <header className="flex justify-center">
       <div className="w-[1068px] h-[60px] flex justify-between items-center px-6">
         <Nav />
         <div className="flex items-center">
-          <Squircle
-            cornerRadius={12}
-            cornerSmoothing={0.6}
-            className="group hidden cursor-text md:flex items-center w-[250px] h-[40px] bg-[#E5E5E5] dark:bg-[#262626] text-[#737373] dark:text-[#808080] text-left px-4 mr-[10px]"
-            onClick={() => setOpen(true)}
-          >
-            <SearchSvg className="cursor-pointer w-[18px] h-[18px] mr-2" />
-            <span className="flex-grow">Search...</span>
+          {shortcutLabel && (
             <Squircle
-              cornerRadius={3}
+              cornerRadius={12}
               cornerSmoothing={0.6}
-              className="group-hover:text-black group-hover:dark:text-white flex items-center justify-center bg-[#FAFAFA] dark:bg-[#171717] w-[35px] h-[20px]"
+              className="group hidden cursor-text md:flex items-center w-[250px] h-[40px] bg-[#E5E5E5] dark:bg-[#262626] text-[#737373] dark:text-[#808080] text-left px-4 mr-[10px]"
+              onClick={() => setOpen(true)}
             >
-              ⌘K
+              <SearchSvg className="cursor-pointer w-[18px] h-[18px] mr-2" />
+              <span className="flex-grow">Search...</span>
+              <Squircle
+                cornerRadius={3}
+                cornerSmoothing={0.6}
+                className="group-hover:text-black group-hover:dark:text-white flex items-center justify-center bg-[#FAFAFA] dark:bg-[#171717] h-[20px] px-[5px]"
+              >
+                {shortcutLabel}
+              </Squircle>
             </Squircle>
-          </Squircle>
+          )}
           <ThemeSwitcher />
         </div>
         <button
