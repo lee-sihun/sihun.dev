@@ -378,9 +378,6 @@ function AboutBody({ item, titleId }: { item: AboutItem; titleId: string }) {
           소개 더 보기
           <ArrowRight />
         </Link>
-        <Link href="/guestbook" className={styles.secondary}>
-          방명록 남기기
-        </Link>
       </div>
     </>
   );
