@@ -405,6 +405,40 @@
   fill: currentColor;
 }
 
+/* 카드 장식 (지금은 쓰지 않음): 제목 점자 */
+.braille {
+  position: absolute;
+  left: 6.3em;
+  top: 9.3em;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.bumpLight {
+  stop-color: rgba(255, 255, 255, 0.4);
+}
+
+.bumpBase {
+  stop-color: rgba(255, 255, 255, 0.08);
+}
+
+.bumpShadow {
+  fill: rgba(0, 0, 0, 0.13);
+}
+
+.card[data-ink="dark"] .bumpLight {
+  stop-color: rgba(255, 255, 255, 0.75);
+}
+
+.card[data-ink="dark"] .bumpBase {
+  stop-color: rgba(255, 255, 255, 0.3);
+}
+
+.card[data-ink="dark"] .bumpShadow {
+  fill: rgba(0, 0, 0, 0.1);
+}
+
 .cardTop {
   display: flex;
   align-items: center;
