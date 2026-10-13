@@ -11,6 +11,8 @@ export const DESIGN = {
   frontTop: 80,
   /** 폴더 안에 꽂혀 있을 때의 카드 크기 */
   inFolderScale: 0.54,
+  /** 닫혀 있을 때 폴더 크기 */
+  closedFolderScale: 0.9,
   /** 열린 뒤 아래로 내려간 폴더 크기 */
   openFolderScale: 0.56,
   /** 화면 위쪽 여백 */
@@ -102,7 +104,7 @@ export function wrapOffset(index: number, p: number, n: number) {
 
 export function folderPose(
   { t, enter, float }: Drivers,
-  g: Geometry
+  g: Geometry,
 ): FolderPose {
   return {
     x: g.w / 2,
@@ -110,7 +112,9 @@ export function folderPose(
       lerp(g.closedY, g.openY, t) +
       float * 5 * g.u * (1 - clamp(t, 0, 1)) +
       (1 - enter) * 28 * g.u,
-    scale: lerp(1, DESIGN.openFolderScale, t) * lerp(0.96, 1, enter),
+    scale:
+      lerp(DESIGN.closedFolderScale, DESIGN.openFolderScale, t) *
+      lerp(0.96, 1, enter),
   };
 }
 
@@ -131,7 +135,7 @@ export function cardPose(
   index: number,
   n: number,
   d: Drivers,
-  g: Geometry
+  g: Geometry,
 ): Pose {
   const o = wrapOffset(index, d.p, n);
   const a = Math.abs(o);
