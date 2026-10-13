@@ -114,6 +114,19 @@ export function folderPose(
   };
 }
 
+/**
+ * 닫힌 폴더 안에서 가운데로부터 offset 번째 카드가 놓이는 자리
+ * (폴더 왼쪽 위 기준, 폴더 단위 · x는 카드 가운데, top은 카드 윗변)
+ */
+export function folderSlot(offset: number) {
+  const slot = clamp(offset, -3, 3);
+  return {
+    x: DESIGN.folderW / 2 + slot * 24,
+    top: DESIGN.tabH + 14 + Math.pow(Math.abs(slot), 1.25) * 9,
+    rotate: slot * 3.2,
+  };
+}
+
 export function cardPose(
   index: number,
   n: number,
@@ -125,23 +138,17 @@ export function cardPose(
   const folder = folderPose(d, g);
 
   // 폴더 안: 가운데 카드가 가장 높이 솟은 작은 부채꼴
-  const slot = clamp(o, -3, 3);
-  const sa = Math.abs(slot);
+  const rest = folderSlot(o);
+  const sa = Math.abs(clamp(o, -3, 3));
   const appear = clamp((d.enter - 0.3 - sa * 0.05) / 0.5, 0, 1);
   const lift = (8 + (3 - sa) * 4) * d.hover;
-  const top =
-    -DESIGN.folderH / 2 +
-    DESIGN.tabH +
-    14 +
-    Math.pow(sa, 1.25) * 9 -
-    lift +
-    (1 - appear) * 30;
-  const inX = folder.x + slot * 24 * g.u * folder.scale;
+  const top = rest.top - DESIGN.folderH / 2 - lift + (1 - appear) * 30;
+  const inX = folder.x + (rest.x - DESIGN.folderW / 2) * g.u * folder.scale;
   const inY =
     folder.y +
     (top + (DESIGN.cardH * DESIGN.inFolderScale) / 2) * g.u * folder.scale;
   const inScale = DESIGN.inFolderScale * folder.scale;
-  const inRotate = slot * 3.2;
+  const inRotate = rest.rotate;
 
   // 펼친 상태: 반지름이 큰 완만한 아치
   const theta = (o * g.spacing) / g.radius;
