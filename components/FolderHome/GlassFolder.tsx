@@ -39,7 +39,6 @@ export interface FolderMotion {
   x: MotionValue<number>;
   y: MotionValue<number>;
   scale: MotionValue<number>;
-  opacity: MotionValue<number>;
   tiltX: MotionValue<number>;
   tiltY: MotionValue<number>;
 }
@@ -51,7 +50,9 @@ interface LayerProps {
   children: ReactNode;
 }
 
-// 위치·크기는 바깥에서, 3D 기울기는 안쪽에서 적용해야 원근의 중심이 폴더 가운데에 맞는다
+// 위치·크기는 바깥에서, 3D 기울기는 안쪽에서 적용해야 원근의 중심이 폴더 가운데에 맞는다.
+// 폴더 레이어에는 opacity를 주지 않는다: 앞판의 조상이 반투명해지면 그 조상이 backdrop root가 되어
+// 유리(backdrop-filter)가 뒤의 카드를 흐리게 하지 못하고 카드가 선명하게 비친다
 function Layer({ motion: m, u, zIndex, children }: LayerProps) {
   return (
     <motion.div
@@ -60,7 +61,6 @@ function Layer({ motion: m, u, zIndex, children }: LayerProps) {
         x: m.x,
         y: m.y,
         scale: m.scale,
-        opacity: m.opacity,
         width: W * u,
         height: H * u,
         fontSize: 16 * u,
@@ -85,10 +85,12 @@ export function FolderShadow({
   motion: m,
   u,
   colors,
+  opacity,
 }: {
   motion: FolderMotion;
   u: number;
   colors: string[];
+  opacity: MotionValue<number>;
 }) {
   return (
     <motion.div
@@ -97,7 +99,7 @@ export function FolderShadow({
         x: m.x,
         y: m.y,
         scale: m.scale,
-        opacity: m.opacity,
+        opacity,
         width: W * u,
         height: H * u,
         zIndex: 5,

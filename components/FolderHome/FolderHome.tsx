@@ -153,7 +153,6 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
       (f) => f.y - (DESIGN.folderH * geoRef.current.u) / 2
     ),
     scale: useTransform(folder, (f) => f.scale),
-    opacity: useTransform(enter, (e) => clamp(e * 1.8, 0, 1)),
     tiltX: useTransform(
       [my, t],
       ([y, tv]: number[]) => -y * 8 * (1 - 0.7 * clamp(tv, 0, 1))
@@ -191,6 +190,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
       clamp(1 - tv * 2.5, 0, 1) * clamp((ev - 0.45) / 0.55, 0, 1)
   );
   const dialOpacity = useTransform(t, (tv) => clamp((tv - 0.55) / 0.35, 0, 1));
+  const shadowOpacity = useTransform(enter, (e) => clamp(e * 1.8, 0, 1));
 
   useMotionValueEvent(p, "change", (value) => {
     setFocusItem(slots[mod(Math.round(value), n)]);
@@ -525,7 +525,12 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
         {about ? `${about.title} · ${about.subline}` : "sihun.dev"}
       </h1>
 
-      <FolderShadow motion={folderMotion} u={u} colors={causticColors} />
+      <FolderShadow
+        motion={folderMotion}
+        u={u}
+        colors={causticColors}
+        opacity={shadowOpacity}
+      />
       <FolderBack motion={folderMotion} u={u} />
 
       <motion.div
