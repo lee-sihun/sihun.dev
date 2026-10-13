@@ -21,8 +21,15 @@ import CardFace, {
   paletteStyle,
 } from "./CardFace";
 import styles from "./FolderHome.module.css";
+import SettingsPanel from "./SettingsPanel";
 import { squircleClip } from "./squircle";
-import type { AboutItem, FolderItem, ProjectItem, WritingItem } from "./types";
+import type {
+  AboutItem,
+  FolderItem,
+  ProjectItem,
+  SettingsItem,
+  WritingItem,
+} from "./types";
 
 export interface CardFrame {
   cx: number;
@@ -43,6 +50,8 @@ interface CardDetailProps {
   getFrame: () => CardFrame;
   onRequestClose: () => void;
   onClosed: () => void;
+  /** 설정 카드의 '아무 카드나 뽑기' */
+  onShuffle: () => void;
 }
 
 const OPEN_SPRING = { type: "spring", stiffness: 110, damping: 19 } as const;
@@ -61,6 +70,7 @@ export default function CardDetail({
   getFrame,
   onRequestClose,
   onClosed,
+  onShuffle,
 }: CardDetailProps) {
   const ratio = cardW / cardH;
   // 화면이 아주 작아도 카드 자체보다 작아지지는 않게 한다
@@ -233,6 +243,14 @@ export default function CardDetail({
               )}
               {item.kind === "writing" && (
                 <WritingBody item={item} titleId={titleId} unit={fontSize} />
+              )}
+              {item.kind === "settings" && (
+                <SettingsBody
+                  item={item}
+                  titleId={titleId}
+                  unit={fontSize}
+                  onShuffle={onShuffle}
+                />
               )}
             </Squircle>
           </div>
@@ -438,6 +456,52 @@ function WritingBody({ item, titleId, unit }: BodyProps<WritingItem>) {
           전체 글 보기 ({item.total})
           <ArrowRight />
         </Link>
+      </div>
+    </>
+  );
+}
+
+function DiceIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+      <rect
+        x="2"
+        y="2"
+        width="12"
+        height="12"
+        rx="3.2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <circle cx="5.6" cy="5.6" r="1.1" fill="currentColor" />
+      <circle cx="8" cy="8" r="1.1" fill="currentColor" />
+      <circle cx="10.4" cy="10.4" r="1.1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function SettingsBody({
+  item,
+  titleId,
+  unit,
+  onShuffle,
+}: BodyProps<SettingsItem> & { onShuffle: () => void }) {
+  return (
+    <>
+      <div className={styles.paperScroll}>
+        <Head
+          item={item}
+          titleId={titleId}
+          unit={unit}
+          meta={item.description}
+        />
+        <SettingsPanel unit={unit} />
+      </div>
+      <div className={styles.actions}>
+        <button type="button" className={styles.primary} onClick={onShuffle}>
+          <DiceIcon />
+          아무 카드나 뽑기
+        </button>
       </div>
     </>
   );

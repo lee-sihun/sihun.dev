@@ -57,4 +57,9 @@ export interface WritingItem extends BaseItem {
   total: number;
 }
 
-export type FolderItem = AboutItem | ProjectItem | WritingItem;
+export interface SettingsItem extends BaseItem {
+  kind: "settings";
+  description: string;
+}
+
+export type FolderItem = AboutItem | ProjectItem | WritingItem | SettingsItem;

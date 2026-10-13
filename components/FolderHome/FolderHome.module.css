@@ -474,6 +474,10 @@
   background: rgba(255, 255, 255, 0.94);
 }
 
+.emblemGlyph[data-kind="settings"] {
+  color: #3b4554;
+}
+
 .emblemGlyph svg {
   width: 45%;
   height: 45%;
@@ -962,4 +966,484 @@
   font-weight: 600;
   line-height: 1.45;
   word-break: keep-all;
+}
+
+/* ───────── 배경 (설정 카드에서 고른다) ───────── */
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.starfield {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.auroraBlob {
+  position: absolute;
+  width: 62vmax;
+  height: 62vmax;
+  border-radius: 50%;
+  opacity: 0.24;
+  background-color: var(--aurora-light);
+  filter: blur(90px);
+  transition: background-color 1.4s ease;
+  animation: auroraDrift 24s ease-in-out infinite alternate;
+}
+
+:global(.dark) .auroraBlob {
+  opacity: 0.2;
+  background-color: var(--aurora-dark);
+}
+
+.auroraBlob[data-index="0"] {
+  left: -14vmax;
+  top: -30vmax;
+}
+
+.auroraBlob[data-index="1"] {
+  right: -18vmax;
+  top: -22vmax;
+  animation-duration: 28s;
+  animation-delay: -8s;
+}
+
+.auroraBlob[data-index="2"] {
+  left: 18vmax;
+  bottom: -42vmax;
+  animation-duration: 32s;
+  animation-delay: -14s;
+}
+
+@keyframes auroraDrift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(9vmax, 7vmax, 0) scale(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auroraBlob {
+    animation: none;
+  }
+}
+
+/* ───────── 설정 카드 ───────── */
+
+.settings {
+  margin-top: 1.1em;
+}
+
+.settingRow,
+.settingBlock {
+  padding: 0.95em 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+:global(.dark) .settingRow,
+:global(.dark) .settingBlock {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.settingLabel {
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.settingHint {
+  margin-top: 0.2em;
+  font-size: 0.75em;
+  line-height: 1.45;
+  color: #8a8a8a;
+  word-break: keep-all;
+}
+
+/* 낮/밤 스위치 */
+.sky {
+  position: relative;
+  flex-shrink: 0;
+  width: 4.6em;
+  height: 2.3em;
+  overflow: hidden;
+  border-radius: 999px;
+  isolation: isolate;
+  cursor: pointer;
+  outline: none;
+  box-shadow:
+    inset 0 0.08em 0.3em rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+  transition: filter 0.2s ease;
+}
+
+.sky:hover,
+.sky:focus-visible {
+  filter: brightness(1.07);
+}
+
+.skyDay,
+.skyNight {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.5s ease;
+}
+
+.skyDay {
+  background: linear-gradient(180deg, #58b4ff 0%, #a6dcff 100%);
+}
+
+.skyNight {
+  opacity: 0;
+  background: linear-gradient(180deg, #0b1130 0%, #27315e 100%);
+}
+
+.sky[data-dark="true"] .skyNight {
+  opacity: 1;
+}
+
+.skyStar {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s ease;
+}
+
+.sky[data-dark="true"] .skyStar {
+  opacity: 0.9;
+  transform: none;
+  animation: skyTwinkle 2.6s ease-in-out infinite;
+}
+
+@keyframes skyTwinkle {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.cloud {
+  position: absolute;
+  height: 0.55em;
+  border-radius: 999px;
+  background: #fff;
+  transition:
+    transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.4s ease;
+}
+
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  bottom: 30%;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.cloud::before {
+  left: 18%;
+  width: 0.62em;
+  height: 0.62em;
+}
+
+.cloud::after {
+  left: 48%;
+  width: 0.46em;
+  height: 0.46em;
+}
+
+.cloud[data-i="0"] {
+  right: 0.42em;
+  bottom: 0.32em;
+  width: 1.5em;
+}
+
+.cloud[data-i="1"] {
+  right: 1.5em;
+  bottom: 1.2em;
+  width: 0.95em;
+  height: 0.36em;
+  opacity: 0.8;
+}
+
+.sky[data-dark="true"] .cloud {
+  opacity: 0;
+  transform: translate(1.4em, 0.5em);
+}
+
+.skyKnob {
+  position: absolute;
+  top: 0.25em;
+  left: 0.25em;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+}
+
+.sun,
+.moon {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transition: opacity 0.4s ease;
+}
+
+.sun {
+  background: radial-gradient(
+    circle at 35% 32%,
+    #fff6c4 0%,
+    #ffd447 45%,
+    #ffb22e 100%
+  );
+  box-shadow:
+    0 0 0.7em 0.1em rgba(255, 196, 64, 0.55),
+    inset 0 -0.08em 0.15em rgba(200, 120, 0, 0.35);
+}
+
+.moon {
+  opacity: 0;
+  background: radial-gradient(
+    circle at 35% 32%,
+    #ffffff 0%,
+    #e3e7f1 55%,
+    #c5ccdc 100%
+  );
+  box-shadow:
+    0 0 0.6em rgba(190, 205, 255, 0.45),
+    inset -0.12em -0.1em 0.2em rgba(120, 130, 160, 0.35);
+}
+
+.moon i {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(140, 150, 175, 0.45);
+}
+
+.moon i:nth-child(1) {
+  top: 26%;
+  left: 52%;
+  width: 22%;
+  height: 22%;
+}
+
+.moon i:nth-child(2) {
+  top: 56%;
+  left: 30%;
+  width: 16%;
+  height: 16%;
+}
+
+.moon i:nth-child(3) {
+  top: 62%;
+  left: 62%;
+  width: 10%;
+  height: 10%;
+}
+
+.sky[data-dark="true"] .sun {
+  opacity: 0;
+}
+
+.sky[data-dark="true"] .moon {
+  opacity: 1;
+}
+
+/* 켜고 끄는 스위치 */
+.toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.9em;
+  height: 1.75em;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.12);
+  outline: none;
+  transition:
+    background 0.25s ease,
+    filter 0.2s ease;
+}
+
+:global(.dark) .toggle {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.toggle[data-on="true"] {
+  background: #171717;
+}
+
+:global(.dark) .toggle[data-on="true"] {
+  background: #f2f2f2;
+}
+
+.toggle:focus-visible {
+  filter: brightness(1.15);
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 0.2em;
+  left: 0.2em;
+  width: 1.35em;
+  height: 1.35em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.25);
+}
+
+:global(.dark) .toggle[data-on="true"] .toggleKnob {
+  background: #1d1d1f;
+}
+
+/* 배경 고르기 */
+.backdropOptions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65em;
+  margin-top: 0.75em;
+}
+
+.backdropOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45em;
+  font-size: 0.78em;
+  color: #8a8a8a;
+  outline: none;
+  transition: color 0.2s ease;
+}
+
+.backdropOption[aria-checked="true"] {
+  color: inherit;
+  font-weight: 600;
+}
+
+.preview {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  overflow: hidden;
+  /* squircle 경로와 비슷한 모서리라 안쪽 테두리가 잘리지 않는다 */
+  border-radius: 0.9em;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+:global(.dark) .preview {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.backdropOption:hover .preview,
+.backdropOption:focus-visible .preview {
+  transform: translateY(-0.12em);
+}
+
+/* 선택 표시는 squircle 경로에 잘리지 않도록 안쪽에 그린다 */
+.backdropOption[aria-checked="true"] .preview {
+  box-shadow: inset 0 0 0 0.16em currentColor;
+}
+
+.preview[data-preview="plain"] {
+  background: #fafafa;
+}
+
+:global(.dark) .preview[data-preview="plain"] {
+  background: #171717;
+}
+
+.previewFolder {
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  top: 40%;
+  bottom: 30%;
+  border-radius: 0.3em;
+  background: rgba(128, 128, 128, 0.28);
+}
+
+.previewFolder::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -0.32em;
+  width: 45%;
+  height: 0.42em;
+  border-radius: 0.2em 0.2em 0 0;
+  background: inherit;
+}
+
+.preview[data-preview="stars"] {
+  color: rgba(28, 30, 40, 0.6);
+  background: #f2f3f7;
+}
+
+:global(.dark) .preview[data-preview="stars"] {
+  color: #fff;
+  background: linear-gradient(180deg, #0d1128 0%, #1c2244 100%);
+}
+
+.previewStars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.previewStars circle {
+  fill: currentColor;
+}
+
+.previewStars polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.5;
+  opacity: 0.4;
+}
+
+:global(.dark) .previewStars polyline {
+  opacity: 0;
+}
+
+.preview[data-preview="aurora"] {
+  background:
+    radial-gradient(circle at 28% 26%, rgba(255, 138, 120, 0.8), transparent 58%),
+    radial-gradient(circle at 76% 34%, rgba(143, 143, 247, 0.8), transparent 58%),
+    radial-gradient(circle at 52% 88%, rgba(122, 214, 255, 0.75), transparent 62%),
+    #fafafa;
+}
+
+:global(.dark) .preview[data-preview="aurora"] {
+  background:
+    radial-gradient(circle at 28% 26%, rgba(255, 138, 120, 0.55), transparent 58%),
+    radial-gradient(circle at 76% 34%, rgba(143, 143, 247, 0.55), transparent 58%),
+    radial-gradient(circle at 52% 88%, rgba(122, 214, 255, 0.5), transparent 62%),
+    #171717;
 }

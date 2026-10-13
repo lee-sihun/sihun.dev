@@ -5,10 +5,16 @@ import type {
   Palette,
   ProfileLink,
   ProjectItem,
+  SettingsItem,
   WritingItem,
 } from "./types";
 
 const ABOUT_PALETTE: Palette = { from: "#FFA48F", to: "#C93549", ink: "light" };
+const SETTINGS_PALETTE: Palette = {
+  from: "#EEF1F5",
+  to: "#9BA6B5",
+  ink: "dark",
+};
 const WRITING_PALETTE: Palette = {
   from: "#B4F5D7",
   to: "#20A688",
@@ -179,6 +185,16 @@ function toWritingItem(posts: Post[]): WritingItem {
   };
 }
 
+const SETTINGS_ITEM: SettingsItem = {
+  kind: "settings",
+  id: "settings",
+  kicker: "Settings",
+  title: "설정",
+  subline: "테마 · 배경 · 효과음",
+  palette: SETTINGS_PALETTE,
+  description: "보는 방식과 소리를 취향대로 바꿔보세요.",
+};
+
 export function buildFolderItems(
   projects: Project[],
   posts: Post[]
@@ -203,5 +219,6 @@ export function buildFolderItems(
     },
     ...sortedProjects.map(toProjectItem),
     toWritingItem(posts),
+    SETTINGS_ITEM,
   ];
 }

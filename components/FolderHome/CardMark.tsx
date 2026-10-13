@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useId, useMemo } from "react";
-import BlogSvg from "@/public/svg/blog.svg";
 import { toBraille } from "./braille";
+import Glyph from "./Glyph";
 import styles from "./FolderHome.module.css";
 import type { FolderItem } from "./types";
 
@@ -12,13 +12,14 @@ const CARD_MARK = "image" as MarkVariant;
 
 // 카드 이미지를 흑백 망점으로 바꿔 카드 색에 스며들게 한다
 function ImageMark({ item }: { item: FolderItem }) {
-  if (!item.art) {
+  if (item.kind === "writing" || item.kind === "settings") {
     return (
       <span className={`${styles.imageMark} ${styles.glyphMark}`} aria-hidden>
-        <BlogSvg />
+        <Glyph kind={item.kind} />
       </span>
     );
   }
+  if (!item.art) return null;
   // 밝은 글자 카드에는 밝은 형태(screen), 어두운 글자 카드에는 어두운 형태(multiply)로 얹는다
   const invert = item.palette.ink === item.art.tone;
   return (

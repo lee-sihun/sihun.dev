@@ -40,7 +40,9 @@ import {
   type Drivers,
   type Geometry,
 } from "./geometry";
+import Backdrop from "./Backdrop";
 import styles from "./FolderHome.module.css";
+import { playChime, playFlip, playFolder, playTick } from "./sound";
 import type { FolderItem } from "./types";
 
 const useIsomorphicLayoutEffect =
@@ -67,6 +69,11 @@ const WHEEL_SPRING = { type: "spring", stiffness: 320, damping: 40 } as const;
 const HOVER_SPRING = { type: "spring", stiffness: 260, damping: 22 } as const;
 const LIFT_SPRING = { type: "spring", stiffness: 380, damping: 26 } as const;
 const QUICK = { duration: 0.2 } as const;
+// 카드 뽑기: 빠르게 돌다가 길게 감속하며 멈춘다
+const SPIN = {
+  duration: 2.6,
+  ease: [0.22, 0.65, 0.18, 1] as [number, number, number, number],
+};
 
 const mod = (value: number, n: number) => ((value % n) + n) % n;
 
@@ -118,6 +125,10 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   // 마우스로 카드를 누르면 포커스가 먼저 옮겨지는데, 이때는 다이얼을 돌리지 않는다
   const pointerPressed = useRef(false);
   const returnFocus = useRef<number | null>(null);
+  const lastIndex = useRef(0);
+  // 진행 중인 카드 뽑기를 구분한다. 다른 조작이 끼어들면 값이 바뀌어 뽑기 후속 동작이 취소된다
+  const spinId = useRef(0);
+  const pendingShuffle = useRef(false);
 
   // ───────── 모션 값 ─────────
   const t = useMotionValue(0);
@@ -193,7 +204,12 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   const shadowOpacity = useTransform(enter, (e) => clamp(e * 1.8, 0, 1));
 
   useMotionValueEvent(p, "change", (value) => {
-    setFocusItem(slots[mod(Math.round(value), n)]);
+    const index = Math.round(value);
+    setFocusItem(slots[mod(index, n)]);
+    if (index !== lastIndex.current) {
+      lastIndex.current = index;
+      if (isOpenRef.current) playTick();
+    }
   });
 
   // ───────── 화면 크기 ─────────
@@ -270,6 +286,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   // ───────── 열고 닫기 · 다이얼 ─────────
   const goTo = useCallback(
     (target: number, velocity = 0) => {
+      spinId.current += 1;
       targetP.current = target;
       animate(p, target, reduceMotion ? QUICK : { ...DIAL_SPRING, velocity });
     },
@@ -285,6 +302,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     if (isOpenRef.current) return;
     isOpenRef.current = true;
     setIsOpen(true);
+    playFolder(true);
     animate(t, 1, reduceMotion ? QUICK : OPEN_SPRING);
     // 키보드로 열었을 때 바로 카드 사이를 오갈 수 있도록
     requestAnimationFrame(() =>
@@ -298,6 +316,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     if (!isOpenRef.current) return;
     isOpenRef.current = false;
     setIsOpen(false);
+    playFolder(false);
     goTo(Math.round(targetP.current));
     animate(t, 0, reduceMotion ? QUICK : CLOSE_SPRING);
     if (stageRef.current?.querySelector("[data-slot]:focus")) {
@@ -321,18 +340,55 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   // ───────── 카드 상세 ─────────
   const openDetail = (slot: number) => {
     goTo(nearest(slot));
+    playFlip();
     setDetail({ slot, closing: false });
   };
 
   const closeDetail = useCallback(() => {
-    setDetail((current) =>
-      current && !current.closing ? { ...current, closing: true } : current
-    );
+    const current = detailRef.current;
+    if (!current || current.closing) return;
+    playFlip();
+    setDetail({ ...current, closing: true });
   }, []);
 
+  // 다이얼을 두 바퀴 넘게 돌려 아무 카드에서 멈춘 뒤 펼친다
+  const spin = () => {
+    const base = Math.round(p.get());
+    const choices = slots
+      .map((itemIndex, slot) => ({ itemIndex, slot }))
+      .filter(
+        ({ itemIndex, slot }) =>
+          slot !== mod(base, n) && items[itemIndex].kind !== "settings"
+      );
+    const { slot } = choices[Math.floor(Math.random() * choices.length)];
+    const target = base + n * 2 + mod(slot - base, n);
+    const id = ++spinId.current;
+    targetP.current = target;
+    animate(p, target, reduceMotion ? QUICK : SPIN).then(() => {
+      if (spinId.current !== id || !isOpenRef.current) return;
+      playChime();
+      window.setTimeout(() => {
+        if (spinId.current === id && isOpenRef.current && !detailRef.current) {
+          openDetail(slot);
+        }
+      }, 420);
+    });
+  };
+  const spinRef = useRef(spin);
+  spinRef.current = spin;
+
+  const shuffle = useCallback(() => {
+    pendingShuffle.current = true;
+    closeDetail();
+  }, [closeDetail]);
+
   const onDetailClosed = useCallback(() => {
-    returnFocus.current = detailRef.current?.slot ?? null;
+    const shuffling = pendingShuffle.current;
+    pendingShuffle.current = false;
+    // 뽑기를 할 때는 설정 카드로 포커스를 돌려보내지 않는다 (포커스가 다이얼을 되돌려 놓으므로)
+    returnFocus.current = shuffling ? null : (detailRef.current?.slot ?? null);
     setDetail(null);
+    if (shuffling) spinRef.current();
   }, []);
 
   const getFrame = useCallback(
@@ -405,6 +461,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     const onWheel = (event: WheelEvent) => {
       if (!isOpenRef.current || detailRef.current) return;
       event.preventDefault();
+      spinId.current += 1;
       const delta =
         Math.abs(event.deltaX) > Math.abs(event.deltaY)
           ? event.deltaX
@@ -444,6 +501,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     suppressClick.current = false;
     if (!isOpenRef.current || detailRef.current || event.button !== 0) return;
     if ((event.target as HTMLElement).closest("[data-no-drag]")) return;
+    spinId.current += 1;
     p.stop();
     dragRef.current = {
       id: event.pointerId,
@@ -503,6 +561,12 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
 
   // ───────── 그리기 ─────────
   const about = items.find((item) => item.kind === "about");
+  // 오로라 배경은 가운데 카드와 이웃 카드의 색을 따른다 (설정 카드의 회색은 건너뛴다)
+  const auroraPalettes = [0, 1, -1, 2, -2]
+    .map((offset) => items[mod(focusItem + offset, items.length)])
+    .filter((item) => item.kind !== "settings")
+    .slice(0, 3)
+    .map((item) => item.palette);
   const causticColors = [-2, -1, 0, 1, 2].map(
     (offset) => items[slots[mod(offset, n)]].palette.to
   );
@@ -525,6 +589,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
         {about ? `${about.title} · ${about.subline}` : "sihun.dev"}
       </h1>
 
+      <Backdrop palettes={auroraPalettes} />
       <FolderShadow
         motion={folderMotion}
         u={u}
@@ -674,6 +739,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
           getFrame={() => getFrame(detail.slot)}
           onRequestClose={closeDetail}
           onClosed={onDetailClosed}
+          onShuffle={shuffle}
         />
       )}
     </div>

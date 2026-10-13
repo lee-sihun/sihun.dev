@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useId, useMemo, type CSSProperties } from "react";
-import BlogSvg from "@/public/svg/blog.svg";
 import CardMark from "./CardMark";
+import Glyph from "./Glyph";
 import styles from "./FolderHome.module.css";
 import { squircleClip, squirclePath } from "./squircle";
 import type { FolderItem, Palette } from "./types";
@@ -37,9 +37,9 @@ export function Emblem({
         className={styles.emblemTile}
         style={{ width: size, height: size, clipPath }}
       >
-        {item.kind === "writing" ? (
-          <span className={styles.emblemGlyph}>
-            <BlogSvg aria-hidden />
+        {item.kind === "writing" || item.kind === "settings" ? (
+          <span className={styles.emblemGlyph} data-kind={item.kind}>
+            <Glyph kind={item.kind} />
           </span>
         ) : (
           <Image
