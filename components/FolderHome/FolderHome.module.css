@@ -4,7 +4,6 @@
   --bg: #fafafa;
   --fg: #171717;
   --muted: #8a8a8a;
-  --ring: #3b82f6;
   --back-top: rgba(0, 0, 0, 0.028);
   --back-bottom: rgba(0, 0, 0, 0.05);
   --back-stroke: rgba(0, 0, 0, 0.075);
@@ -258,11 +257,6 @@
   outline: none;
 }
 
-.stage:has(.hit:focus-visible) .front {
-  outline: 2px solid var(--ring);
-  outline-offset: 4px;
-}
-
 /* ───────── 카드 ───────── */
 
 .cards {
@@ -300,11 +294,6 @@
   position: absolute;
   inset: 0;
   display: block;
-}
-
-.cardSlot:focus-visible .card {
-  outline: 2px solid var(--ring);
-  outline-offset: 3px;
 }
 
 .card {
@@ -561,9 +550,11 @@
 }
 
 .dot:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: -2px;
-  border-radius: 6px;
+  outline: none;
+}
+
+.dot:focus-visible::before {
+  opacity: 0.5;
 }
 
 /* ───────── 카드 상세 (뒤집기) ───────── */
@@ -586,6 +577,7 @@
   left: 50%;
   top: 50%;
   z-index: 100;
+  outline: none;
   transform-style: preserve-3d;
 }
 
@@ -652,8 +644,8 @@
 }
 
 .close:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.38);
 }
 
 .close svg {
@@ -868,8 +860,28 @@
 .primary:focus-visible,
 .secondary:focus-visible,
 .postLink:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline: none;
+}
+
+.primary:focus-visible {
+  background: #000;
+}
+
+:global(.dark) .primary:focus-visible {
+  background: #fff;
+}
+
+.secondary:focus-visible {
+  background: #e6e6e6;
+}
+
+:global(.dark) .secondary:focus-visible {
+  background: #343438;
+}
+
+.postLink:focus-visible .postTitle {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .posts {

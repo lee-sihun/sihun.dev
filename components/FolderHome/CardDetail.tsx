@@ -70,11 +70,11 @@ export default function CardDetail({
   const opacity = useMotionValue(reduceMotion ? 0 : 1);
   const scrim = useMotionValue(0);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
 
   // 열릴 때 한 번: 카드가 놓여 있던 자리에서 출발해 가운데로 오면서 뒤집힌다
   useLayoutEffect(() => {
-    closeRef.current?.focus({ preventScroll: true });
+    // 대화상자 자체에 포커스를 두어 닫기 버튼이 강조된 채로 열리지 않게 한다
+    dialogRef.current?.focus({ preventScroll: true });
     animate(scrim, 1, { duration: 0.35 });
 
     if (reduceMotion) {
@@ -120,7 +120,8 @@ export default function CardDetail({
     if (!nodes?.length) return;
     const first = nodes[0];
     const last = nodes[nodes.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || active === dialogRef.current)) {
       event.preventDefault();
       last.focus();
     } else if (!event.shiftKey && document.activeElement === last) {
@@ -144,6 +145,7 @@ export default function CardDetail({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        tabIndex={-1}
         className={styles.flipper}
         onKeyDown={trapFocus}
         style={{
@@ -181,7 +183,6 @@ export default function CardDetail({
               {item.kicker} · {String(index + 1).padStart(2, "0")}
             </span>
             <button
-              ref={closeRef}
               type="button"
               className={styles.close}
               onClick={onRequestClose}
