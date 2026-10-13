@@ -34,7 +34,7 @@ export default function Nav() {
 
   return (
     <nav className="flex items-center">
-      <Link className="hidden md:flex items-center" href="/">
+      <Link className="hidden md:flex items-center" href="/blog">
         <LogoSvg className="fill-black dark:fill-white" />
         <h1 className="text-lg font-bold ml-[5px]">시훈의 개발노트</h1>
       </Link>
