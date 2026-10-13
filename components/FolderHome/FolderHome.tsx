@@ -9,7 +9,6 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import Link from "next/link";
 import {
   forwardRef,
   useCallback,
@@ -22,8 +21,6 @@ import {
   type MutableRefObject,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
-import SaturnSvg from "@/public/svg/saturn.svg";
 import CardDetail, { type CardFrame } from "./CardDetail";
 import CardFace from "./CardFace";
 import {
@@ -525,17 +522,6 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
       <h1 className="sr-only">
         {about ? `${about.title} · ${about.subline}` : "sihun.dev"}
       </h1>
-
-      <header className={styles.bar} data-no-drag>
-        <span className={styles.wordmark}>
-          <SaturnSvg aria-hidden />
-          sihun.dev
-        </span>
-        <nav className={styles.barLinks}>
-          <Link href="/blog">Blog</Link>
-          <ThemeSwitcher />
-        </nav>
-      </header>
 
       <FolderShadow motion={folderMotion} u={u} colors={causticColors} />
       <FolderBack motion={folderMotion} u={u} />

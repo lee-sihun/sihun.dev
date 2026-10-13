@@ -13,7 +13,8 @@ export const DESIGN = {
   inFolderScale: 0.54,
   /** 열린 뒤 아래로 내려간 폴더 크기 */
   openFolderScale: 0.56,
-  barH: 60,
+  /** 화면 위쪽 여백 */
+  topInset: 24,
 } as const;
 
 export interface Geometry {
@@ -76,7 +77,7 @@ export function measure(w: number, h: number): Geometry {
   const cardH = DESIGN.cardH * u;
   const openHalf = (DESIGN.folderH * DESIGN.openFolderScale * u) / 2;
   const openY = h - 40 * u - openHalf;
-  const fanTop = DESIGN.barH + 28 * u + cardH / 2;
+  const fanTop = DESIGN.topInset + 28 * u + cardH / 2;
   const fanBottom = openY - openHalf - 60 * u - cardH / 2;
 
   return {

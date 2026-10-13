@@ -43,51 +43,6 @@
   cursor: grabbing;
 }
 
-/* ───────── 상단 바 ───────── */
-
-.bar {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 0 24px;
-}
-
-.wordmark {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.wordmark svg {
-  width: 24px;
-  height: auto;
-  fill: currentColor;
-}
-
-.barLinks {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.barLinks a {
-  transition: color 0.2s ease;
-}
-
-.barLinks a:hover {
-  color: var(--fg);
-}
-
 /* ───────── 폴더 ───────── */
 
 .layer {
