@@ -9,7 +9,7 @@ import type {
   WritingItem,
 } from "./types";
 
-const ABOUT_PALETTE: Palette = { from: "#FFA48F", to: "#C93549", ink: "light" };
+const ABOUT_PALETTE: Palette = { from: "#FFC296", to: "#D9632F", ink: "light" };
 const SETTINGS_PALETTE: Palette = {
   from: "#EEF1F5",
   to: "#9BA6B5",
