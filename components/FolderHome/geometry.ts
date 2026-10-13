@@ -36,6 +36,8 @@ export interface Geometry {
 export interface Drivers {
   /** 0 닫힘 → 1 열림 */
   t: number;
+  /** 폴더가 카드보다 늦게 움직이는 정도 (FOLDER_LAG) */
+  lag: number;
   /** 가운데에 놓인 카드 인덱스 (드래그 중에는 소수) */
   p: number;
   hover: number;
@@ -102,19 +104,20 @@ export function wrapOffset(index: number, p: number, n: number) {
   return d >= n / 2 ? d - n : d;
 }
 
-// 열 때는 카드가 먼저 빠져나간 뒤에 폴더가 내려가고, 닫을 때는 폴더가 먼저 올라와 카드를 받는다.
-// (같이 움직이면 카드가 내려가는 폴더에 끌려 잠깐 가라앉았다가 올라온다)
-const FOLDER_LAG = 0.3;
+// 폴더는 t가 lag~1 사이에 있을 때만 움직인다.
+// 열 때는 카드가 먼저 빠져나간 뒤에 내려가고, 닫을 때는 카드가 들어오기 직전에 맞춰 올라온다.
+// 닫을 때도 열 때만큼 일찍 도착하려 하면, 스프링이 가장 빠른 초반에 몰아서 올라와 확 닫혀 보인다
+export const FOLDER_LAG = { open: 0.3, close: 0.12 } as const;
 
 /** 폴더 위치·크기의 진행도 */
-export const folderProgress = (t: number) =>
-  smoothstep(clamp((t - FOLDER_LAG) / (1 - FOLDER_LAG), 0, 1));
+export const folderProgress = (t: number, lag: number) =>
+  smoothstep(clamp((t - lag) / (1 - lag), 0, 1));
 
 export function folderPose(
-  { t, enter, float }: Drivers,
+  { t, lag, enter, float }: Drivers,
   g: Geometry,
 ): FolderPose {
-  const tf = folderProgress(t);
+  const tf = folderProgress(t, lag);
   return {
     x: g.w / 2,
     y:

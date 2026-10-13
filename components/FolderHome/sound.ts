@@ -114,14 +114,19 @@ export function playTick() {
 export function playFolder(open: boolean) {
   const ctx = audio();
   if (!ctx) return;
-  const now = ctx.currentTime;
   if (open) {
     sweep(ctx, { from: 500, to: 2400, duration: 0.45, peak: 0.16, q: 0.8 });
     tone(ctx, { frequency: 150, duration: 0.18, peak: 0.12 });
   } else {
-    sweep(ctx, { from: 2200, to: 450, duration: 0.4, peak: 0.14, q: 0.8 });
-    tone(ctx, { at: now + 0.3, frequency: 110, duration: 0.16, peak: 0.2 });
+    sweep(ctx, { from: 2200, to: 450, duration: 0.45, peak: 0.14, q: 0.8 });
   }
+}
+
+/** 닫히면서 카드가 폴더에 들어앉는 순간의 낮은 소리 */
+export function playShut() {
+  const ctx = audio();
+  if (!ctx) return;
+  tone(ctx, { frequency: 110, duration: 0.16, peak: 0.2 });
 }
 
 /** 카드를 뒤집을 때 */
