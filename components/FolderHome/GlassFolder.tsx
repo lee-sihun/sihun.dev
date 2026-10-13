@@ -213,7 +213,8 @@ export function FolderFront({
         />
         <span className={styles.lip} aria-hidden />
         <span className={styles.rim} aria-hidden />
-        <SaturnSvg className={styles.etch} aria-hidden />
+        {/* SVGR이 viewBox를 지워서 크기를 줄이면 그림이 잘리므로 다시 넣어준다 */}
+        <SaturnSvg viewBox="0 0 32 21" className={styles.etch} aria-hidden />
       </motion.div>
     </Layer>
   );
