@@ -36,6 +36,7 @@ import {
   folderPose,
   lerp,
   measure,
+  smoothstep,
   wrapOffset,
   type Drivers,
   type Geometry,
@@ -51,19 +52,20 @@ const useIsomorphicLayoutEffect =
 // 카드가 이보다 적으면 원형으로 돌릴 때 빈자리가 보여서 목록을 반복해 채운다
 const MIN_SLOTS = 7;
 
-// 카드가 흘러나오는 과정이 보이도록 약 0.9초에 걸쳐 살짝 튕기며 열린다
+// 누르자마자 움직이기 시작해 약 0.6초 안에 넘치지 않고 멈춘다 (임계 감쇠 + 초기 속도)
 const OPEN_SPRING = {
   type: "spring",
-  stiffness: 32,
-  damping: 8.5,
+  stiffness: 90,
+  damping: 19,
   restDelta: 0.0005,
 } as const;
 const CLOSE_SPRING = {
   type: "spring",
-  stiffness: 50,
-  damping: 12.5,
+  stiffness: 100,
+  damping: 20,
   restDelta: 0.0005,
 } as const;
+const KICK = 1.6;
 const DIAL_SPRING = { type: "spring", stiffness: 260, damping: 32 } as const;
 const WHEEL_SPRING = { type: "spring", stiffness: 320, damping: 40 } as const;
 const HOVER_SPRING = { type: "spring", stiffness: 260, damping: 22 } as const;
@@ -184,8 +186,9 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   );
   const cardsOriginY = useTransform(folder, (f) => f.y / geoRef.current.h);
 
+  // 앞판은 열기 초반에 먼저 젖혀지고, 닫을 때는 카드가 다 들어간 뒤 마지막에 닫힌다
   const flap = useTransform([t, hover], ([tv, hv]: number[]) =>
-    lerp(-7 * hv, -30 + 8 * hv, clamp(tv, 0, 1))
+    lerp(-7 * hv, -30 + 8 * hv, smoothstep(clamp(tv / 0.35, 0, 1)))
   );
   const sheenX = useTransform(mx, (x) => `${x * 14}%`);
   const captionY = useTransform(
@@ -303,7 +306,13 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     isOpenRef.current = true;
     setIsOpen(true);
     playFolder(true);
-    animate(t, 1, reduceMotion ? QUICK : OPEN_SPRING);
+    animate(
+      t,
+      1,
+      reduceMotion
+        ? QUICK
+        : { ...OPEN_SPRING, velocity: Math.max(t.getVelocity(), KICK) }
+    );
     // 키보드로 열었을 때 바로 카드 사이를 오갈 수 있도록
     requestAnimationFrame(() =>
       cardRefs.current[mod(Math.round(targetP.current), n)]?.focus({
@@ -318,7 +327,13 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     setIsOpen(false);
     playFolder(false);
     goTo(Math.round(targetP.current));
-    animate(t, 0, reduceMotion ? QUICK : CLOSE_SPRING);
+    animate(
+      t,
+      0,
+      reduceMotion
+        ? QUICK
+        : { ...CLOSE_SPRING, velocity: Math.min(t.getVelocity(), -KICK) }
+    );
     if (stageRef.current?.querySelector("[data-slot]:focus")) {
       hitRef.current?.focus({ preventScroll: true });
     }

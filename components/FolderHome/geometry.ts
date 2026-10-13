@@ -66,7 +66,7 @@ export const clamp = (value: number, min: number, max: number) =>
 export const lerp = (from: number, to: number, k: number) =>
   from + (to - from) * k;
 
-const smoothstep = (k: number) => k * k * (3 - 2 * k);
+export const smoothstep = (k: number) => k * k * (3 - 2 * k);
 
 const bezier = (a: number, b: number, c: number, d: number, k: number) => {
   const r = 1 - k;
@@ -102,18 +102,27 @@ export function wrapOffset(index: number, p: number, n: number) {
   return d >= n / 2 ? d - n : d;
 }
 
+// 열 때는 카드가 먼저 빠져나간 뒤에 폴더가 내려가고, 닫을 때는 폴더가 먼저 올라와 카드를 받는다.
+// (같이 움직이면 카드가 내려가는 폴더에 끌려 잠깐 가라앉았다가 올라온다)
+const FOLDER_LAG = 0.3;
+
+/** 폴더 위치·크기의 진행도 */
+export const folderProgress = (t: number) =>
+  smoothstep(clamp((t - FOLDER_LAG) / (1 - FOLDER_LAG), 0, 1));
+
 export function folderPose(
   { t, enter, float }: Drivers,
   g: Geometry,
 ): FolderPose {
+  const tf = folderProgress(t);
   return {
     x: g.w / 2,
     y:
-      lerp(g.closedY, g.openY, t) +
+      lerp(g.closedY, g.openY, tf) +
       float * 5 * g.u * (1 - clamp(t, 0, 1)) +
       (1 - enter) * 28 * g.u,
     scale:
-      lerp(DESIGN.closedFolderScale, DESIGN.openFolderScale, t) *
+      lerp(DESIGN.closedFolderScale, DESIGN.openFolderScale, tf) *
       lerp(0.96, 1, enter),
   };
 }
@@ -139,7 +148,9 @@ export function cardPose(
 ): Pose {
   const o = wrapOffset(index, d.p, n);
   const a = Math.abs(o);
-  const folder = folderPose(d, g);
+  // 카드 경로는 '닫혀 있을 때의 폴더'에서 출발한다. 폴더는 카드가 빠져나간 뒤에야 움직이므로
+  // 그 전까지는 실제 폴더와 같은 자리이고, 내려가는 폴더가 카드를 끌어내리지 않는다
+  const folder = folderPose({ ...d, t: 0 }, g);
 
   // 폴더 안: 가운데 카드가 가장 높이 솟은 작은 부채꼴
   const rest = folderSlot(o);
@@ -162,20 +173,22 @@ export function cardPose(
   const fanScale = 1 - 0.06 * Math.min(a, 1) - 0.04 * clamp(a - 1, 0, 2);
   const fanOpacity = clamp(1 - (a - 2.3) / 0.9, 0, 1);
 
-  // 가운데 카드부터 차례로 빠져나오도록 카드마다 출발을 늦춘다
-  const delay = (Math.min(a, 3) / 3) * 0.24;
-  const k = clamp((d.t - delay) / (1 - delay), 0, 1.08);
-  const kc = Math.min(k, 1);
-  // 폴더에서 위로 쑥 빠져나온 뒤 아치 위 자리로 내려앉는 곡선
-  const rise = Math.max(90 * g.u, (inY - fanY) * 0.6);
+  // 가운데 카드부터 차례로 빠져나오도록 카드마다 출발을 조금씩 늦춘다
+  const delay = (Math.min(a, 3) / 3) * 0.18;
+  const k = clamp((d.t - delay) / (1 - delay), 0, 1);
+  // 폴더 위로 빠져나온 뒤 아치 위 자리로 이어지는 곡선.
+  // 제어점이 도착점을 넘지 않아 중간에 멈칫하거나 지나쳤다 돌아오지 않는다
+  const dy = inY - fanY;
+  const climb = clamp(dy * 0.45, 36 * g.u, 150 * g.u);
+  const settle = Math.max(0, dy * 0.2);
 
   return {
     x: bezier(inX, inX, fanX, fanX, k),
-    y: bezier(inY, inY - rise, fanY + rise * 0.5, fanY, k),
-    rotate: lerp(inRotate, fanRotate, smoothstep(kc)),
-    scale: lerp(inScale, fanScale, kc),
-    opacity: lerp(appear, fanOpacity, kc),
+    y: bezier(inY, inY - climb, fanY + settle, fanY, k),
+    rotate: lerp(inRotate, fanRotate, smoothstep(k)),
+    scale: lerp(inScale, fanScale, k),
+    opacity: lerp(appear, fanOpacity, k),
     zIndex: 100 - Math.round(a * 10),
-    out: kc,
+    out: k,
   };
 }
