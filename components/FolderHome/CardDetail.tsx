@@ -63,10 +63,10 @@ export default function CardDetail({
   onClosed,
 }: CardDetailProps) {
   const ratio = cardW / cardH;
-  const width = Math.min(
-    cardW * 1.7,
-    viewport.w - 32,
-    (viewport.h - 64) * ratio
+  // 화면이 아주 작아도 카드 자체보다 작아지지는 않게 한다
+  const width = Math.max(
+    cardW,
+    Math.min(cardW * 1.7, viewport.w - 32, (viewport.h - 64) * ratio)
   );
   const height = width / ratio;
   const fontSize = Math.min(16, Math.max(12.5, width / 26));

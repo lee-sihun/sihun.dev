@@ -201,6 +201,8 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     const stage = stageRef.current;
     if (!stage) return;
     const update = () => {
+      // 스타일이 잠깐 빠진 순간(개발 중 HMR 등)처럼 무대가 무너진 크기는 무시한다
+      if (stage.clientWidth < 64 || stage.clientHeight < 64) return;
       const next = measure(stage.clientWidth, stage.clientHeight);
       geoRef.current = next;
       setGeo(next);
