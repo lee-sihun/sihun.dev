@@ -48,7 +48,7 @@ const PROFILE: {
 } = {
   name: "이시훈",
   role: "프론트엔드 개발자",
-  avatar: "/img/profile.jpeg",
+  avatar: "/img/profile.png",
   intro: [
     "직관적이고 자연스러운 UI/UX를 중요하게 생각하며, 유지보수가 용이하고 가독성이 좋은 코드를 작성하기 위해 노력하고 있습니다.",
     "최신 기술에도 관심이 많아 변화에 빠르게 적응할 수 있습니다. 이 블로그에서는 프론트엔드를 주제로 한 게시글을 주로 작성하고 있습니다.",
@@ -211,7 +211,7 @@ export function buildFolderItems(
       title: PROFILE.name,
       subline: PROFILE.role,
       palette: ABOUT_PALETTE,
-      art: { src: PROFILE.avatar, tone: "dark" },
+      art: { src: PROFILE.avatar, tone: "light" },
       avatar: PROFILE.avatar,
       role: PROFILE.role,
       intro: PROFILE.intro,

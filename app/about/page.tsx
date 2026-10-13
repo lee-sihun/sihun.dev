@@ -1,5 +1,5 @@
 import Image from "next/image";
-import profileImg from "../../public/img/profile.jpeg";
+import profileImg from "../../public/img/profile.png";
 import MailSvg from "../../public/svg/mail.svg";
 import GithubSvg from "../../public/svg/github.svg";
 import DiscordSvg from "../../public/svg/discord.svg";
