@@ -26,6 +26,7 @@ import { squircleClip } from "./squircle";
 import type {
   AboutItem,
   FolderItem,
+  Palette,
   ProjectItem,
   SettingsItem,
   WritingItem,
@@ -52,6 +53,8 @@ interface CardDetailProps {
   onClosed: () => void;
   /** 설정 카드의 '아무 카드나 뽑기' */
   onShuffle: () => void;
+  /** 지금 폴더에 꽂힌 카드 색 (설정 카드의 배경 미리보기용) */
+  folderPalettes: Palette[];
 }
 
 const OPEN_SPRING = { type: "spring", stiffness: 110, damping: 19 } as const;
@@ -71,6 +74,7 @@ export default function CardDetail({
   onRequestClose,
   onClosed,
   onShuffle,
+  folderPalettes,
 }: CardDetailProps) {
   const ratio = cardW / cardH;
   // 화면이 아주 작아도 카드 자체보다 작아지지는 않게 한다
@@ -250,6 +254,7 @@ export default function CardDetail({
                   titleId={titleId}
                   unit={fontSize}
                   onShuffle={onShuffle}
+                  folderPalettes={folderPalettes}
                 />
               )}
             </Squircle>
@@ -485,7 +490,11 @@ function SettingsBody({
   titleId,
   unit,
   onShuffle,
-}: BodyProps<SettingsItem> & { onShuffle: () => void }) {
+  folderPalettes,
+}: BodyProps<SettingsItem> & {
+  onShuffle: () => void;
+  folderPalettes: Palette[];
+}) {
   return (
     <>
       <div className={styles.paperScroll}>
@@ -495,7 +504,7 @@ function SettingsBody({
           unit={unit}
           meta={item.description}
         />
-        <SettingsPanel unit={unit} />
+        <SettingsPanel unit={unit} folderPalettes={folderPalettes} />
       </div>
       <div className={styles.actions}>
         <button type="button" className={styles.primary} onClick={onShuffle}>

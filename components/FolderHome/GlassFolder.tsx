@@ -10,7 +10,7 @@ const TAB_R = 12;
 const TAB_SLOPE = 16;
 
 // 왼쪽 위에 탭이 달린 폴더 뒷판
-const BACK_PATH = [
+export const BACK_PATH = [
   `M 0 ${H - R}`,
   `V ${TAB_R}`,
   `A ${TAB_R} ${TAB_R} 0 0 1 ${TAB_R} 0`,

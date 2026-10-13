@@ -1347,10 +1347,11 @@
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 1 / 1.05;
+  /* 배경은 화면 전체에 깔리므로 화면 비율로 보여준다 */
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   /* squircle 경로와 비슷한 모서리라 안쪽 테두리가 잘리지 않는다 */
-  border-radius: 0.9em;
+  border-radius: 0.77em;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   transition:
     transform 0.2s ease,
@@ -1379,25 +1380,61 @@
   background: #171717;
 }
 
-.previewFolder {
+.miniFolder {
   position: absolute;
-  left: 30%;
-  right: 30%;
-  top: 40%;
-  bottom: 30%;
-  border-radius: 0.3em;
-  background: rgba(128, 128, 128, 0.28);
+  left: 50%;
+  top: 54%;
+  width: 46%;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0.08em 0.12em rgba(0, 0, 0, 0.14));
 }
 
-.previewFolder::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: -0.32em;
-  width: 45%;
-  height: 0.42em;
-  border-radius: 0.2em 0.2em 0 0;
-  background: inherit;
+.miniBack {
+  fill: rgba(0, 0, 0, 0.05);
+  stroke: rgba(0, 0, 0, 0.14);
+  stroke-width: 0.75px;
+  vector-effect: non-scaling-stroke;
+}
+
+:global(.dark) .miniBack {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.16);
+}
+
+/* 유리 색은 실제 앞판(.front)의 그라디언트를 그대로 쓴다 */
+.miniFront {
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 0.75px;
+  vector-effect: non-scaling-stroke;
+}
+
+:global(.dark) .miniFront {
+  stroke: rgba(255, 255, 255, 0.3);
+}
+
+.miniGlassTop {
+  stop-color: rgba(255, 255, 255, 0.5);
+}
+
+.miniGlassMiddle {
+  stop-color: rgba(255, 255, 255, 0.18);
+}
+
+.miniGlassBottom {
+  stop-color: rgba(255, 255, 255, 0.26);
+}
+
+:global(.dark) .miniGlassTop {
+  stop-color: rgba(255, 255, 255, 0.17);
+}
+
+:global(.dark) .miniGlassMiddle {
+  stop-color: rgba(255, 255, 255, 0.07);
+}
+
+:global(.dark) .miniGlassBottom {
+  stop-color: rgba(255, 255, 255, 0.045);
 }
 
 .preview[data-preview="stars"] {

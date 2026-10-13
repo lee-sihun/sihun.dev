@@ -567,6 +567,10 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     .filter((item) => item.kind !== "settings")
     .slice(0, 3)
     .map((item) => item.palette);
+  // 설정 카드의 배경 미리보기 속 폴더에도 지금 폴더와 같은 순서로 카드를 꽂는다
+  const folderPalettes = [-3, -2, -1, 0, 1, 2, 3].map(
+    (offset) => items[mod(focusItem + offset, items.length)].palette
+  );
   const causticColors = [-2, -1, 0, 1, 2].map(
     (offset) => items[slots[mod(offset, n)]].palette.to
   );
@@ -740,6 +744,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
           onRequestClose={closeDetail}
           onClosed={onDetailClosed}
           onShuffle={shuffle}
+          folderPalettes={folderPalettes}
         />
       )}
     </div>

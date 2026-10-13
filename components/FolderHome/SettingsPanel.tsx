@@ -4,8 +4,10 @@ import { useTheme } from "next-themes";
 import { useRef, type KeyboardEvent } from "react";
 import { Squircle } from "@/components/Squircle";
 import { useHomeSettingsStore, type HomeBackdrop } from "@/stores";
+import FolderMiniature from "./FolderMiniature";
 import styles from "./FolderHome.module.css";
 import { playToggle } from "./sound";
+import type { Palette } from "./types";
 
 const KNOB_SPRING = { type: "spring", stiffness: 520, damping: 34 } as const;
 
@@ -105,26 +107,34 @@ const BACKDROPS: { value: HomeBackdrop; label: string }[] = [
   { value: "aurora", label: "오로라" },
 ];
 
-// [x, y, 반지름]
+// 16:10 미리보기 위의 별 [x, y, 반지름] — 가운데 폴더 자리는 비워 둔다
 const PREVIEW_STARS = [
-  [9, 12, 1.1],
-  [17, 18, 0.8],
-  [25, 13, 1.2],
-  [31, 22, 0.9],
-  [6, 31, 0.6],
-  [20, 34, 0.7],
-  [33, 37, 0.5],
-  [13, 26, 0.5],
-  [29, 6, 0.6],
+  [4, 5, 0.9],
+  [9, 13, 0.6],
+  [5, 22, 0.7],
+  [11, 27, 0.5],
+  [16, 3, 0.7],
+  [24, 2.5, 0.5],
+  [31, 4, 0.8],
+  [38, 9, 1],
+  [44, 4, 0.6],
+  [43, 15, 0.7],
+  [39, 24, 0.5],
+  [46, 27, 0.6],
 ] as const;
+
+// 라이트 모드의 별자리 선
+const PREVIEW_LINES = ["4,5 9,13 5,22", "38,9 44,4 43,15"];
 
 function BackdropPicker({
   value,
   unit,
+  folderPalettes,
   onChange,
 }: {
   value: HomeBackdrop;
   unit: number;
+  folderPalettes: Palette[];
   onChange: (value: HomeBackdrop) => void;
 }) {
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -164,26 +174,26 @@ function BackdropPicker({
         >
           <Squircle
             as="span"
-            cornerRadius={unit * 0.7}
+            cornerRadius={unit * 0.6}
             cornerSmoothing={0.6}
             className={styles.preview}
             data-preview={option.value}
           >
-            {option.value === "plain" && (
-              <span className={styles.previewFolder} />
-            )}
             {option.value === "stars" && (
               <svg
-                viewBox="0 0 40 44"
+                viewBox="0 0 48 30"
                 className={styles.previewStars}
                 aria-hidden
               >
-                <polyline points="9,12 17,18 25,13 31,22" />
+                {PREVIEW_LINES.map((points) => (
+                  <polyline key={points} points={points} />
+                ))}
                 {PREVIEW_STARS.map(([x, y, r]) => (
                   <circle key={`${x}-${y}`} cx={x} cy={y} r={r} />
                 ))}
               </svg>
             )}
+            <FolderMiniature palettes={folderPalettes} />
           </Squircle>
           {option.label}
         </button>
@@ -193,7 +203,14 @@ function BackdropPicker({
 }
 
 /** 설정 카드 뒷면의 조절 항목들 */
-export default function SettingsPanel({ unit }: { unit: number }) {
+export default function SettingsPanel({
+  unit,
+  folderPalettes,
+}: {
+  unit: number;
+  /** 지금 폴더에 꽂힌 카드 색 (미리보기 속 폴더에 쓴다) */
+  folderPalettes: Palette[];
+}) {
   const { resolvedTheme, setTheme } = useTheme();
   const dark = resolvedTheme !== "light";
   const { backdrop, sound, setBackdrop, setSound } = useHomeSettingsStore();
@@ -220,6 +237,7 @@ export default function SettingsPanel({ unit }: { unit: number }) {
         <BackdropPicker
           value={backdrop}
           unit={unit}
+          folderPalettes={folderPalettes}
           onChange={(next) => {
             setBackdrop(next);
             playToggle(true);
