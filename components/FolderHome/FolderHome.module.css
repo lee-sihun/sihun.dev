@@ -1,0 +1,956 @@
+/* ───────── 무대 ───────── */
+
+.stage {
+  --bg: #fafafa;
+  --fg: #171717;
+  --muted: #8a8a8a;
+  --ring: #3b82f6;
+  --back-top: rgba(0, 0, 0, 0.028);
+  --back-bottom: rgba(0, 0, 0, 0.05);
+  --back-stroke: rgba(0, 0, 0, 0.075);
+  --back-highlight: rgba(255, 255, 255, 0.95);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:global(.dark) .stage {
+  --bg: #171717;
+  --fg: #fafafa;
+  --muted: #8c8c8c;
+  --back-top: rgba(255, 255, 255, 0.075);
+  --back-bottom: rgba(255, 255, 255, 0.035);
+  --back-stroke: rgba(255, 255, 255, 0.11);
+  --back-highlight: rgba(255, 255, 255, 0.3);
+}
+
+.stage[data-open="true"] {
+  touch-action: none;
+  cursor: grab;
+}
+
+.stage[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+/* ───────── 상단 바 ───────── */
+
+.bar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 24px;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.wordmark svg {
+  width: 24px;
+  height: auto;
+  fill: currentColor;
+}
+
+.barLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.barLinks a {
+  transition: color 0.2s ease;
+}
+
+.barLinks a:hover {
+  color: var(--fg);
+}
+
+/* ───────── 폴더 ───────── */
+
+.layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.tilt {
+  position: absolute;
+  inset: 0;
+}
+
+.back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.backFillTop {
+  stop-color: var(--back-top);
+}
+
+.backFillBottom {
+  stop-color: var(--back-bottom);
+}
+
+.backStroke {
+  stroke: var(--back-stroke);
+}
+
+.backHighlightStop {
+  stop-color: var(--back-highlight);
+}
+
+.tabLabel {
+  position: absolute;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-radius: 1.05em 1.05em 1.5em 1.5em;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.18) 40%,
+    rgba(255, 255, 255, 0.26) 100%
+  );
+  -webkit-backdrop-filter: blur(12px) saturate(185%);
+  backdrop-filter: blur(12px) saturate(185%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1.2em 2em -1.4em rgba(255, 255, 255, 0.6),
+    0 0 0 1px rgba(0, 0, 0, 0.045),
+    0 1.4em 2.6em -1.1em rgba(0, 0, 0, 0.26);
+}
+
+:global(.dark) .front {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.17) 0%,
+    rgba(255, 255, 255, 0.07) 45%,
+    rgba(255, 255, 255, 0.045) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    inset 0 -1.2em 2em -1.4em rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 1.6em 3em -1.2em rgba(0, 0, 0, 0.75);
+}
+
+.front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.sheen {
+  position: absolute;
+  top: -40%;
+  bottom: -40%;
+  left: -50%;
+  width: 200%;
+  background: linear-gradient(
+    102deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.34) 44%,
+    rgba(255, 255, 255, 0.05) 51%,
+    transparent 58%
+  );
+  pointer-events: none;
+}
+
+:global(.dark) .sheen {
+  opacity: 0.28;
+}
+
+.lip {
+  position: absolute;
+  left: 1em;
+  right: 1em;
+  top: 0.45em;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.8) 80%,
+    transparent
+  );
+  opacity: 0.7;
+}
+
+:global(.dark) .lip {
+  opacity: 0.25;
+}
+
+.rim {
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.12) 35%,
+    rgba(255, 255, 255, 0.04) 65%,
+    rgba(255, 255, 255, 0.55)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+:global(.dark) .rim {
+  opacity: 0.45;
+}
+
+.etch {
+  position: absolute;
+  right: 1.15em;
+  bottom: 1em;
+  width: 1.55em;
+  height: auto;
+  fill: rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.07));
+}
+
+:global(.dark) .etch {
+  fill: rgba(255, 255, 255, 0.3);
+  filter: none;
+}
+
+.floorShadow {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: -4.5%;
+  height: 10%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.2), transparent);
+  filter: blur(5px);
+}
+
+:global(.dark) .floorShadow {
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.caustic {
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: -11%;
+  height: 15%;
+  border-radius: 50%;
+  filter: blur(22px);
+  opacity: 0.36;
+}
+
+:global(.dark) .caustic {
+  opacity: 0.26;
+}
+
+.hit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 35;
+  border-radius: 1.5em;
+  cursor: pointer;
+  outline: none;
+}
+
+.stage:has(.hit:focus-visible) .front {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+
+/* ───────── 카드 ───────── */
+
+.cards {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.cardSlot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  padding: 0;
+  border-radius: 1.25em;
+  outline: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.stage[data-open="true"] .cardSlot {
+  cursor: inherit;
+}
+
+.stage[data-open="true"] .cardSlot[aria-current="true"] {
+  cursor: pointer;
+}
+
+.stage[data-dragging="true"] .cardSlot {
+  cursor: grabbing;
+}
+
+.cardLift {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.cardSlot:focus-visible .card {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 1.05em 1.1em 1.15em;
+  overflow: hidden;
+  border-radius: 1.25em;
+  color: #fff;
+  text-align: left;
+  background:
+    radial-gradient(120% 70% at 12% 0%, rgba(255, 255, 255, 0.36), transparent 62%),
+    linear-gradient(158deg, var(--from) 0%, var(--to) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 큰 그림자는 폴더 밖으로 나온 만큼만 드리운다 (폴더 안에서는 유리 아래가 탁해 보여서) */
+.cardShadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.25em;
+  box-shadow: 0 1.2em 2.4em -1em rgba(0, 0, 0, 0.38);
+  pointer-events: none;
+}
+
+:global(.dark) .cardShadow {
+  box-shadow: 0 1.4em 2.8em -1em rgba(0, 0, 0, 0.7);
+}
+
+.card[data-ink="dark"] {
+  color: rgba(12, 12, 12, 0.88);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--grain);
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.2));
+  pointer-events: none;
+}
+
+.card[data-ink="dark"]::after {
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.14));
+}
+
+.orbit {
+  position: absolute;
+  right: -6.5em;
+  bottom: -5.5em;
+  z-index: -1;
+  width: 16em;
+  height: 16em;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.orbit::after {
+  content: "";
+  position: absolute;
+  inset: 2.8em;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.card[data-ink="dark"] .orbit,
+.card[data-ink="dark"] .orbit::after {
+  border-color: rgba(0, 0, 0, 0.09);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.625em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.emblem {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 3.5em;
+  height: 3.5em;
+  margin-top: 1.5em;
+  overflow: hidden;
+  border-radius: 0.95em;
+  background: #fff;
+  box-shadow:
+    0 0.6em 1.2em -0.5em rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.emblem[data-shape="round"] {
+  border-radius: 50%;
+}
+
+.emblemGlyph {
+  display: grid;
+  place-items: center;
+  color: #12695a;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.emblemGlyph svg {
+  width: 1.55em;
+  height: 1.55em;
+  fill: currentColor;
+}
+
+.cardBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  margin-top: auto;
+}
+
+.cardTitle {
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.cardSubline {
+  overflow: hidden;
+  font-size: 0.75em;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.92;
+}
+
+.card[data-ink="dark"] .cardSubline {
+  opacity: 0.82;
+}
+
+/* ───────── 라벨 · 인디케이터 ───────── */
+
+.caption {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.captionName {
+  font-size: 0.95em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.captionRole {
+  margin-top: 0.3em;
+  font-size: 0.8em;
+  color: var(--muted);
+}
+
+.captionHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-top: 1.3em;
+  font-size: 0.72em;
+  color: var(--muted);
+}
+
+.forTouch {
+  display: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .forPointer {
+    display: none;
+  }
+
+  .forTouch {
+    display: inline;
+  }
+}
+
+.captionHint kbd {
+  padding: 0.1em 0.45em;
+  border-radius: 0.35em;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.92em;
+  border: 1px solid currentColor;
+  opacity: 0.7;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: currentColor;
+  opacity: 0.18;
+  transition:
+    width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.35s ease;
+}
+
+.dot[aria-current="true"]::before {
+  width: 16px;
+  opacity: 0.85;
+}
+
+.dot:hover::before {
+  opacity: 0.5;
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+/* ───────── 카드 상세 (뒤집기) ───────── */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(250, 250, 250, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+:global(.dark) .scrim {
+  background: rgba(23, 23, 23, 0.6);
+}
+
+.flipper {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  transform-style: preserve-3d;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1.25em;
+}
+
+.backFace {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  overflow: hidden;
+  border-radius: 1.4em;
+  color: #fff;
+  background:
+    radial-gradient(120% 60% at 12% 0%, rgba(255, 255, 255, 0.32), transparent 60%),
+    linear-gradient(158deg, var(--from) 0%, var(--to) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 2em 4em -1.5em rgba(0, 0, 0, 0.45);
+  transform: rotateY(180deg);
+}
+
+.backFace[data-ink="dark"] {
+  color: rgba(12, 12, 12, 0.88);
+}
+
+.backHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35em 0.35em 0.65em 0.8em;
+}
+
+.backKicker {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 2.1em;
+  height: 2.1em;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.24);
+  transition: background 0.2s ease;
+}
+
+.backFace[data-ink="dark"] .close {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.close:hover {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.close svg {
+  width: 0.8em;
+  height: 0.8em;
+}
+
+.paper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 1em;
+  color: #171717;
+  background: #fff;
+  box-shadow: 0 0.2em 0.6em rgba(0, 0, 0, 0.08);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* 내용이 길면 이 영역만 스크롤되고 아래 버튼은 그대로 남는다 */
+.paperScroll {
+  flex: 1;
+  min-height: 0;
+  padding: 1.35em 1.35em 1em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.2em), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.2em), transparent);
+}
+
+.paperScroll::-webkit-scrollbar {
+  display: none;
+}
+
+:global(.dark) .paper {
+  color: #f2f2f2;
+  background: #1d1d1f;
+}
+
+.paperHead {
+  display: flex;
+  align-items: center;
+  gap: 0.85em;
+}
+
+.paperEmblem {
+  position: relative;
+  flex-shrink: 0;
+  width: 3.2em;
+  height: 3.2em;
+  overflow: hidden;
+  border-radius: 0.85em;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 0.3em 0.8em -0.3em rgba(0, 0, 0, 0.25);
+}
+
+.paperEmblem[data-shape="round"] {
+  border-radius: 50%;
+}
+
+.paperTitle {
+  font-size: 1.45em;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.paperMeta {
+  margin-top: 0.25em;
+  font-size: 0.8em;
+  color: #8a8a8a;
+}
+
+.paperText {
+  margin-top: 1.1em;
+  font-size: 0.9em;
+  line-height: 1.7;
+  color: #3d3d3d;
+  word-break: keep-all;
+}
+
+.paperText + .paperText {
+  margin-top: 0.6em;
+}
+
+:global(.dark) .paperText {
+  color: #c9c9c9;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45em 1em;
+  margin-top: 1.1em;
+  padding-top: 1em;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  font-size: 0.8em;
+  line-height: 1.5;
+}
+
+:global(.dark) .facts {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.facts dt {
+  color: #8a8a8a;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  margin-top: 1.1em;
+}
+
+.chip {
+  padding: 0.3em 0.65em;
+  border-radius: 999px;
+  font-size: 0.72em;
+  font-weight: 500;
+  color: #404040;
+  background: #f0f0f0;
+}
+
+:global(.dark) .chip {
+  color: #c4c4c4;
+  background: #2b2b2e;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  padding: 0.4em 1.35em 1.2em;
+}
+
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  height: 2.9em;
+  border-radius: 999px;
+  font-size: 0.88em;
+  font-weight: 600;
+  color: #fafafa;
+  background: #171717;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.primary:hover {
+  background: #000;
+}
+
+:global(.dark) .primary {
+  color: #171717;
+  background: #f2f2f2;
+}
+
+:global(.dark) .primary:hover {
+  background: #fff;
+}
+
+.primary:active {
+  transform: scale(0.98);
+}
+
+.primary svg,
+.secondary svg {
+  width: 1em;
+  height: 1em;
+}
+
+.secondaryRow {
+  display: flex;
+  gap: 0.5em;
+}
+
+.secondary {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  height: 2.6em;
+  border-radius: 999px;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #404040;
+  background: #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.secondary:hover {
+  background: #e6e6e6;
+}
+
+:global(.dark) .secondary {
+  color: #d4d4d4;
+  background: #2b2b2e;
+}
+
+:global(.dark) .secondary:hover {
+  background: #343438;
+}
+
+.primary:focus-visible,
+.secondary:focus-visible,
+.postLink:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.9em;
+}
+
+.postLink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  padding: 0.8em 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 0.2em;
+}
+
+:global(.dark) .postLink {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.postLink:hover .postTitle {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.postMeta {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.68em;
+  letter-spacing: 0.04em;
+  color: #8a8a8a;
+}
+
+.postTitle {
+  font-size: 0.9em;
+  font-weight: 600;
+  line-height: 1.45;
+  word-break: keep-all;
+}

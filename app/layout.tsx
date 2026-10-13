@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import Header from "@/components/Header";
 import Providers from "@/components/Provider";
 import Footer from "@/components/Footer";
+import SiteChrome from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sihun.dev"),
@@ -70,9 +71,13 @@ export default function RootLayout({
       </head>
       <body className={pretendard.className}>
         <Providers>
-          <Header />
+          <SiteChrome>
+            <Header />
+          </SiteChrome>
           <main>{children}</main>
-          <Footer />
+          <SiteChrome>
+            <Footer />
+          </SiteChrome>
         </Providers>
       </body>
     </html>
