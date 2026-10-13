@@ -362,29 +362,47 @@
   background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.14));
 }
 
-.orbit {
+/* 카드 장식: 흑백 망점으로 바꾼 카드 이미지 */
+.imageMark {
   position: absolute;
-  right: -6.5em;
-  bottom: -5.5em;
+  right: -3.6em;
+  bottom: -3.4em;
   z-index: -1;
-  width: 16em;
-  height: 16em;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 13.5em;
+  height: 13.5em;
+  opacity: 0.6;
+  mix-blend-mode: screen;
   pointer-events: none;
+  -webkit-mask-image:
+    radial-gradient(circle, #000 0.12em, transparent 0.135em),
+    radial-gradient(circle at 75% 75%, #000 30%, transparent 72%);
+  mask-image:
+    radial-gradient(circle, #000 0.12em, transparent 0.135em),
+    radial-gradient(circle at 75% 75%, #000 30%, transparent 72%);
+  -webkit-mask-size:
+    0.36em 0.36em,
+    100% 100%;
+  mask-size:
+    0.36em 0.36em,
+    100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
-.orbit::after {
-  content: "";
-  position: absolute;
-  inset: 2.8em;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.13);
+.imageMark[data-blend="multiply"] {
+  opacity: 0.45;
+  mix-blend-mode: multiply;
 }
 
-.card[data-ink="dark"] .orbit,
-.card[data-ink="dark"] .orbit::after {
-  border-color: rgba(0, 0, 0, 0.09);
+.glyphMark {
+  opacity: 0.32;
+  mix-blend-mode: normal;
+}
+
+.glyphMark svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
 }
 
 .cardTop {

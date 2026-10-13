@@ -12,6 +12,8 @@ interface BaseItem {
   /** 카드 앞면 제목 아래 한 줄 */
   subline: string;
   palette: Palette;
+  /** 카드 장식에 쓰는 이미지와 그 배경의 밝기 */
+  art?: { src: string; tone: "light" | "dark" };
 }
 
 export interface ProfileLink {

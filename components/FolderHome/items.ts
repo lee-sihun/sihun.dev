@@ -23,6 +23,9 @@ const PROJECT_PALETTES: Record<string, Palette> = {
   "sihun.dev": { from: "#CBBBFF", to: "#6549D6", ink: "light" },
 };
 
+// 배경이 어두운 썸네일 (나머지는 밝은 배경으로 본다)
+const DARK_THUMBNAILS = new Set(["deepeye"]);
+
 // 팔레트가 지정되지 않은 새 프로젝트용
 const FALLBACK_PALETTES: Palette[] = [
   { from: "#FFC4DA", to: "#B3326A", ink: "light" },
@@ -134,6 +137,10 @@ function toProjectItem(project: Project, index: number): ProjectItem {
     palette:
       PROJECT_PALETTES[slug] ??
       FALLBACK_PALETTES[index % FALLBACK_PALETTES.length],
+    art: {
+      src: `/img/thumbnail/${project.thumbnail}`,
+      tone: DARK_THUMBNAILS.has(slug) ? "dark" : "light",
+    },
     url: project.url,
     thumbnail: `/img/thumbnail/${project.thumbnail}`,
     year,
@@ -188,6 +195,7 @@ export function buildFolderItems(
       title: PROFILE.name,
       subline: PROFILE.role,
       palette: ABOUT_PALETTE,
+      art: { src: PROFILE.avatar, tone: "dark" },
       avatar: PROFILE.avatar,
       role: PROFILE.role,
       intro: PROFILE.intro,

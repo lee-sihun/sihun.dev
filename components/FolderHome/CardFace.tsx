@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useId, useMemo, type CSSProperties } from "react";
 import BlogSvg from "@/public/svg/blog.svg";
+import CardMark from "./CardMark";
 import styles from "./FolderHome.module.css";
 import { squircleClip, squirclePath } from "./squircle";
 import type { FolderItem, Palette } from "./types";
@@ -85,7 +86,7 @@ export default function CardFace({
       data-ink={item.palette.ink}
       style={{ ...paletteStyle(item.palette), clipPath: shape.clip }}
     >
-      <span className={styles.orbit} aria-hidden />
+      <CardMark item={item} />
       <span className={styles.cardTop}>
         <span>{item.kicker}</span>
         <span>{String(index + 1).padStart(2, "0")}</span>
