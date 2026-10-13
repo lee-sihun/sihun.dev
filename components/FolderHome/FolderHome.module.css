@@ -305,16 +305,20 @@
   height: 100%;
   padding: 1.05em 1.1em 1.15em;
   overflow: hidden;
-  border-radius: 1.25em;
   color: #fff;
   text-align: left;
   background:
     radial-gradient(120% 70% at 12% 0%, rgba(255, 255, 255, 0.36), transparent 62%),
     linear-gradient(158deg, var(--from) 0%, var(--to) 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 모서리 하이라이트 (squircle 경로를 그대로 따라 그린다) */
+.cardRim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 /* 큰 그림자는 폴더 밖으로 나온 만큼만 드리운다 (폴더 안에서는 유리 아래가 탁해 보여서) */
@@ -396,34 +400,31 @@
 }
 
 .emblem {
-  position: relative;
   display: block;
-  flex-shrink: 0;
-  width: 3.5em;
-  height: 3.5em;
+  width: fit-content;
   margin-top: 1.5em;
-  overflow: hidden;
-  border-radius: 0.95em;
-  background: #fff;
-  box-shadow:
-    0 0.6em 1.2em -0.5em rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 0.4em 0.55em rgba(0, 0, 0, 0.32));
 }
 
-.emblem[data-shape="round"] {
-  border-radius: 50%;
+.emblemTile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #fff;
 }
 
 .emblemGlyph {
   display: grid;
   place-items: center;
+  width: 100%;
+  height: 100%;
   color: #12695a;
   background: rgba(255, 255, 255, 0.94);
 }
 
 .emblemGlyph svg {
-  width: 1.55em;
-  height: 1.55em;
+  width: 45%;
+  height: 45%;
   fill: currentColor;
 }
 
@@ -586,23 +587,24 @@
   inset: 0;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  border-radius: 1.25em;
+  box-shadow: 0 2em 4em -1.5em rgba(0, 0, 0, 0.45);
+}
+
+.backSide {
+  transform: rotateY(180deg);
 }
 
 .backFace {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   padding: 0.5em;
   overflow: hidden;
-  border-radius: 1.4em;
   color: #fff;
   background:
     radial-gradient(120% 60% at 12% 0%, rgba(255, 255, 255, 0.32), transparent 60%),
     linear-gradient(158deg, var(--from) 0%, var(--to) 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
-    0 2em 4em -1.5em rgba(0, 0, 0, 0.45);
-  transform: rotateY(180deg);
 }
 
 .backFace[data-ink="dark"] {
@@ -659,10 +661,8 @@
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
-  border-radius: 1em;
   color: #171717;
   background: #fff;
-  box-shadow: 0 0.2em 0.6em rgba(0, 0, 0, 0.08);
   user-select: text;
   -webkit-user-select: text;
 }
@@ -695,20 +695,10 @@
 }
 
 .paperEmblem {
-  position: relative;
+  display: block;
   flex-shrink: 0;
-  width: 3.2em;
-  height: 3.2em;
-  overflow: hidden;
-  border-radius: 0.85em;
-  background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 0.3em 0.8em -0.3em rgba(0, 0, 0, 0.25);
-}
-
-.paperEmblem[data-shape="round"] {
-  border-radius: 50%;
+  filter: drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.35))
+    drop-shadow(0 0.25em 0.45em rgba(0, 0, 0, 0.14));
 }
 
 .paperTitle {

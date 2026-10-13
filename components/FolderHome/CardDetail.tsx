@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   type KeyboardEvent,
   type ReactNode,
@@ -12,8 +13,15 @@ import { createPortal } from "react-dom";
 import MailSvg from "@/public/svg/mail.svg";
 import GithubSvg from "@/public/svg/github.svg";
 import DiscordSvg from "@/public/svg/discord.svg";
-import CardFace, { Emblem, paletteStyle } from "./CardFace";
+import { Squircle } from "@/components/Squircle";
+import CardFace, {
+  CARD_EMS,
+  CARD_RADIUS,
+  Emblem,
+  paletteStyle,
+} from "./CardFace";
 import styles from "./FolderHome.module.css";
+import { squircleClip } from "./squircle";
 import type { AboutItem, FolderItem, ProjectItem, WritingItem } from "./types";
 
 export interface CardFrame {
@@ -61,6 +69,14 @@ export default function CardDetail({
     (viewport.h - 64) * ratio
   );
   const height = width / ratio;
+  const fontSize = Math.min(16, Math.max(12.5, width / 26));
+  // 앞면은 카드를 그대로 키운 모양, 뒷면은 상세 화면에 맞춘 작은 모서리
+  const frontRadius = (CARD_RADIUS * width) / CARD_EMS;
+  const backRadius = 1.4 * fontSize;
+  const backClip = useMemo(
+    () => squircleClip(width, height, backRadius),
+    [width, height, backRadius]
+  );
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -165,50 +181,60 @@ export default function CardDetail({
       >
         <div
           className={styles.face}
-          style={{ fontSize: width / 14.5 }}
+          style={{ fontSize: width / CARD_EMS, borderRadius: frontRadius }}
           aria-hidden
         >
-          <CardFace item={item} index={index} />
+          <CardFace item={item} index={index} width={width} height={height} />
         </div>
         <div
-          className={`${styles.face} ${styles.backFace}`}
-          data-ink={item.palette.ink}
-          style={{
-            ...paletteStyle(item.palette),
-            fontSize: Math.min(16, Math.max(12.5, width / 26)),
-          }}
+          className={`${styles.face} ${styles.backSide}`}
+          style={{ borderRadius: backRadius }}
         >
-          <div className={styles.backHeader}>
-            <span className={styles.backKicker}>
-              {item.kicker} · {String(index + 1).padStart(2, "0")}
-            </span>
-            <button
-              type="button"
-              className={styles.close}
-              onClick={onRequestClose}
-              aria-label="닫기"
-            >
-              <svg
-                viewBox="0 0 14 14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
+          <div
+            className={styles.backFace}
+            data-ink={item.palette.ink}
+            style={{
+              ...paletteStyle(item.palette),
+              fontSize,
+              clipPath: backClip,
+            }}
+          >
+            <div className={styles.backHeader}>
+              <span className={styles.backKicker}>
+                {item.kicker} · {String(index + 1).padStart(2, "0")}
+              </span>
+              <button
+                type="button"
+                className={styles.close}
+                onClick={onRequestClose}
+                aria-label="닫기"
               >
-                <path d="M2 2l10 10M12 2L2 12" />
-              </svg>
-            </button>
-          </div>
-          <div className={styles.paper}>
-            {item.kind === "project" && (
-              <ProjectBody item={item} titleId={titleId} />
-            )}
-            {item.kind === "about" && (
-              <AboutBody item={item} titleId={titleId} />
-            )}
-            {item.kind === "writing" && (
-              <WritingBody item={item} titleId={titleId} />
-            )}
+                <svg
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                >
+                  <path d="M2 2l10 10M12 2L2 12" />
+                </svg>
+              </button>
+            </div>
+            <Squircle
+              cornerRadius={fontSize}
+              cornerSmoothing={0.6}
+              className={styles.paper}
+            >
+              {item.kind === "project" && (
+                <ProjectBody item={item} titleId={titleId} unit={fontSize} />
+              )}
+              {item.kind === "about" && (
+                <AboutBody item={item} titleId={titleId} unit={fontSize} />
+              )}
+              {item.kind === "writing" && (
+                <WritingBody item={item} titleId={titleId} unit={fontSize} />
+              )}
+            </Squircle>
           </div>
         </div>
       </motion.div>
@@ -249,18 +275,27 @@ function ArrowUpRight() {
   );
 }
 
+interface BodyProps<T> {
+  item: T;
+  titleId: string;
+  /** 뒷면 글자 크기 (px) */
+  unit: number;
+}
+
 function Head({
   item,
   titleId,
+  unit,
   meta,
-}: {
-  item: FolderItem;
-  titleId: string;
-  meta: ReactNode;
-}) {
+}: BodyProps<FolderItem> & { meta: ReactNode }) {
   return (
     <div className={styles.paperHead}>
-      <Emblem item={item} className={styles.paperEmblem} />
+      <Emblem
+        item={item}
+        size={3.2 * unit}
+        radius={0.85 * unit}
+        className={styles.paperEmblem}
+      />
       <div>
         <h2 id={titleId} className={styles.paperTitle}>
           {item.title}
@@ -271,17 +306,11 @@ function Head({
   );
 }
 
-function ProjectBody({
-  item,
-  titleId,
-}: {
-  item: ProjectItem;
-  titleId: string;
-}) {
+function ProjectBody({ item, titleId, unit }: BodyProps<ProjectItem>) {
   return (
     <>
       <div className={styles.paperScroll}>
-        <Head item={item} titleId={titleId} meta={item.year} />
+        <Head item={item} titleId={titleId} unit={unit} meta={item.year} />
         <p className={styles.paperText}>{item.summary}</p>
         {(item.period || item.team) && (
           <dl className={styles.facts}>
@@ -345,11 +374,11 @@ function ProjectBody({
 
 const LINK_ICONS = { mail: MailSvg, github: GithubSvg, discord: DiscordSvg };
 
-function AboutBody({ item, titleId }: { item: AboutItem; titleId: string }) {
+function AboutBody({ item, titleId, unit }: BodyProps<AboutItem>) {
   return (
     <>
       <div className={styles.paperScroll}>
-        <Head item={item} titleId={titleId} meta={item.role} />
+        <Head item={item} titleId={titleId} unit={unit} meta={item.role} />
         {item.intro.map((paragraph) => (
           <p key={paragraph} className={styles.paperText}>
             {paragraph}
@@ -383,17 +412,16 @@ function AboutBody({ item, titleId }: { item: AboutItem; titleId: string }) {
   );
 }
 
-function WritingBody({
-  item,
-  titleId,
-}: {
-  item: WritingItem;
-  titleId: string;
-}) {
+function WritingBody({ item, titleId, unit }: BodyProps<WritingItem>) {
   return (
     <>
       <div className={styles.paperScroll}>
-        <Head item={item} titleId={titleId} meta={item.description} />
+        <Head
+          item={item}
+          titleId={titleId}
+          unit={unit}
+          meta={item.description}
+        />
         <nav className={styles.posts} aria-label="최근 글">
           {item.posts.map((post) => (
             <Link key={post.url} href={post.url} className={styles.postLink}>

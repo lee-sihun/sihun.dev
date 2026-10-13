@@ -22,7 +22,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import CardDetail, { type CardFrame } from "./CardDetail";
-import CardFace from "./CardFace";
+import CardFace, { CARD_EMS } from "./CardFace";
 import {
   FolderBack,
   FolderFront,
@@ -744,7 +744,7 @@ const CardSlot = forwardRef<HTMLButtonElement, CardSlotProps>(function CardSlot(
         pointerEvents,
         width,
         height,
-        fontSize: width / 14.5,
+        fontSize: width / CARD_EMS,
         visibility: hidden ? "hidden" : undefined,
       }}
       onClick={onClick}
@@ -760,7 +760,7 @@ const CardSlot = forwardRef<HTMLButtonElement, CardSlotProps>(function CardSlot(
           style={{ opacity: shadow }}
           aria-hidden
         />
-        <CardFace item={item} index={index} />
+        <CardFace item={item} index={index} width={width} height={height} />
       </motion.span>
     </motion.button>
   );
