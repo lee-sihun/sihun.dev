@@ -308,7 +308,11 @@
   color: #fff;
   text-align: left;
   background:
-    radial-gradient(120% 70% at 12% 0%, rgba(255, 255, 255, 0.36), transparent 62%),
+    radial-gradient(
+      120% 70% at 12% 0%,
+      rgba(255, 255, 255, 0.36),
+      transparent 62%
+    ),
     linear-gradient(158deg, var(--from) 0%, var(--to) 100%);
 }
 
@@ -359,7 +363,11 @@
 }
 
 .card[data-ink="dark"]::after {
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.14));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.14)
+  );
 }
 
 /* 카드 장식: 흑백 망점으로 바꾼 카드 이미지 */
@@ -647,7 +655,11 @@
   overflow: hidden;
   color: #fff;
   background:
-    radial-gradient(120% 60% at 12% 0%, rgba(255, 255, 255, 0.32), transparent 60%),
+    radial-gradient(
+      120% 60% at 12% 0%,
+      rgba(255, 255, 255, 0.32),
+      transparent 60%
+    ),
     linear-gradient(158deg, var(--from) 0%, var(--to) 100%);
 }
 
@@ -719,7 +731,11 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.2em), transparent);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 1.2em),
+    transparent
+  );
   mask-image: linear-gradient(to bottom, #000 calc(100% - 1.2em), transparent);
 }
 
@@ -834,7 +850,9 @@
   font-weight: 600;
   color: #fafafa;
   background: #171717;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .primary:hover {
@@ -1461,16 +1479,40 @@
 
 .preview[data-preview="aurora"] {
   background:
-    radial-gradient(circle at 28% 26%, rgba(255, 138, 120, 0.8), transparent 58%),
-    radial-gradient(circle at 76% 34%, rgba(143, 143, 247, 0.8), transparent 58%),
-    radial-gradient(circle at 52% 88%, rgba(122, 214, 255, 0.75), transparent 62%),
+    radial-gradient(
+      circle at 28% 26%,
+      rgba(255, 138, 120, 0.8),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 76% 34%,
+      rgba(143, 143, 247, 0.8),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 52% 88%,
+      rgba(122, 214, 255, 0.75),
+      transparent 62%
+    ),
     #fafafa;
 }
 
 :global(.dark) .preview[data-preview="aurora"] {
   background:
-    radial-gradient(circle at 28% 26%, rgba(255, 138, 120, 0.55), transparent 58%),
-    radial-gradient(circle at 76% 34%, rgba(143, 143, 247, 0.55), transparent 58%),
-    radial-gradient(circle at 52% 88%, rgba(122, 214, 255, 0.5), transparent 62%),
+    radial-gradient(
+      circle at 28% 26%,
+      rgba(255, 138, 120, 0.55),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 76% 34%,
+      rgba(143, 143, 247, 0.55),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 52% 88%,
+      rgba(122, 214, 255, 0.5),
+      transparent 62%
+    ),
     #171717;
 }
