@@ -59,7 +59,6 @@ export interface WritingItem extends BaseItem {
 
 export interface SettingsItem extends BaseItem {
   kind: "settings";
-  description: string;
 }
 
 export type FolderItem = AboutItem | ProjectItem | WritingItem | SettingsItem;

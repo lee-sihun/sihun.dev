@@ -498,12 +498,7 @@ function SettingsBody({
   return (
     <>
       <div className={styles.paperScroll}>
-        <Head
-          item={item}
-          titleId={titleId}
-          unit={unit}
-          meta={item.description}
-        />
+        <Head item={item} titleId={titleId} unit={unit} meta={item.subline} />
         <SettingsPanel unit={unit} folderPalettes={folderPalettes} />
       </div>
       <div className={styles.actions}>

@@ -203,7 +203,6 @@ const SETTINGS_ITEM: SettingsItem = {
   title: "설정",
   subline: "테마 · 배경 · 효과음",
   palette: SETTINGS_PALETTE,
-  description: "보는 방식과 소리를 취향대로 바꿔보세요.",
 };
 
 export function buildFolderItems(
