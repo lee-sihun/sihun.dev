@@ -85,6 +85,12 @@ export const Project = defineDocumentType(() => ({
       description:
         "메인 폴더 카드 상세에 보일 요약 (없으면 본문에서 자동으로 뽑는다)",
     },
+    order: {
+      type: "number",
+      required: false,
+      description:
+        "메인 폴더 카드 순서 (작을수록 앞, 없으면 최신순으로 그 뒤에 놓인다)",
+    },
     thumbnail: { type: "string", required: true },
     techStack: { type: "list", of: { type: "string" }, required: true },
     demoUrl: { type: "string", required: false },

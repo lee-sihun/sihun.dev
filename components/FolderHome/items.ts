@@ -200,8 +200,11 @@ export function buildFolderItems(
   projects: Project[],
   posts: Post[]
 ): FolderItem[] {
-  const sortedProjects = [...projects].sort((a, b) =>
-    compareDesc(new Date(a.createdAt), new Date(b.createdAt))
+  // order를 지정한 프로젝트가 작은 순서대로 앞에 오고, 나머지는 최신순
+  const sortedProjects = [...projects].sort(
+    (a, b) =>
+      (a.order ?? Infinity) - (b.order ?? Infinity) ||
+      compareDesc(new Date(a.createdAt), new Date(b.createdAt))
   );
 
   return [
