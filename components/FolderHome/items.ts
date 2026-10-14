@@ -126,13 +126,21 @@ function parseProjectBody(raw: string, title: string) {
   return { ...meta, summary };
 }
 
+// 카드에 보이는 연도: 개발이 끝난 해. 아직 진행 중이면 올해, 개발 기간이 없으면 만든 날짜의 해
+function projectYear(period: string | undefined, createdAt: string) {
+  const end = period?.split("~").pop();
+  if (end?.includes("진행 중")) return String(new Date().getFullYear());
+  const years = end?.match(/\d{4}/g);
+  return years ? years[years.length - 1] : format(new Date(createdAt), "yyyy");
+}
+
 function toProjectItem(project: Project, index: number): ProjectItem {
   const slug = project._raw.flattenedPath.replace(/^projects\//, "");
   const { summary, period, team } = parseProjectBody(
     project.body.raw,
     project.title
   );
-  const year = format(new Date(project.createdAt), "yyyy");
+  const year = projectYear(period, project.createdAt);
 
   return {
     kind: "project",
