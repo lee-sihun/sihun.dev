@@ -79,6 +79,12 @@ export const Project = defineDocumentType(() => ({
   fields: {
     title: { type: "string", required: true },
     description: { type: "string", required: true },
+    summary: {
+      type: "string",
+      required: false,
+      description:
+        "메인 폴더 카드 상세에 보일 요약 (없으면 본문에서 자동으로 뽑는다)",
+    },
     thumbnail: { type: "string", required: true },
     techStack: { type: "list", of: { type: "string" }, required: true },
     demoUrl: { type: "string", required: false },

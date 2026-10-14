@@ -150,7 +150,8 @@ function toProjectItem(project: Project, index: number): ProjectItem {
     url: project.url,
     thumbnail: `/img/thumbnail/${project.thumbnail}`,
     year,
-    summary: summary || project.description,
+    // 직접 적은 요약(frontmatter summary)이 있으면 그대로 쓰고, 없으면 본문에서 뽑은 문장 → description 순서
+    summary: project.summary?.trim() || summary || project.description,
     period,
     team,
     techStack: project.techStack,
