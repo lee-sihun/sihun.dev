@@ -777,13 +777,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
         style={{ y: captionY, opacity: captionOpacity, fontSize: 16 * u }}
         aria-hidden
       >
-        {about && (
-          <>
-            <span className={styles.captionName}>{about.title}</span>
-            <span className={styles.captionRole}>{about.subline}</span>
-          </>
-        )}
-        <span className={styles.captionHint}>폴더를 눌러 열어보세요</span>
+        <span className={styles.captionHint}>폴더를 눌러 열어보세요!</span>
       </motion.div>
 
       <motion.div

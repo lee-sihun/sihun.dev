@@ -527,18 +527,6 @@
   pointer-events: none;
 }
 
-.captionName {
-  font-size: 0.95em;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.captionRole {
-  margin-top: 0.3em;
-  font-size: 0.8em;
-  color: var(--muted);
-}
-
 .captionHint {
   display: inline-flex;
   align-items: center;
