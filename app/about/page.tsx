@@ -11,7 +11,7 @@ const profile = {
   text: "🎉 제 블로그에 방문해주신 여러분 모두 환영합니다 🎉",
   img: profileImg,
   name: "이시훈",
-  job: "프론트엔드 개발자",
+  job: "프로덕트 엔지니어",
   mail: "mailto:cnsa201119@gmail.com",
   github: "https://github.com/lee-sihun",
   discord: "https://discordapp.com/users/479635064368398342",
@@ -19,7 +19,7 @@ const profile = {
 
 export const metadata: Metadata = {
   title: "About",
-  description: "프론트엔드 개발자 이시훈에 대한 소개입니다.",
+  description: "프로덕트 엔지니어 이시훈에 대한 소개입니다.",
 };
 
 export default function About() {

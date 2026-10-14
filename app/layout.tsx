@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     default: "시훈의 개발노트",
     template: "%s | 시훈의 개발노트",
   },
-  description: "프론트엔드 개발자 시훈의 기술 블로그입니다.",
+  description: "프로덕트 엔지니어 시훈의 기술 블로그입니다.",
   openGraph: {
     title: "시훈의 개발노트",
-    description: "프론트엔드 개발자 시훈의 기술 블로그입니다.",
+    description: "프로덕트 엔지니어 시훈의 기술 블로그입니다.",
     type: "website",
     siteName: "시훈의 개발노트",
     url: "https://sihun.dev",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "시훈의 개발노트",
-    description: "프론트엔드 개발자 시훈의 기술 블로그입니다.",
+    description: "프로덕트 엔지니어 시훈의 기술 블로그입니다.",
     images: [
       {
         url: "/img/logo.jpg",

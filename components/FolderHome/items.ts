@@ -47,11 +47,13 @@ const PROFILE: {
   links: ProfileLink[];
 } = {
   name: "이시훈",
-  role: "프론트엔드 개발자",
+  role: "프로덕트 엔지니어",
   avatar: "/img/profile.png",
   intro: [
-    "직관적이고 자연스러운 UI/UX를 중요하게 생각하며, 유지보수가 용이하고 가독성이 좋은 코드를 작성하기 위해 노력하고 있습니다.",
-    "최신 기술에도 관심이 많아 변화에 빠르게 적응할 수 있습니다. 이 블로그에서는 프론트엔드를 주제로 한 게시글을 주로 작성하고 있습니다.",
+    "안녕하세요. 저는 프로덕트 엔지니어 이시훈입니다.",
+    "필요하거나 재미있어 보이는 것을 만들고, 조금씩 다듬어 갑니다.",
+    "개발 환경이 빠르게 변하면서, 저는 무엇을 만들지 정하고, 어떻게 느껴질지 고민하고, 제대로 동작하는지 확인하는 일에 더 집중하고 있습니다.",
+    "방문해 주셔서 감사합니다! 오늘도 좋은 하루 보내세요.",
   ],
   links: [
     { label: "Mail", href: "mailto:cnsa201119@gmail.com", icon: "mail" },
@@ -183,7 +185,7 @@ function toWritingItem(posts: Post[]): WritingItem {
       ? `${sorted.length}편 · 최근 ${format(new Date(latest.createdAt), "yyyy.MM.dd")}`
       : "준비 중",
     palette: WRITING_PALETTE,
-    description: "프론트엔드 개발자 시훈의 기술 블로그입니다.",
+    description: "프로덕트 엔지니어 시훈의 기술 블로그입니다.",
     posts: sorted.slice(0, 4).map((post) => ({
       title: post.title,
       url: post.url,
