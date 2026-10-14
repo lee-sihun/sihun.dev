@@ -79,6 +79,15 @@ const SPIN = {
 
 const mod = (value: number, n: number) => ((value % n) + n) % n;
 
+// 키보드로 옮긴 포커스인지 (:focus-visible을 모르는 오래된 브라우저에서는 그렇다고 본다)
+function isFocusVisible(element: Element) {
+  try {
+    return element.matches(":focus-visible");
+  } catch {
+    return true;
+  }
+}
+
 interface DragState {
   id: number;
   startX: number;
@@ -307,6 +316,32 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     [p, n]
   );
 
+  // 폴더가 들뜨는 모습은 마우스를 폴더 위로 움직였거나 키보드로 포커스했을 때만 보인다.
+  // 클릭이나 닫을 때 옮겨 온 포커스에는 반응하지 않아, 닫히면 처음 모습으로 돌아온다
+  const hoverBy = useRef({ pointer: false, focus: false });
+  const setHover = useCallback(
+    (next: Partial<{ pointer: boolean; focus: boolean }>) => {
+      Object.assign(hoverBy.current, next);
+      const { pointer, focus } = hoverBy.current;
+      animate(hover, pointer || focus ? 1 : 0, HOVER_SPRING);
+    },
+    [hover]
+  );
+
+  // 폴더가 가만히 있는 마우스 아래로 움직여 오면 브라우저가 같은 위치로 포인터 이벤트를 다시 보낸다.
+  // 마지막 위치와 비교해 실제로 마우스를 움직였을 때만 들뜨게 한다
+  const lastPointer = useRef({ x: NaN, y: NaN });
+  useEffect(() => {
+    const onMove = (event: PointerEvent) => {
+      lastPointer.current = { x: event.clientX, y: event.clientY };
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+  const pointerMoved = (event: { clientX: number; clientY: number }) =>
+    event.clientX !== lastPointer.current.x ||
+    event.clientY !== lastPointer.current.y;
+
   // 여는 움직임과 닫는 움직임을 바꾼다. 다 열리거나 닫힌 상태에서는 두 움직임의 자세가 같아 바로 바꾸고,
   // 움직이는 도중에 방향을 바꾸면 튀지 않게 잠깐에 걸쳐 바꾼다
   const setClosing = useCallback(
@@ -324,6 +359,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     setIsOpen(true);
     playFolder(true);
     setClosing(0);
+    setHover({ pointer: false });
     animate(
       t,
       1,
@@ -337,7 +373,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
         preventScroll: true,
       })
     );
-  }, [t, n, reduceMotion, setClosing]);
+  }, [t, n, reduceMotion, setClosing, setHover]);
 
   const closeFolder = useCallback(() => {
     if (!isOpenRef.current) return;
@@ -362,7 +398,9 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     if (stageRef.current?.querySelector("[data-slot]:focus")) {
       hitRef.current?.focus({ preventScroll: true });
     }
-  }, [goTo, t, reduceMotion, setClosing]);
+    // 폴더가 마우스 아래에서 빠져나가고 포커스도 저절로 옮겨 온 것이라 들뜨지 않게 한다
+    setHover({ pointer: false, focus: false });
+  }, [goTo, t, reduceMotion, setClosing, setHover]);
 
   const goToItem = (itemIndex: number) => {
     const candidates = slots
@@ -702,10 +740,20 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
           fontSize: 16 * u,
         }}
         onClick={isOpen ? closeFolder : openFolder}
-        onPointerEnter={() => animate(hover, 1, HOVER_SPRING)}
-        onPointerLeave={() => animate(hover, 0, HOVER_SPRING)}
-        onFocus={() => animate(hover, 1, HOVER_SPRING)}
-        onBlur={() => animate(hover, 0, HOVER_SPRING)}
+        onPointerEnter={(event) => {
+          if (pointerMoved(event)) setHover({ pointer: true });
+        }}
+        // 이미 폴더 위에 있던 마우스는 enter가 다시 오지 않아 움직임으로 알아챈다
+        onPointerMove={(event) => {
+          if (!hoverBy.current.pointer && pointerMoved(event)) {
+            setHover({ pointer: true });
+          }
+        }}
+        onPointerLeave={() => setHover({ pointer: false })}
+        onFocus={(event) =>
+          setHover({ focus: isFocusVisible(event.currentTarget) })
+        }
+        onBlur={() => setHover({ focus: false })}
       />
 
       <motion.div
