@@ -122,7 +122,7 @@ export function playFolder(open: boolean) {
   }
 }
 
-/** 닫히면서 카드가 폴더에 들어앉는 순간의 낮은 소리 */
+/** 닫히면서 카드가 폴더 바닥에 닿는 순간의 낮은 소리 */
 export function playShut() {
   const ctx = audio();
   if (!ctx) return;

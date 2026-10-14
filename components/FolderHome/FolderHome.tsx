@@ -33,7 +33,6 @@ import {
   cardPose,
   clamp,
   DESIGN,
-  FOLDER_LAG,
   folderPose,
   lerp,
   measure,
@@ -60,10 +59,12 @@ const OPEN_SPRING = {
   damping: 19,
   restDelta: 0.0005,
 } as const;
-// 닫을 때는 0보다 조금 아래(-CLOSE_PAST)를 겨냥하고 0에 닿는 순간 멈춘다.
-// t가 0 아래로 가도 화면은 그대로라서, 스프링 끝의 느린 꼬리 없이 약 0.55초에 카드가 살며시 들어앉는다
-const CLOSE_SPRING = { type: "spring", stiffness: 80, damping: 18 } as const;
-const CLOSE_PAST = 0.04;
+// 닫을 때는 카드가 아래쪽 폴더로 들어간 뒤 폴더와 함께 가운데로 떠오른다.
+// 0보다 조금 아래(-CLOSE_PAST)를 겨냥하고 0에 닿는 순간 멈춰, 스프링 끝의 미세한 꼬리 없이 약 0.47초에 끝난다
+const CLOSE_SPRING = { type: "spring", stiffness: 100, damping: 18 } as const;
+const CLOSE_PAST = 0.015;
+// 닫을 때 카드가 폴더 바닥까지 내려가 닿는 지점. 여기서 '툭' 소리를 낸다
+const SHUT_AT = 0.33;
 const KICK = 1.6;
 const DIAL_SPRING = { type: "spring", stiffness: 260, damping: 32 } as const;
 const WHEEL_SPRING = { type: "spring", stiffness: 320, damping: 40 } as const;
@@ -133,7 +134,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
 
   // ───────── 모션 값 ─────────
   const t = useMotionValue(0);
-  const lag = useMotionValue<number>(FOLDER_LAG.open);
+  const closing = useMotionValue(0);
   const p = useMotionValue(0);
   const hover = useMotionValue(0);
   const enter = useMotionValue(0);
@@ -145,10 +146,10 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   const my = useSpring(pointerY, { stiffness: 80, damping: 18, mass: 0.7 });
 
   const drivers = useTransform(
-    [t, lag, p, hover, enter, float, layoutVersion],
-    ([tv, lv, pv, hv, ev, fv]: number[]): Drivers => ({
+    [t, closing, p, hover, enter, float, layoutVersion],
+    ([tv, cv, pv, hv, ev, fv]: number[]): Drivers => ({
       t: tv,
-      lag: lv,
+      closing: cv,
       p: pv,
       hover: hv,
       enter: ev,
@@ -187,9 +188,13 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   );
   const cardsOriginY = useTransform(folder, (f) => f.y / geoRef.current.h);
 
-  // 앞판은 열기 초반에 먼저 젖혀지고, 닫을 때는 카드가 다 들어간 뒤 마지막에 닫힌다
-  const flap = useTransform([t, hover], ([tv, hv]: number[]) =>
-    lerp(-7 * hv, -30 + 8 * hv, smoothstep(clamp(tv / 0.35, 0, 1)))
+  // 앞판은 열기 초반에 먼저 젖혀지고, 닫을 때는 폴더가 올라오는 동안 차츰 닫힌다
+  const flap = useTransform([t, hover, closing], ([tv, hv, cv]: number[]) =>
+    lerp(
+      -7 * hv,
+      -30 + 8 * hv,
+      lerp(smoothstep(clamp(tv / 0.35, 0, 1)), clamp(tv, 0, 1), cv)
+    )
   );
   const sheenX = useTransform(mx, (x) => `${x * 14}%`);
   const captionY = useTransform(
@@ -302,15 +307,15 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     [p, n]
   );
 
-  // 폴더 지연을 열기·닫기에 맞춘다. 다 열리거나 닫힌 상태에서는 지연과 상관없이 폴더가 같은 자리라 바로 바꾸고,
-  // 움직이는 도중에 방향을 바꾸면 폴더가 튀지 않게 잠깐에 걸쳐 바꾼다
-  const setLag = useCallback(
+  // 여는 움직임과 닫는 움직임을 바꾼다. 다 열리거나 닫힌 상태에서는 두 움직임의 자세가 같아 바로 바꾸고,
+  // 움직이는 도중에 방향을 바꾸면 튀지 않게 잠깐에 걸쳐 바꾼다
+  const setClosing = useCallback(
     (value: number) => {
       const tv = t.get();
-      if (tv <= 0 || tv >= 1) lag.jump(value);
-      else animate(lag, value, { duration: 0.2 });
+      if (tv <= 0 || tv >= 1) closing.jump(value);
+      else animate(closing, value, { duration: 0.2 });
     },
-    [t, lag]
+    [t, closing]
   );
 
   const openFolder = useCallback(() => {
@@ -318,7 +323,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     isOpenRef.current = true;
     setIsOpen(true);
     playFolder(true);
-    setLag(FOLDER_LAG.open);
+    setClosing(0);
     animate(
       t,
       1,
@@ -332,7 +337,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
         preventScroll: true,
       })
     );
-  }, [t, n, reduceMotion, setLag]);
+  }, [t, n, reduceMotion, setClosing]);
 
   const closeFolder = useCallback(() => {
     if (!isOpenRef.current) return;
@@ -340,21 +345,24 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     setIsOpen(false);
     playFolder(false);
     goTo(Math.round(targetP.current));
-    setLag(FOLDER_LAG.close);
+    setClosing(1);
+    let shut = false;
     animate(t, reduceMotion ? 0 : -CLOSE_PAST, {
       ...(reduceMotion
         ? QUICK
         : { ...CLOSE_SPRING, velocity: Math.min(t.getVelocity(), -KICK) }),
       onUpdate: (value) => {
-        if (value > 0) return;
-        t.jump(0);
-        playShut();
+        if (!shut && value <= SHUT_AT) {
+          shut = true;
+          playShut();
+        }
+        if (value <= 0) t.jump(0);
       },
     });
     if (stageRef.current?.querySelector("[data-slot]:focus")) {
       hitRef.current?.focus({ preventScroll: true });
     }
-  }, [goTo, t, reduceMotion, setLag]);
+  }, [goTo, t, reduceMotion, setClosing]);
 
   const goToItem = (itemIndex: number) => {
     const candidates = slots

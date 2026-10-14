@@ -36,8 +36,8 @@ export interface Geometry {
 export interface Drivers {
   /** 0 닫힘 → 1 열림 */
   t: number;
-  /** 폴더가 카드보다 늦게 움직이는 정도 (FOLDER_LAG) */
-  lag: number;
+  /** 0이면 여는 움직임, 1이면 닫는 움직임 (방향을 바꾸는 도중에는 그 사이) */
+  closing: number;
   /** 가운데에 놓인 카드 인덱스 (드래그 중에는 소수) */
   p: number;
   hover: number;
@@ -104,20 +104,22 @@ export function wrapOffset(index: number, p: number, n: number) {
   return d >= n / 2 ? d - n : d;
 }
 
-// 폴더는 t가 lag~1 사이에 있을 때만 움직인다.
-// 열 때는 카드가 먼저 빠져나간 뒤에 내려가고, 닫을 때는 카드가 들어오기 직전에 맞춰 올라온다.
-// 닫을 때도 열 때만큼 일찍 도착하려 하면, 스프링이 가장 빠른 초반에 몰아서 올라와 확 닫혀 보인다
-export const FOLDER_LAG = { open: 0.3, close: 0.12 } as const;
+// 열 때는 카드가 먼저 빠져나간 뒤에 폴더가 내려간다 (t가 이 값을 넘어야 폴더가 움직인다)
+const OPEN_FOLDER_LAG = 0.3;
 
-/** 폴더 위치·크기의 진행도 */
-export const folderProgress = (t: number, lag: number) =>
-  smoothstep(clamp((t - lag) / (1 - lag), 0, 1));
+/** 폴더 위치·크기의 진행도. 닫을 때는 처음부터 t를 그대로 따라 올라온다 */
+export const folderProgress = (t: number, closing: number) =>
+  lerp(
+    smoothstep(clamp((t - OPEN_FOLDER_LAG) / (1 - OPEN_FOLDER_LAG), 0, 1)),
+    clamp(t, 0, 1),
+    closing,
+  );
 
 export function folderPose(
-  { t, lag, enter, float }: Drivers,
+  { t, closing, enter, float }: Drivers,
   g: Geometry,
 ): FolderPose {
-  const tf = folderProgress(t, lag);
+  const tf = folderProgress(t, closing);
   return {
     x: g.w / 2,
     y:
@@ -151,9 +153,16 @@ export function cardPose(
 ): Pose {
   const o = wrapOffset(index, d.p, n);
   const a = Math.abs(o);
-  // 카드 경로는 '닫혀 있을 때의 폴더'에서 출발한다. 폴더는 카드가 빠져나간 뒤에야 움직이므로
-  // 그 전까지는 실제 폴더와 같은 자리이고, 내려가는 폴더가 카드를 끌어내리지 않는다
-  const folder = folderPose({ ...d, t: 0 }, g);
+  // 열 때는 '닫혀 있을 때의 폴더'를 기준으로 삼는다. 폴더는 카드가 빠져나간 뒤에야 움직이므로
+  // 그 전까지는 실제 폴더와 같은 자리이고, 내려가는 폴더가 카드를 끌어내리지 않는다.
+  // 닫을 때는 움직이는 폴더를 기준으로 삼아, 아래쪽 폴더로 들어간 뒤 폴더와 함께 올라온다
+  const closedFolder = folderPose({ ...d, t: 0 }, g);
+  const movingFolder = folderPose(d, g);
+  const folder = {
+    x: lerp(closedFolder.x, movingFolder.x, d.closing),
+    y: lerp(closedFolder.y, movingFolder.y, d.closing),
+    scale: lerp(closedFolder.scale, movingFolder.scale, d.closing),
+  };
 
   // 폴더 안: 가운데 카드가 가장 높이 솟은 작은 부채꼴
   const rest = folderSlot(o);
@@ -176,14 +185,16 @@ export function cardPose(
   const fanScale = 1 - 0.06 * Math.min(a, 1) - 0.04 * clamp(a - 1, 0, 2);
   const fanOpacity = clamp(1 - (a - 2.3) / 0.9, 0, 1);
 
-  // 가운데 카드부터 차례로 빠져나오도록 카드마다 출발을 조금씩 늦춘다
-  const delay = (Math.min(a, 3) / 3) * 0.18;
+  // 가운데 카드부터 차례로 빠져나오도록 카드마다 출발을 조금씩 늦춘다 (닫을 때는 간격을 조금 더 둔다)
+  const delay = (Math.min(a, 3) / 3) * lerp(0.18, 0.24, d.closing);
   const k = clamp((d.t - delay) / (1 - delay), 0, 1);
-  // 폴더 위로 빠져나온 뒤 아치 위 자리로 이어지는 곡선.
-  // 제어점이 도착점을 넘지 않아 중간에 멈칫하거나 지나쳤다 돌아오지 않는다
+  // 열 때: 폴더 위로 빠져나온 뒤 아치 위 자리로 이어지는 곡선.
+  //   제어점이 도착점을 넘지 않아 중간에 멈칫하거나 지나쳤다 돌아오지 않는다
+  // 닫을 때: 아치에서 살짝 내려온 뒤 폴더 위로 솟았다가 떨어지듯 들어간다
   const dy = inY - fanY;
-  const climb = clamp(dy * 0.45, 36 * g.u, 150 * g.u);
-  const settle = Math.max(0, dy * 0.2);
+  const rise = Math.max(90 * g.u, dy * 0.6);
+  const climb = lerp(clamp(dy * 0.45, 36 * g.u, 150 * g.u), rise, d.closing);
+  const settle = lerp(Math.max(0, dy * 0.2), rise * 0.5, d.closing);
 
   return {
     x: bezier(inX, inX, fanX, fanX, k),
