@@ -1,67 +1,73 @@
 ---
 title: "DM NOTE"
 description: "Make it yours. A customizable key viewer for DJMAX RESPECT V and any game."
+summary: "Make it yours\n 나만의 스타일로 완성하는 키뷰어"
 thumbnail: "dmnote3.png"
-techStack: ["React", "Tauri", "Zustand", "Tailwind CSS", "electron-store"]
-githubUrl: "https://github.com/lee-sihun/djmax-keyviewer"
+techStack: ["Tauri", "React", "TypeScript", "Vite", "Zustand", "Tailwind CSS"]
+githubUrl: "https://github.com/DmNote-App/DmNote"
 createdAt: 2025-01-01
 featured: true
+order: 1
 ---
-개발 기간: 2024.12 ~ 2025.01  
-팀 구성: 팀 프로젝트 (개발자1, 디자이너1)
+개발 기간: 2024.12 ~ 진행 중  
+팀 구성: 2인 프로젝트
 
 ## 🎹 DM NOTE
-Make it yours. 
-나만의 스타일로 완성하는 키뷰어 
+**Make it yours**  
+**나만의 스타일로 완성하는 키뷰어**
 
-## 🛠 기술 스택
+**DM Note**는 DJMAX RESPECT V에서 사용하기 위해 만들어진 키뷰어입니다.
 
-- **프레임워크**: Electron
-- **UI 라이브러리**: React
-- **상태 관리**: Zustand
-- **스타일링**: Tailwind CSS
-- **번들러**: Webpack
-- **키보드 후킹**: node-global-key-listener
-- **세팅 저장**: electron-store
-- **빌드**: electron-builder
+다른 게임에서도 자유롭게 사용할 수 있고 설정이 간단해서 스트리밍이나 플레이 영상에 키 입력을 바로 띄울 수 있습니다.
+
+**지원 환경** · Windows 10/11 · macOS
 
 ## ✨ 주요 기능
 
-- 실시간 키보드 입력 감지 및 표시
-- 커스텀 키 매핑 설정
-- 4/5/6/8키 모드 지원
-- 키 위치 자유 배치
-- 사용자 맞춤 테마 지원 (활성/비활성)
-- 프리셋 저장/불러오기
-- GPU 가속 설정
-- ANGLE 그래픽 백엔드 설정
-  - Direct3D 11/9
-  - OpenGL
-- 오버레이 기능
-  - 항상 위에 표시
-  - 창 위치 고정
-  - 위치 저장
+**입력과 표시**: [실시간 시각화](https://dmnote.app/docs/guide/interface) · [키 매핑](https://dmnote.app/docs/guide/key-mapping) · [노트 효과](https://dmnote.app/docs/guide/note-effects) · [키 카운터](https://dmnote.app/docs/guide/key-counter) · KPS 통계와 그래프 · 키음
 
-## 🔜 업데이트 예정
+**꾸미기**: 그리드에서 키 편집 · 키마다 이미지 지정 · [사용자 정의 CSS](https://dmnote.app/docs/custom-css) · 플러그인 · [프리셋](https://dmnote.app/docs/guide/presets)
 
-- 키 입력 카운트 표시 
-- 키 사이즈 커스터마이징
-- 동시 입력 간격 밀리초(ms) 표시
-- 키 입력 속도 그래프 시각화
-- 입력 통계 분석 기능
+**오버레이**: 항상 위에 표시 · 위치 고정 · 리사이즈 기준점 · OBS 브라우저 소스
+
+그 밖에 다국어 5종, 단축키, 설정 초기화, 자동 업데이트를 지원합니다. 자세한 사용법은 [문서](https://dmnote.app/docs/)를 확인해 주세요.
+
+## 🛠 기술 스택
+
+- **프론트엔드**: React 19 + TypeScript + Vite 7
+- **백엔드**: Tauri
+- **스타일링**: Tailwind CSS 3
+- **입력 감지**: Raw Input API (Windows), 전역 입력 이벤트 (macOS)
+- **패키지 매니저**: npm
 
 ## 🖼️ 스크린샷
 
-![Demo1](https://i.postimg.cc/L41mTJLR/key.gif)
+![Screenshot](https://raw.githubusercontent.com/DmNote-App/DmNote/main/docs/assets/screenshot-ko.png)
 
-![Demo2](https://i.postimg.cc/RFGZxyCm/2.gif)
+## 📝 참고사항
 
-![Demo3](https://i.postimg.cc/wv9jPgpF/3.gif)
+### 사용 팁
 
-## 📝참고사항
+> 오버레이를 직접 볼 필요 없이 스트리밍이나 녹화에만 사용한다면 **OBS 모드**를 권장합니다.
+>
+> 일반 오버레이 모드보다 게임 프레임에 주는 부담이 적습니다.
 
-- 그래픽 문제 발생 시 설정에서 렌더링 옵션을 변경해주세요.
-- 키보드 후킹 라이브러리로 인해 바이러스 오진이 있을 수 있습니다. [(관련 이슈)](https://github.com/LaunchMenu/node-global-key-listener?tab=readme-ov-file#disadvantages-2)
-- OBS 윈도우 캡쳐로 크로마키 없이 배경을 투명하게 불러올 수 있습니다.
-- 게임 화면 위에 표시할 경우, **항상 위에 표시**로 배치한 뒤 **오버레이 창 고정**을 활성화해주세요.
-- 기본 제공 프리셋은 resources > resources > presets 폴더에 있습니다. 
+게임용 컴퓨터와 스트리밍/녹화용 컴퓨터가 따로 있다면 게임용 컴퓨터에서 DM Note를 실행하고 스트리밍/녹화용 컴퓨터에서 OBS 브라우저 소스로 연결하는 방법을 추천합니다.
+
+키뷰어 때문에 생기는 게임 프레임 저하를 거의 없앨 수 있습니다.
+
+### 오버레이가 게임에 가려질 때
+
+**항상 위에 표시**를 켜도 일부 게임은 전체화면에서 오버레이를 덮습니다. 이때는 테두리 없는 창 모드를 사용해 주세요.
+
+### 플러그인과 CSS
+
+> **신뢰할 수 없는 플러그인은 절대 불러오지 마세요.**
+>
+> 비공식 플러그인을 사용할 때는 ChatGPT 같은 도구로 안전한지 반드시 확인한 뒤 사용해 주세요.
+
+사용자 정의 CSS로 프로그램 인터페이스와 오버레이 스타일을 원하는 대로 바꿀 수 있습니다.
+
+공식 플러그인과 CSS 예제는 `assets.zip`에 들어 있습니다.
+
+클래스명은 선택자 없이 이름만 입력해 주세요. (`blue` ✅, `.blue` ❌)
