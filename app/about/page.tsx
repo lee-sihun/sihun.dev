@@ -60,7 +60,7 @@ export default function About() {
           </Link>
         </nav>
         <hr className="h-px w-full my-5 bg-[#D4D4D4] dark:bg-[#686868]" />
-        <section className="prose prose-lg mx-auto dark:prose-invert text-left">
+        <section className="prose prose-lg mx-auto dark:prose-invert text-left break-keep">
           <ProfileIntro />
         </section>
       </article>
