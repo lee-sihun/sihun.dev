@@ -79,6 +79,13 @@ const SPIN = {
 
 const mod = (value: number, n: number) => ((value % n) + n) % n;
 
+// 스페이스·엔터를 스스로 처리하는 요소 안에서 눌렸는지
+const isControl = (target: EventTarget | null) =>
+  target instanceof Element &&
+  target.closest(
+    "a[href], button, input, select, textarea, [role='switch'], [role='radio']"
+  ) !== null;
+
 // 키보드로 옮긴 포커스인지 (:focus-visible을 모르는 오래된 브라우저에서는 그렇다고 본다)
 function isFocusVisible(element: Element) {
   try {
@@ -510,6 +517,15 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     const onKeyDown = (event: KeyboardEvent) => {
       if (detailRef.current) {
         if (event.key === "Escape") closeDetail();
+        // 스페이스·엔터로 연 카드는 같은 키로 닫는다 (카드 안의 버튼·링크·스위치에서는 그 컨트롤을 누른다)
+        if (
+          (event.key === " " || event.key === "Enter") &&
+          !event.repeat &&
+          !isControl(event.target)
+        ) {
+          event.preventDefault();
+          closeDetail();
+        }
         return;
       }
       if (!isOpenRef.current) return;
