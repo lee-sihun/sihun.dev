@@ -63,6 +63,8 @@ function makeConstellations(stars: Star[]) {
 function StarField({ dark }: { dark: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
+  // 테마만 바뀌어 다시 그릴 때는 같은 별을 이어서 쓴다 (새로 뿌리면 별이 한꺼번에 자리를 옮긴다)
+  const kept = useRef<{ w: number; h: number; stars: Star[] }>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -85,7 +87,10 @@ function StarField({ dark }: { dark: boolean }) {
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      stars = makeStars(w, h);
+      const prev = kept.current;
+      stars =
+        prev && prev.w === w && prev.h === h ? prev.stars : makeStars(w, h);
+      kept.current = { w, h, stars };
       constellations = dark ? [] : makeConstellations(stars);
     };
 
