@@ -1340,10 +1340,24 @@
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.25);
+  /* 다크 모드에서는 켜고 끌 때 손잡이 색도 뒤집힌다. 바로 바꾸면 바탕과 같은 색이
+     되는 순간이 생겨서, 바탕 색이 절반쯤 바뀌었을 때 바꾼다 */
+  transition: background-color 0s 0.075s;
 }
 
 :global(.dark) .toggle[data-on="true"] .toggleKnob {
   background: #1d1d1f;
+}
+
+/* 테마가 바뀌는 순간에는 색이 뒤집히는 요소를 전환 없이 바로 바꾼다.
+   바탕과 글자 색이 따로 움직이면 중간에 둘이 같아져 깜빡인다 (SettingsPanel) */
+:global(html[data-theme-switching]) .primary,
+:global(html[data-theme-switching]) .secondary,
+:global(html[data-theme-switching]) .toggle,
+:global(html[data-theme-switching]) .toggleKnob,
+:global(html[data-theme-switching]) .backdropOption,
+:global(html[data-theme-switching]) .preview {
+  transition: none;
 }
 
 /* 배경 고르기 */

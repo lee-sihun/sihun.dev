@@ -11,6 +11,20 @@ import type { Palette } from "./types";
 
 const KNOB_SPRING = { type: "spring", stiffness: 520, damping: 34 } as const;
 
+// 테마를 바꾸는 프레임 동안 html에 표시를 남겨, 색이 뒤집히는 요소의 전환 효과를 끈다
+// (FolderHome.module.css의 html[data-theme-switching])
+let themeSwitchFrame = 0;
+function markThemeSwitch() {
+  const root = document.documentElement;
+  root.dataset.themeSwitching = "";
+  cancelAnimationFrame(themeSwitchFrame);
+  themeSwitchFrame = requestAnimationFrame(() => {
+    themeSwitchFrame = requestAnimationFrame(() => {
+      delete root.dataset.themeSwitching;
+    });
+  });
+}
+
 // [가로 %, 세로 %, 크기 em]
 const SKY_STARS = [
   [16, 28, 0.15],
@@ -227,6 +241,7 @@ export default function SettingsPanel({
         <SkySwitch
           dark={dark}
           onChange={(next) => {
+            markThemeSwitch();
             setTheme(next ? "dark" : "light");
             playToggle(next);
           }}
