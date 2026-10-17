@@ -107,11 +107,19 @@ export function wrapOffset(index: number, p: number, n: number) {
 // 열 때는 카드가 먼저 빠져나간 뒤에 폴더가 내려간다 (t가 이 값을 넘어야 폴더가 움직인다)
 const OPEN_FOLDER_LAG = 0.3;
 
-/** 폴더 위치·크기의 진행도. 닫을 때는 처음부터 t를 그대로 따라 올라온다 */
+// 닫을 때 폴더가 카드보다 먼저 올라오는 정도. 1이면 카드가 아래쪽 폴더로 깊이 내려갔다가 함께 올라오고,
+// 클수록 폴더가 빨리 올라와 얕게 내려오는 카드를 받아 함께 올라간다
+const CLOSE_FOLDER_LEAD = 1.2;
+
+/** 닫을 때 폴더(와 앞판)의 진행도 */
+export const closeFolderProgress = (t: number) =>
+  Math.pow(clamp(t, 0, 1), CLOSE_FOLDER_LEAD);
+
+/** 폴더 위치·크기의 진행도. 닫을 때는 카드보다 조금 먼저 올라온다 */
 export const folderProgress = (t: number, closing: number) =>
   lerp(
     smoothstep(clamp((t - OPEN_FOLDER_LAG) / (1 - OPEN_FOLDER_LAG), 0, 1)),
-    clamp(t, 0, 1),
+    closeFolderProgress(t),
     closing,
   );
 
@@ -155,7 +163,7 @@ export function cardPose(
   const a = Math.abs(o);
   // 열 때는 '닫혀 있을 때의 폴더'를 기준으로 삼는다. 폴더는 카드가 빠져나간 뒤에야 움직이므로
   // 그 전까지는 실제 폴더와 같은 자리이고, 내려가는 폴더가 카드를 끌어내리지 않는다.
-  // 닫을 때는 움직이는 폴더를 기준으로 삼아, 아래쪽 폴더로 들어간 뒤 폴더와 함께 올라온다
+  // 닫을 때는 움직이는 폴더를 기준으로 삼아, 올라오는 폴더에 담긴 뒤 함께 올라온다
   const closedFolder = folderPose({ ...d, t: 0 }, g);
   const movingFolder = folderPose(d, g);
   const folder = {

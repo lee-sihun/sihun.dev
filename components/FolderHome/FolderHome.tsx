@@ -32,6 +32,7 @@ import {
 import {
   cardPose,
   clamp,
+  closeFolderProgress,
   DESIGN,
   folderPose,
   lerp,
@@ -59,12 +60,12 @@ const OPEN_SPRING = {
   damping: 19,
   restDelta: 0.0005,
 } as const;
-// 닫을 때는 카드가 아래쪽 폴더로 들어간 뒤 폴더와 함께 가운데로 떠오른다.
+// 닫을 때는 폴더가 먼저 올라와 얕게 내려오는 카드를 받아 함께 가운데로 떠오른다.
 // 0보다 조금 아래(-CLOSE_PAST)를 겨냥하고 0에 닿는 순간 멈춰, 스프링 끝의 미세한 꼬리 없이 약 0.47초에 끝난다
 const CLOSE_SPRING = { type: "spring", stiffness: 100, damping: 18 } as const;
 const CLOSE_PAST = 0.015;
-// 닫을 때 카드가 폴더 바닥까지 내려가 닿는 지점. 여기서 '툭' 소리를 낸다
-const SHUT_AT = 0.33;
+// 닫을 때 올라오던 폴더가 카드를 받아 내는 지점. 여기서 '툭' 소리를 낸다
+const SHUT_AT = 0.3;
 const KICK = 1.6;
 const DIAL_SPRING = { type: "spring", stiffness: 260, damping: 32 } as const;
 const WHEEL_SPRING = { type: "spring", stiffness: 320, damping: 40 } as const;
@@ -209,7 +210,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
     lerp(
       -7 * hv,
       -30 + 8 * hv,
-      lerp(smoothstep(clamp(tv / 0.35, 0, 1)), clamp(tv, 0, 1), cv)
+      lerp(smoothstep(clamp(tv / 0.35, 0, 1)), closeFolderProgress(tv), cv)
     )
   );
   const sheenX = useTransform(mx, (x) => `${x * 14}%`);
