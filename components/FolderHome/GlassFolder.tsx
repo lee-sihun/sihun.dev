@@ -3,6 +3,7 @@ import { useId, type ReactNode } from "react";
 import SaturnSvg from "@/public/svg/saturn.svg";
 import { DESIGN } from "./geometry";
 import styles from "./FolderHome.module.css";
+import type { Palette } from "./types";
 
 const { folderW: W, folderH: H, tabW, tabH, frontTop } = DESIGN;
 const R = 24;
@@ -34,6 +35,44 @@ const BACK_HIGHLIGHT_PATH = [
   `H ${W - R}`,
   `A ${R - 0.5} ${R - 0.5} 0 0 1 ${W - 0.5} ${tabH + R}`,
 ].join(" ");
+
+// 꼭짓점마다 반지름을 준 둥근 다각형 ([x, y, 반지름]을 시계 방향으로)
+function roundedPolygon(points: [number, number, number][]) {
+  const corners = points.map(([x, y, r], i) => {
+    const [px, py] = points[(i + points.length - 1) % points.length];
+    const [nx, ny] = points[(i + 1) % points.length];
+    const la = Math.hypot(px - x, py - y);
+    const lb = Math.hypot(nx - x, ny - y);
+    const a = [(px - x) / la, (py - y) / la];
+    const b = [(nx - x) / lb, (ny - y) / lb];
+    // 둥근 곡선이 두 변에 닿는 점까지의 거리
+    const t = r / Math.tan(Math.acos(a[0] * b[0] + a[1] * b[1]) / 2);
+    return {
+      start: [x + a[0] * t, y + a[1] * t],
+      end: [x + b[0] * t, y + b[1] * t],
+      r,
+    };
+  });
+  const last = corners[corners.length - 1];
+  return [
+    `M ${last.end[0]} ${last.end[1]}`,
+    ...corners.map(
+      ({ start, end, r }) =>
+        `L ${start[0]} ${start[1]} A ${r} ${r} 0 0 1 ${end[0]} ${end[1]}`
+    ),
+    "Z",
+  ].join(" ");
+}
+
+// 탭 안쪽에 탭과 같은 모양으로 들어가는 띠 (지금 가운데 있는 카드 색으로 칠한다).
+// 탭 테두리에서 5만큼 안쪽에 두고, 왼쪽 위는 탭 모서리와 중심이 같은 곡선으로,
+// 오른쪽 끝은 탭의 S자 경사 한가운데 기울기(약 54°)로 잘라 둥글린다
+const TAB_MARK_PATH = roundedPolygon([
+  [5, tabH - 5, 2.5],
+  [5, 5, TAB_R - 5],
+  [tabW - 10.6, 5, 8],
+  [tabW - 1.8, tabH - 5, 3],
+]);
 
 export interface FolderMotion {
   x: MotionValue<number>;
@@ -118,9 +157,12 @@ export function FolderShadow({
 export function FolderBack({
   motion: m,
   u,
+  palette,
 }: {
   motion: FolderMotion;
   u: number;
+  /** 지금 가운데 있는 카드 색 (탭 안의 띠에 쓴다) */
+  palette: Palette;
 }) {
   const id = useId().replace(/:/g, "");
 
@@ -158,6 +200,18 @@ export function FolderBack({
               className={styles.backHighlightStop}
             />
           </linearGradient>
+          <linearGradient id={`${id}-mark`} x1="0" y1="0" x2="1" y2="0">
+            <stop
+              offset="0"
+              className={styles.markStop}
+              style={{ stopColor: palette.from }}
+            />
+            <stop
+              offset="1"
+              className={styles.markStop}
+              style={{ stopColor: palette.to }}
+            />
+          </linearGradient>
         </defs>
         <path
           d={BACK_PATH}
@@ -166,6 +220,7 @@ export function FolderBack({
           strokeWidth={1}
           vectorEffect="non-scaling-stroke"
         />
+        <path d={TAB_MARK_PATH} fill={`url(#${id}-mark)`} />
         <path
           d={BACK_HIGHLIGHT_PATH}
           fill="none"

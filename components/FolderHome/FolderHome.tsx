@@ -697,7 +697,11 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
         colors={causticColors}
         opacity={shadowOpacity}
       />
-      <FolderBack motion={folderMotion} u={u} />
+      <FolderBack
+        motion={folderMotion}
+        u={u}
+        palette={items[focusItem].palette}
+      />
 
       <motion.div
         id={cardsId}
