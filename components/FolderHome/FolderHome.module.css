@@ -873,10 +873,26 @@
   transform: scale(0.98);
 }
 
-.primary svg,
-.secondary svg {
+.primary svg {
   width: 1em;
   height: 1em;
+}
+
+/* 작은 버튼은 글자가 작아서 아이콘이 같은 크기면 묻혀 보인다 */
+.secondary svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+/* 선으로 그린 아이콘(화살표·새 창)은 같은 크기면 채운 아이콘보다 작아 보여서 1.25배로 키운다 */
+.primary .lineIcon {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.secondary .lineIcon {
+  width: 1.5em;
+  height: 1.5em;
 }
 
 .secondaryRow {

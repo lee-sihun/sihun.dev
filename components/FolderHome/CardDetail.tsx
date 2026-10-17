@@ -272,9 +272,10 @@ function ArrowRight() {
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={styles.lineIcon}
       aria-hidden
     >
       <path d="M3 8h10M9 4l4 4-4 4" />
@@ -289,9 +290,10 @@ function ExternalLink() {
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={styles.lineIcon}
       aria-hidden
     >
       <path d="M8 4.5H4.5A1.5 1.5 0 0 0 3 6v5.5A1.5 1.5 0 0 0 4.5 13H10a1.5 1.5 0 0 0 1.5-1.5V8M10 3h3v3M13 3 7.5 8.5" />
