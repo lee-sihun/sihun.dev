@@ -844,10 +844,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.45em;
-  height: 2.9em;
+  /* 카드 글자 크기 기준 2.552em: 글자 크기를 바꾸면 높이도 같이 맞춘다 */
+  height: 3.112em;
   border-radius: 999px;
-  font-size: 0.88em;
-  font-weight: 600;
+  font-size: 0.82em;
+  font-weight: 500;
   color: #fafafa;
   background: #171717;
   transition:
@@ -889,7 +890,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  /* 큰 버튼(.primary)과 같은 높이: 2.9em × 0.88 ÷ 0.8 */
+  /* 큰 버튼(.primary)과 같은 높이: 3.112em × 0.82 ÷ 0.8 */
   height: 3.19em;
   border-radius: 999px;
   font-size: 0.8em;
