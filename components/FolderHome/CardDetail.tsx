@@ -282,7 +282,8 @@ function ArrowRight() {
   );
 }
 
-function ArrowUpRight() {
+// 새 창으로 열리는 사이트 (프로젝트 페이지의 Live Demo 아이콘과 같은 모양)
+function ExternalLink() {
   return (
     <svg
       viewBox="0 0 16 16"
@@ -293,7 +294,7 @@ function ArrowUpRight() {
       strokeLinejoin="round"
       aria-hidden
     >
-      <path d="M5 11l6-6M6 5h5v5" />
+      <path d="M8 4.5H4.5A1.5 1.5 0 0 0 3 6v5.5A1.5 1.5 0 0 0 4.5 13H10a1.5 1.5 0 0 0 1.5-1.5V8M10 3h3v3M13 3 7.5 8.5" />
     </svg>
   );
 }
@@ -369,8 +370,8 @@ function ProjectBody({ item, titleId, unit }: BodyProps<ProjectItem>) {
                 rel="noopener noreferrer"
                 className={styles.secondary}
               >
+                <GithubSvg aria-hidden />
                 GitHub
-                <ArrowUpRight />
               </a>
             )}
             {item.demoUrl && (
@@ -380,8 +381,8 @@ function ProjectBody({ item, titleId, unit }: BodyProps<ProjectItem>) {
                 rel="noopener noreferrer"
                 className={styles.secondary}
               >
+                <ExternalLink />
                 Live
-                <ArrowUpRight />
               </a>
             )}
           </div>
