@@ -1,6 +1,7 @@
 "use client";
 import {
   animate,
+  mix,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -669,6 +670,16 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   const causticColors = [-2, -1, 0, 1, 2].map(
     (offset) => items[slots[mod(offset, n)]].palette.to
   );
+  // 폴더 탭 안의 띠는 카드가 넘어가는 만큼 다음 카드 색으로 섞여 든다
+  // (가운데 카드가 바뀐 뒤에 색을 바꾸면 넘기기가 끝난 다음에야 따라오는 것처럼 보인다)
+  const markColor = (key: "from" | "to") => (value: number) => {
+    const i = Math.floor(value);
+    const a = items[slots[mod(i, n)]].palette[key];
+    const b = items[slots[mod(i + 1, n)]].palette[key];
+    return mix(a, b)(value - i);
+  };
+  const markFrom = useTransform(p, markColor("from"));
+  const markTo = useTransform(p, markColor("to"));
   const { u } = geo;
   const openHalf = (DESIGN.folderH * DESIGN.openFolderScale * u) / 2;
   const detailItem = detail ? items[slots[detail.slot]] : null;
@@ -700,7 +711,7 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
       <FolderBack
         motion={folderMotion}
         u={u}
-        palette={items[focusItem].palette}
+        mark={{ from: markFrom, to: markTo }}
       />
 
       <motion.div

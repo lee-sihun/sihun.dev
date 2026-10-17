@@ -80,11 +80,6 @@
   stop-color: var(--back-highlight);
 }
 
-/* 가운데 카드가 바뀌면 탭 안의 띠 색도 천천히 따라 바뀐다 */
-.markStop {
-  transition: stop-color 0.4s ease;
-}
-
 .tabLabel {
   position: absolute;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;

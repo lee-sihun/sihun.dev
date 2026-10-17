@@ -3,7 +3,6 @@ import { useId, type ReactNode } from "react";
 import SaturnSvg from "@/public/svg/saturn.svg";
 import { DESIGN } from "./geometry";
 import styles from "./FolderHome.module.css";
-import type { Palette } from "./types";
 
 const { folderW: W, folderH: H, tabW, tabH, frontTop } = DESIGN;
 const R = 24;
@@ -141,12 +140,12 @@ export function FolderShadow({
 export function FolderBack({
   motion: m,
   u,
-  palette,
+  mark,
 }: {
   motion: FolderMotion;
   u: number;
-  /** 지금 가운데 있는 카드 색 (탭 안의 띠에 쓴다) */
-  palette: Palette;
+  /** 탭 안 띠의 그라디언트 양 끝 색 (가운데 카드 색을 따라간다) */
+  mark: { from: MotionValue<string>; to: MotionValue<string> };
 }) {
   const id = useId().replace(/:/g, "");
 
@@ -185,16 +184,8 @@ export function FolderBack({
             />
           </linearGradient>
           <linearGradient id={`${id}-mark`} x1="0" y1="0" x2="1" y2="0">
-            <stop
-              offset="0"
-              className={styles.markStop}
-              style={{ stopColor: palette.from }}
-            />
-            <stop
-              offset="1"
-              className={styles.markStop}
-              style={{ stopColor: palette.to }}
-            />
+            <motion.stop offset="0" style={{ stopColor: mark.from }} />
+            <motion.stop offset="1" style={{ stopColor: mark.to }} />
           </linearGradient>
         </defs>
         <path
