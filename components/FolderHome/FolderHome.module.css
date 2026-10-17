@@ -463,7 +463,10 @@
   display: block;
   width: fit-content;
   margin-top: 1.5em;
-  filter: drop-shadow(0 0.18em 0.32em rgba(0, 0, 0, 0.16));
+  /* 회색 그림자는 색 있는 카드 위에서 탁한 얼룩처럼 보여서, 카드 색으로 물든 짧은 그림자를 준다 */
+  filter: drop-shadow(
+    0 0.1em 0.18em color-mix(in srgb, var(--to) 60%, transparent)
+  );
 }
 
 .emblemTile {
