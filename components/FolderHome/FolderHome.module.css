@@ -889,7 +889,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  height: 2.6em;
+  /* 큰 버튼(.primary)과 같은 높이: 2.9em × 0.88 ÷ 0.8 */
+  height: 3.19em;
   border-radius: 999px;
   font-size: 0.8em;
   font-weight: 600;

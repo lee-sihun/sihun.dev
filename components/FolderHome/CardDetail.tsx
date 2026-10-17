@@ -360,10 +360,6 @@ function ProjectBody({ item, titleId, unit }: BodyProps<ProjectItem>) {
         </div>
       </div>
       <div className={styles.actions}>
-        <Link href={item.url} className={styles.primary}>
-          프로젝트 자세히 보기
-          <ArrowRight />
-        </Link>
         {(item.githubUrl || item.demoUrl) && (
           <div className={styles.secondaryRow}>
             {item.githubUrl && (
@@ -390,6 +386,10 @@ function ProjectBody({ item, titleId, unit }: BodyProps<ProjectItem>) {
             )}
           </div>
         )}
+        <Link href={item.url} className={styles.primary}>
+          프로젝트 자세히 보기
+          <ArrowRight />
+        </Link>
       </div>
     </>
   );
