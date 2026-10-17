@@ -175,13 +175,14 @@ export function FolderBack({
           vectorEffect="non-scaling-stroke"
         />
       </svg>
+      {/* 탭 글씨는 고칠지 뺄지 정할 때까지 숨겨 둔다
       <span
         className={styles.tabLabel}
         style={{ left: 16 * u, top: 6 * u, fontSize: 9.5 * u }}
         aria-hidden
       >
         sihun.dev
-      </span>
+      </span> */}
     </Layer>
   );
 }
