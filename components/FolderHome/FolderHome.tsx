@@ -683,6 +683,8 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
+      // 이미지·링크를 끌어 옮기지 못하게 한다 (포털로 띄운 펼친 카드에서도 여기로 올라온다)
+      onDragStart={(event) => event.preventDefault()}
     >
       <h1 className="sr-only">
         {about ? `${about.title} · ${about.subline}` : "sihun.dev"}

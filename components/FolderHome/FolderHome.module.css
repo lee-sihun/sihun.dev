@@ -632,6 +632,9 @@
   z-index: 100;
   outline: none;
   transform-style: preserve-3d;
+  /* body에 포털로 붙어서 .stage의 선택 막기를 물려받지 못한다 */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .face {
@@ -719,8 +722,6 @@
   overflow: hidden;
   color: #171717;
   background: #fff;
-  user-select: text;
-  -webkit-user-select: text;
 }
 
 /* 내용이 길면 이 영역만 스크롤되고 아래 버튼은 그대로 남는다 */
