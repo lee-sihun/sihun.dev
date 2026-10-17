@@ -1394,18 +1394,23 @@
   /* squircle 경로와 비슷한 모서리라 안쪽 테두리가 잘리지 않는다 */
   border-radius: 0.77em;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 :global(.dark) .preview {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-.backdropOption:hover .preview,
-.backdropOption:focus-visible .preview {
-  transform: translateY(-0.12em);
+/* 마우스를 올리면 타일은 그대로 두고 이름만 또렷해진다 */
+.backdropOption:hover,
+.backdropOption:focus-visible {
+  color: inherit;
+}
+
+/* 키보드로 들어오면 고른 타일 이름에 밑줄을 그어 지금 위치를 알려 준다 */
+.backdropOption:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 /* 선택 표시는 squircle 경로에 잘리지 않도록 안쪽에 그린다 */
