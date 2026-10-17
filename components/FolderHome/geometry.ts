@@ -107,6 +107,15 @@ export function wrapOffset(index: number, p: number, n: number) {
 // 열 때는 카드가 먼저 빠져나간 뒤에 폴더가 내려간다 (t가 이 값을 넘어야 폴더가 움직인다)
 const OPEN_FOLDER_LAG = 0.3;
 
+// 닫을 때 마지막 구간(진행도가 이 값보다 작을 때)은 속도가 0이 되도록 감속하며 내려앉는다
+const CLOSE_LANDING = 0.2;
+
+/** 닫는 진행도의 끝부분만 부드럽게 감속시킨다 (0에서 속도 0, CLOSE_LANDING 위로는 그대로) */
+const closeLanding = (k: number) =>
+  k >= CLOSE_LANDING
+    ? k
+    : (k * k * (2 * CLOSE_LANDING - k)) / (CLOSE_LANDING * CLOSE_LANDING);
+
 // 닫을 때 폴더가 카드보다 먼저 올라오는 정도. 1이면 카드가 아래쪽 폴더로 깊이 내려갔다가 함께 올라오고,
 // 클수록 폴더가 빨리 올라와 얕게 내려오는 카드를 받아 함께 올라간다
 const CLOSE_FOLDER_LEAD = 1.2;
@@ -194,8 +203,13 @@ export function cardPose(
   const fanOpacity = clamp(1 - (a - 2.3) / 0.9, 0, 1);
 
   // 가운데 카드부터 차례로 빠져나오도록 카드마다 출발을 조금씩 늦춘다 (닫을 때는 간격을 조금 더 둔다)
-  const delay = (Math.min(a, 3) / 3) * lerp(0.18, 0.24, d.closing);
-  const k = clamp((d.t - delay) / (1 - delay), 0, 1);
+  const ac = Math.min(a, 3);
+  const openDelay = (ac / 3) * 0.18;
+  const closeDelay = (ac / 3) * 0.24;
+  const kOpen = clamp((d.t - openDelay) / (1 - openDelay), 0, 1);
+  const kClose = clamp((d.t - closeDelay) / (1 - closeDelay), 0, 1);
+  // 닫을 때는 폴더에 들어앉는 끝부분을 감속시켜 딱 멈추지 않게 한다
+  const k = lerp(kOpen, closeLanding(kClose), d.closing);
   // 열 때: 폴더 위로 빠져나온 뒤 아치 위 자리로 이어지는 곡선.
   //   제어점이 도착점을 넘지 않아 중간에 멈칫하거나 지나쳤다 돌아오지 않는다
   // 닫을 때: 아치에서 살짝 내려온 뒤 폴더 위로 솟았다가 떨어지듯 들어간다
