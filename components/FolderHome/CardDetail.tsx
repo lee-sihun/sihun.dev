@@ -469,25 +469,6 @@ function WritingBody({ item, titleId, unit }: BodyProps<WritingItem>) {
   );
 }
 
-function DiceIcon() {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden>
-      <rect
-        x="2"
-        y="2"
-        width="12"
-        height="12"
-        rx="3.2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <circle cx="5.6" cy="5.6" r="1.1" fill="currentColor" />
-      <circle cx="8" cy="8" r="1.1" fill="currentColor" />
-      <circle cx="10.4" cy="10.4" r="1.1" fill="currentColor" />
-    </svg>
-  );
-}
-
 function SettingsBody({
   item,
   titleId,
@@ -506,8 +487,7 @@ function SettingsBody({
       </div>
       <div className={styles.actions}>
         <button type="button" className={styles.primary} onClick={onShuffle}>
-          <DiceIcon />
-          아무 카드나 뽑기
+          아무 카드나 뽑기!
         </button>
       </div>
     </>
