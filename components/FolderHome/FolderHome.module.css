@@ -338,6 +338,9 @@
   border-radius: 1.25em;
   box-shadow: 0 1.2em 2.4em -1em rgba(0, 0, 0, 0.38);
   pointer-events: none;
+  /* 폴더를 열고 닫는 동안 투명도가 매 프레임 바뀐다. 따로 레이어를 둬서 카드와 큰 번짐을
+     매번 다시 그리지 않게 한다 (번진 그림자라 늘려 써도 흐려 보이지 않는다) */
+  will-change: transform, opacity;
 }
 
 :global(.dark) .cardShadow {
