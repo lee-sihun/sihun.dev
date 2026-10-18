@@ -282,6 +282,12 @@
   cursor: inherit;
 }
 
+/* 카드가 넘어가는 동안에는 카드 레이어를 지금 크기 그대로 써서, 크기가 바뀔 때마다 다시 그리지 않는다.
+   멈추면 풀려서 제 크기로 한 번 다시 그린다 (계속 고정해 두면 가운데로 온 카드가 흐려진다) */
+.stage[data-moving] .cardSlot {
+  will-change: transform;
+}
+
 .stage[data-open="true"] .cardSlot[aria-current="true"] {
   cursor: pointer;
 }

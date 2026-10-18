@@ -230,12 +230,25 @@ export default function FolderHome({ items }: { items: FolderItem[] }) {
   const dialOpacity = useTransform(t, (tv) => clamp((tv - 0.55) / 0.35, 0, 1));
   const shadowOpacity = useTransform(enter, (e) => clamp(e * 1.8, 0, 1));
 
+  // 카드가 넘어가는 동안에는 stage에 표시를 남겨 카드 레이어를 지금 크기로 고정한다
+  // (FolderHome.module.css의 .stage[data-moving]). 멈추면 풀어서 제 크기로 한 번 다시 그린다
+  const settleTimer = useRef(0);
+  useEffect(() => () => window.clearTimeout(settleTimer.current), []);
+
   useMotionValueEvent(p, "change", (value) => {
     const index = Math.round(value);
     setFocusItem(slots[mod(index, n)]);
     if (index !== lastIndex.current) {
       lastIndex.current = index;
       if (isOpenRef.current) playTick();
+    }
+    const stage = stageRef.current;
+    if (stage) {
+      if (!("moving" in stage.dataset)) stage.dataset.moving = "";
+      window.clearTimeout(settleTimer.current);
+      settleTimer.current = window.setTimeout(() => {
+        delete stage.dataset.moving;
+      }, 150);
     }
   });
 
