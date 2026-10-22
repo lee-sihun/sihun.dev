@@ -1,5 +1,5 @@
 "use client";
-import { animate, motion, useMotionValue } from "framer-motion";
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import Link from "next/link";
 import {
   useEffect,
@@ -100,6 +100,15 @@ export default function CardDetail({
   const opacity = useMotionValue(reduceMotion ? 0 : 1);
   const scrim = useMotionValue(0);
   const dialogRef = useRef<HTMLDivElement>(null);
+  // 뒤로 돌아간 면은 직접 숨긴다. backface-visibility에만 맡기면 윈도우 크롬 일부 환경에서
+  // 뒷면(상세 화면)이 거울처럼 뒤집힌 채 먼저 보였다가 제대로 돌아온다
+  const facingFront = (r: number) => Math.cos((r * Math.PI) / 180) >= 0;
+  const frontVisibility = useTransform(rotateY, (r) =>
+    facingFront(r) ? "visible" : "hidden"
+  );
+  const backVisibility = useTransform(rotateY, (r) =>
+    facingFront(r) ? "hidden" : "visible"
+  );
 
   // 열릴 때 한 번: 카드가 놓여 있던 자리에서 출발해 가운데로 오면서 뒤집힌다
   useLayoutEffect(() => {
@@ -193,16 +202,20 @@ export default function CardDetail({
           pointerEvents: closing ? "none" : "auto",
         }}
       >
-        <div
+        <motion.div
           className={styles.face}
-          style={{ fontSize: width / CARD_EMS, borderRadius: frontRadius }}
+          style={{
+            fontSize: width / CARD_EMS,
+            borderRadius: frontRadius,
+            visibility: frontVisibility,
+          }}
           aria-hidden
         >
           <CardFace item={item} index={index} width={width} height={height} />
-        </div>
-        <div
+        </motion.div>
+        <motion.div
           className={`${styles.face} ${styles.backSide}`}
-          style={{ borderRadius: backRadius }}
+          style={{ borderRadius: backRadius, visibility: backVisibility }}
         >
           <div
             className={styles.backFace}
@@ -259,7 +272,7 @@ export default function CardDetail({
               )}
             </Squircle>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </>,
     document.body
